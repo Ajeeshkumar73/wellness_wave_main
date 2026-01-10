@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wellness Wave Healthcare Landing Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0052cc",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1723",
+                        "slate-gray": "#456aa1",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0c131d] dark:text-white antialiased">
+<!-- Header / Navbar -->
+<header class="sticky top-0 z-50 glass-nav border-b border-solid border-[#e6ecf4] dark:border-gray-800">
+<div class="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+<svg class="w-8 h-8" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-[#0c131d] dark:text-white text-xl font-bold tracking-tight">Wellness Wave | Family Doctor</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Services</a>
+<a class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Blogs</a>
+<a class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">Reviews</a>
+<a class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#">About</a>
+</nav>
+<div class="flex gap-3">
+<button class="bg-primary text-white text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all">Join as Patient</button>
+<button class="border border-primary text-primary text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-primary/10 transition-all">Join as Doctor</button>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative w-full overflow-hidden px-6 py-10 md:py-20 bg-background-light dark:bg-background-dark">
+<div class="max-w-[1280px] mx-auto">
+<div class="relative rounded-xl overflow-hidden min-h-[560px] flex flex-col items-center justify-center p-8 text-center bg-cover bg-center" data-alt="Modern medical facility interior with blue light" style='background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 82, 204, 0.4)), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCaXe2Oh6Qa6xdiwB8YsKlWb7QxspRBa9ZxNvWOHvj0ps6UxtVU4L5sTj2K_MgS7D0wHQYISqhf6KHHdEphbl-htQgvL_8-nRx0DDiqYWAsR5YL3ZJ7OSTK4YP_ruaADkAGKTnYSVlNpjDYshV08T4h2Z3tT3FTDevgsRdGiPp8MeukaPnr5ui09dQzgzpywM0hmbc4neUJPoXhFNSeYwpQ3HUAjfanTvesESIdajVrsBcc-I4yJw1a1zjAC0M6cssmFWav0fuDl2U");'>
+<div class="max-w-3xl space-y-6">
+<h1 class="text-white text-5xl md:text-7xl font-black leading-tight tracking-tight">
+                            Your Health, Our Priority
+                        </h1>
+<p class="text-white/90 text-lg md:text-xl font-normal leading-relaxed max-w-2xl mx-auto">
+                            Redefining healthcare with AI-driven lifestyle disease prediction and prevention for a healthier, more vibrant future.
+                        </p>
+<div class="flex flex-wrap gap-4 justify-center pt-4">
+<button class="bg-primary text-white h-14 px-8 rounded-lg text-lg font-bold shadow-lg hover:scale-105 transition-transform">
+                                Start Your Journey
+                            </button>
+<button class="bg-white/10 backdrop-blur-md border border-white/30 text-white h-14 px-8 rounded-lg text-lg font-bold hover:bg-white/20 transition-all">
+                                Explore AI Tools
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Services Section -->
+<section class="max-w-[1280px] mx-auto px-6 py-20">
+<div class="mb-12">
+<h2 class="text-[#0c131d] dark:text-white text-4xl font-bold tracking-tight mb-4">Our Services</h2>
+<p class="text-slate-gray dark:text-gray-400 text-lg max-w-2xl">Empowering your wellness journey with cutting-edge medical technology and personalized care plans.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- AI Prediction Card -->
+<div class="group bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">monitoring</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white">AI Prediction</h3>
+<p class="text-slate-gray dark:text-gray-400 leading-relaxed">Advanced predictive analytics for lifestyle diseases based on your unique health data and genetic markers.</p>
+</div>
+<!-- Easy Appointments Card -->
+<div class="group bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">calendar_month</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white">Easy Appointments</h3>
+<p class="text-slate-gray dark:text-gray-400 leading-relaxed">Seamless booking system with our global specialist network, offering both in-person and virtual consultations.</p>
+</div>
+<!-- Lifestyle Prevention Card -->
+<div class="group bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">medical_services</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white">Lifestyle Prevention</h3>
+<p class="text-slate-gray dark:text-gray-400 leading-relaxed">Habit tracking and proactive health management powered by real-time biofeedback and expert coaching.</p>
+</div>
+</div>
+</section>
+<!-- Prevention Section (Split Layout) -->
+<section class="bg-white dark:bg-gray-900 py-20 px-6 overflow-hidden">
+<div class="max-w-[1280px] mx-auto flex flex-col lg:flex-row items-center gap-16">
+<div class="lg:w-1/2 space-y-8">
+<span class="text-primary font-bold tracking-widest uppercase text-sm">Proactive Care</span>
+<h2 class="text-[#0c131d] dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-tight">
+                        Prevention is Better Than Cure
+                    </h2>
+<p class="text-slate-gray dark:text-gray-300 text-lg leading-relaxed">
+                        Our platform focuses on identifying risks before they become problems. Take control of your health with data-driven insights and personalized prevention plans designed for your lifestyle.
+                    </p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 text-sm font-semibold">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            Early Risk Detection Models
+                        </li>
+<li class="flex items-center gap-3 text-sm font-semibold">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            Personalized Wellness Roadmaps
+                        </li>
+<li class="flex items-center gap-3 text-sm font-semibold">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                            24/7 Health Monitoring Access
+                        </li>
+</ul>
+<button class="bg-primary text-white h-12 px-8 rounded-lg font-bold hover:shadow-lg transition-all">Learn More About Prevention</button>
+</div>
+<div class="lg:w-1/2 relative">
+<div class="aspect-square rounded-2xl bg-cover bg-center shadow-2xl relative z-10" data-alt="Happy senior couple jogging in a park" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAHiandDwmdKujYr5ei98e4uFHEb2sB7noeqmchV1d9NvSRe4OR20-a7ls_hWGNkVXN53CHoFXJKQtRu-1EefC5SroOL0x7QHT14HW56Vk-tIdo8U6xD9uSWyVbrsjXBQ6HitMkuGsv3UFu8t0ztv7QdSAHBtWUF92Uw5DCQ-H3xjA4ROytrqLhNQLogGDTu84N4wNBHq0_wyYyxlu8pSPr9d0gdfdJHrLGtwZqcpTIbhFnbvw5ZJpAczyyI3AScW_rjqkISnvk9xo");'>
+</div>
+<div class="absolute -bottom-6 -left-6 w-48 h-48 bg-primary/10 rounded-2xl -z-10"></div>
+<div class="absolute -top-6 -right-6 w-64 h-64 bg-slate-100 dark:bg-gray-800 rounded-full -z-10"></div>
+</div>
+</div>
+</section>
+<!-- Blog Section -->
+<section class="max-w-[1280px] mx-auto px-6 py-20">
+<div class="flex items-center justify-between mb-12">
+<h2 class="text-[#0c131d] dark:text-white text-3xl font-bold tracking-tight">Latest Health Insights</h2>
+<a class="text-primary font-bold flex items-center gap-2 hover:underline" href="#">
+                    View all posts <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Blog Post 1 -->
+<div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col">
+<div class="h-52 bg-cover bg-center" data-alt="Balanced nutritious breakfast bowl" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBDyP7Vf0JxPk2jjvzo9Qa1Wzziaxj5Sln3hJ52ZsE5I8Au2HngA5RVO9EGzHKuACaF4ZzMdSm7ktB875ct6uzCc5LKjYVIZjEojmf18Ge8Y0IhbTujObxBMAN02VDQEjd3qxVYhFWUKvfkpaBCW1n3OGftTGB9mz0BPkw51DClcgCO0RbkTQ_mVjDM36yhLO2jlLCoXkiHnOeg3WEl8MPNdTkurTzc0O0B0lIKgStQZCJmpYjt0bRooVSHWzPQEOEJB3KQUrYfq34");'></div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex gap-2 mb-4">
+<span class="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-1 rounded">Nutrition</span>
+</div>
+<h4 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white leading-snug">The Impact of Diet on Cardiovascular Longevity</h4>
+<div class="flex items-center gap-3 mt-auto pt-6 border-t border-gray-50 dark:border-gray-700">
+<div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden" data-alt="Portrait of Dr. Sarah Chen">
+<img alt="Dr. Sarah Chen" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV5aeUzUy29KM1tNOmwkWhrSdKgQP9QCInbtdRthCEhewwZ2qtfWowpETZArSuY3yNB9DM47oNzQtBZk7ryRe8_Dir4uwEYYFwAVyaQGLG828PHCE30a7gYkme1a2lzBCX6NUl1wC4YAkmy9gMqnfBn3wIGOTPvE1l6ID-rzdRYrRd4EHHTVIK0qXkmj1thrBz_bTtDrsgfj3Nx4nAFCA2WDDSTveVYO9BnBpL9GUDuo2nshruXoyS851fcZ4GnhhBiihmwKbm8G8"/>
+</div>
+<span class="text-sm font-medium text-slate-gray dark:text-gray-400">Dr. Sarah Chen</span>
+</div>
+</div>
+</div>
+<!-- Blog Post 2 -->
+<div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col">
+<div class="h-52 bg-cover bg-center" data-alt="Person using a digital health wearable" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAaWndobzbMZGrgPqh2aJ8lRFZygC6rSGvMZX6cVJs92yBM6UtY_5Q94Cx4x1XUKPzaxxOzUzHgY0XL5HGOVsdWy9bExJa_Ma6NAvhrL3C6RTWGXE9Csm03xRGi3tyYgMnnV9GZP7mTYtXcQWjcuxj7F1rTxEuInnwsH_RKRAEVUr8j-Eji2z6STcvYfhD1lg-PshyJdc6HYD5-C3Q2bTCvwqbTEDZ8TWDctLt8Viu1wohNhWb83oYNVUHb0NlhMcihiYO_IxkFD7I");'></div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex gap-2 mb-4">
+<span class="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-1 rounded">Technology</span>
+</div>
+<h4 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white leading-snug">AI Diagnostics: The New Frontier of Prevention</h4>
+<div class="flex items-center gap-3 mt-auto pt-6 border-t border-gray-50 dark:border-gray-700">
+<div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden" data-alt="Portrait of Dr. Michael Ross">
+<img alt="Dr. Michael Ross" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRNVzKB8KFEoR_Do_hlAG0Yg0JVGC_yY2n-evCITa24hvi0sOrRpq4KT8slEeVzvTfAoggp_2zmVE1oN40YLsUglDmqyWCY8yGjYetr4i7WeQG-xgy9Acu7KW3zm02Jt23aDUfTI_6nVrL-8UO4Qxd71fQK3sBZUw29VZnTyRu3CwnuBugIAaBVTeXZvWMy53sTbYOhI6Kis8VBBAI7w27d7lh8npWXLbZ9zOAypqnStiu4ZysmWhP1wVfWvpl_pCJudNrbHHYWxI"/>
+</div>
+<span class="text-sm font-medium text-slate-gray dark:text-gray-400">Dr. Michael Ross</span>
+</div>
+</div>
+</div>
+<!-- Blog Post 3 -->
+<div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col">
+<div class="h-52 bg-cover bg-center" data-alt="Person practicing meditation" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAJ-5KF2A2sCztyb6nIlyTAnx-CA9pCo2B39dWJoT_VwWODXDKmrQqRQlGrwT0GdQlS6zeAjBO08JUPCUqbk3tuO7tuqUUsLDi6DzEpSsV8dHSw8ktMjbSSFOeO-MKIGmFFmlS7HxPUfWiD7OoyqpT4_J_B9aAR1wHaX0LQYiI4V5rIWncTOujhP7Wd8N_ePzjqnPK3R0RUqaQu0_5GXlAH8fhkJ54JhIGm5vYKpnVH7FhSTwXc89uMu53Mt-i5kkqT_BrGGvI6nF0");'></div>
+<div class="p-6 flex-1 flex flex-col">
+<div class="flex gap-2 mb-4">
+<span class="text-[10px] font-bold uppercase tracking-widest bg-primary/10 text-primary px-2 py-1 rounded">Mental Wellness</span>
+</div>
+<h4 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white leading-snug">Stress Management Techniques for Modern Life</h4>
+<div class="flex items-center gap-3 mt-auto pt-6 border-t border-gray-50 dark:border-gray-700">
+<div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden" data-alt="Portrait of Dr. Emily Watts">
+<img alt="Dr. Emily Watts" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJc9ZwHub_DUQX_9lArVDs909k5Swrpl0wbM4WA4hfmMsBOWZKavhTtM0au0Jv8chu85oTCaxFX65JCQ1AW1ZlV5IoaQ_TyEJIyVFNWnXwWNpP832HntRDYcc1TTr88uBrO3IbyHBB67HY4nAD5i-2Ao_V9K4pKcDf2aA5oObKok1oF-QHICHcgUHAlVW5pFWNfwgnW0y0Bk8fVX3Q-DuTA_aTE2kok8Xe5N0M0Hmxuqy-dxNjJUglFw1afr5xnL6XRbHkDnhBlj4"/>
+</div>
+<span class="text-sm font-medium text-slate-gray dark:text-gray-400">Dr. Emily Watts</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="bg-gray-100 dark:bg-gray-950 py-24 px-6">
+<div class="max-w-[1280px] mx-auto text-center mb-16">
+<h2 class="text-4xl font-black text-[#0c131d] dark:text-white mb-4">Real People, Real Impact</h2>
+<p class="text-slate-gray dark:text-gray-400 text-lg">See how Wellness Wave is transforming lives through data and care.</p>
+</div>
+<div class="max-w-[1280px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Testimonial 1 -->
+<div class="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm relative">
+<span class="material-symbols-outlined text-primary/20 text-6xl absolute top-4 right-8">format_quote</span>
+<div class="flex gap-1 mb-4">
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+</div>
+<p class="text-slate-gray dark:text-gray-300 italic mb-8 relative z-10">
+                        "The AI prediction tool caught a metabolic trend early. With the personalized lifestyle plan, I managed to reverse my pre-diabetic state in 6 months."
+                    </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-blue-100 overflow-hidden">
+<img alt="Patient profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAivtS7rTjHc5uZW7Jr2GlsR5wiNFTQ-IN1eO4FYF6wH9ZNGiie9B6Qt9AtmGm3O1l2ND5neJdrKnS1r4FiNfmdEy5Ewa_Yf4EKmo4fcdJ4wJsM3-Hmfsl-XQ6j_8opEWdGvh94qgeHcMcUFxIRMEbOPoH1W6t2Is4ukh6qChWT4y8sISXRRWZWk2ukXsrz2vL5uEdFxjvMK8XUeo4HvxjmqisFFImesqUeo3Zu2ydK9U8bpALrhVMIUlrvMDAh5DlNkAb9BIvk_34"/>
+</div>
+<div>
+<h5 class="font-bold text-[#0c131d] dark:text-white">James T.</h5>
+<span class="text-xs text-slate-gray">Patient for 2 years</span>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm relative">
+<span class="material-symbols-outlined text-primary/20 text-6xl absolute top-4 right-8">format_quote</span>
+<div class="flex gap-1 mb-4">
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+</div>
+<p class="text-slate-gray dark:text-gray-300 italic mb-8 relative z-10">
+                        "Integrating Wellness Wave into my practice has allowed me to monitor patients more effectively. The data visualization is a game-changer."
+                    </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-blue-100 overflow-hidden">
+<img alt="Doctor profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvY_IasKaFfiBmYpSZ9ms-O4FkWpy7Di-yHNyw7HwrgUMvb7bDrNXr4AdW4hed7c2DYMUUt6_D9sFxeHkYUCQtT_ODKGgLYtdR36qb57a2Wq-_RnjbP9mGpQNM2Tf1n1QjWXVdn68MF9-I8xg1eYrcyoT6t_hg5MnrtqiDXb1GE8FGV7F2YzRB_ylmEEtPPG9oZ3MP3DFMYc0y5TRdeIM_solVaqi3qjOiwDyelXoeyhwJ0p4DVBmrrtjwDOkzMlR_pz2bzns4CpY"/>
+</div>
+<div>
+<h5 class="font-bold text-[#0c131d] dark:text-white">Dr. Lisa M.</h5>
+<span class="text-xs text-slate-gray">Cardiologist</span>
+</div>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm relative">
+<span class="material-symbols-outlined text-primary/20 text-6xl absolute top-4 right-8">format_quote</span>
+<div class="flex gap-1 mb-4">
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+<span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+</div>
+<p class="text-slate-gray dark:text-gray-300 italic mb-8 relative z-10">
+                        "I love how easy it is to track my vitals and sync them with my doctor. It's the first health app I've used that actually feels helpful."
+                    </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-blue-100 overflow-hidden">
+<img alt="Patient profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-TEES-3ZKK_lglIPHIz9zq7g2CioVq-xWxo5uDmetYE0ip6RAbJn2HFWDWbP28vcJs9WLr_qSc7FPB4vODrYrOZ7x-RixAWuccZp1ywnirHEYPRhFOc9Q0AbjuX-BenwTRDJZ61PGbhl6MyQOWIvw052S1BFoi0Lxsa5GWLrBWkGtswnbgAq4fkLyVpZXh08EjfAXehaML0Qa51ID7o7kXDUBGKDf13Qwc1mHxq3eQE1wB6R9XmvT3rNAYCW1ZY1Z_GjnGYb0LGM"/>
+</div>
+<div>
+<h5 class="font-bold text-[#0c131d] dark:text-white">Elena R.</h5>
+<span class="text-xs text-slate-gray">Patient for 1 year</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-900 text-white py-20 px-6">
+<div class="max-w-[1280px] mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<svg class="w-6 h-6 text-primary" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 4H17.3334V17.3334H30.6666V30.6666H44V44H4V4Z" fill="currentColor"></path>
+</svg>
+<h2 class="text-xl font-bold tracking-tight">Wellness Wave</h2>
+</div>
+<p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Pioneering the future of preventive healthcare through artificial intelligence and patient-centric design.
+                    </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</a>
+</div>
+</div>
+<div>
+<h5 class="font-bold mb-6">Services</h5>
+<ul class="space-y-4 text-gray-400 text-sm">
+<li><a class="hover:text-primary" href="#">AI Risk Assessment</a></li>
+<li><a class="hover:text-primary" href="#">Virtual Consultations</a></li>
+<li><a class="hover:text-primary" href="#">Habit Coaching</a></li>
+<li><a class="hover:text-primary" href="#">Genetic Testing</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6">Company</h5>
+<ul class="space-y-4 text-gray-400 text-sm">
+<li><a class="hover:text-primary" href="#">About Us</a></li>
+<li><a class="hover:text-primary" href="#">Medical Team</a></li>
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6">Contact</h5>
+<ul class="space-y-4 text-gray-400 text-sm">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">mail</span>
+                            hello@wellnesswave.com
+                        </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">phone</span>
+                            +1 (800) WAVE-DOC
+                        </li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-sm">location_on</span>
+                            123 Health Ave, Suite 500<br/>Medical District, CA 90210
+                        </li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-xs">
+<p>© 2024 Wellness Wave Healthcare Platform. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="hover:text-white transition-colors" href="#">Accessibility</a>
+<a class="hover:text-white transition-colors" href="#">Cookies Settings</a>
+<a class="hover:text-white transition-colors" href="#">Compliance</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

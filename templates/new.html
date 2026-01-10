@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wellness Wave - Your Journey to Better Health</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "card-dark": "#1c2127",
+                        "card-border": "#283039",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-nav {
+            background: rgba(16, 25, 34, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }.text-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }.glow-bg {
+            background: radial-gradient(circle at 50% 50%, rgba(19, 127, 236, 0.08) 0%, rgba(16, 25, 34, 0) 50%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-x-hidden">
+<div class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-card-border">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap py-4">
+<div class="flex items-center gap-3 text-slate-900 dark:text-white">
+<div class="size-8 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl">ecg_heart</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">Wellness Wave</h2>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">Home</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#services">Services</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#prevention">Prevention</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#blog">Blog</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium leading-normal" href="#reviews">Reviews</a>
+</div>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-primary hover:bg-blue-600 transition-colors text-white text-sm font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Get Started</span>
+</button>
+</div>
+</header>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-20">
+<div class="relative flex flex-col glow-bg">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-10">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+<div class="@container">
+<div class="flex flex-col-reverse gap-10 px-4 py-10 @[864px]:flex-row @[864px]:items-center">
+<div class="flex flex-col gap-8 flex-1 @[864px]:max-w-[50%]">
+<div class="flex flex-col gap-4 text-left">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-xs font-semibold text-primary uppercase tracking-wide">Healthcare Reimagined</span>
+</div>
+<h1 class="text-slate-900 dark:text-white text-5xl font-black leading-[1.1] tracking-[-0.033em] @[480px]:text-6xl text-gradient">
+                                            Your Journey to Better Health Starts Here
+                                        </h1>
+<h2 class="text-slate-600 dark:text-slate-300 text-lg font-normal leading-relaxed">
+                                            Experience comprehensive care designed around your life. From telemedicine to specialized diagnostics, we are here for you 24/7.
+                                        </h2>
+</div>
+<div class="flex flex-wrap gap-4">
+<button class="flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary hover:bg-blue-600 transition-colors shadow-lg shadow-primary/25 text-white text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Book Appointment</span>
+</button>
+<button class="flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-slate-200 dark:bg-card-border hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors text-slate-900 dark:text-white text-base font-bold leading-normal tracking-[0.015em]">
+<span class="truncate">Learn More</span>
+</button>
+</div>
+<div class="flex items-center gap-4 pt-4">
+<div class="flex -space-x-3">
+<div class="w-10 h-10 rounded-full border-2 border-background-light dark:border-background-dark bg-gray-300 bg-cover" data-alt="Portrait of a female patient" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAbwhFmfecgvLZARBXEbR0ZTwUU4aeAbyLfvUNIEXdA3UhKKlSnMVwaWqy2Qe7beBVkthUsCjgX9nJm91mqQXbPctkk7BaZ1osyGQuzWDGOf8zDlcz5msApkCVvHaP7piPKqYId_WMieTqnepePfp4pZbZeMqGpqotMe2e5qiBunXFA__Vs3y3NnCP7HKkFWD68zSF5LPYnZqoqis3Pjo34Uq3Vdh_DtR9HkljNstE-muQwllM67pKCtOks9-bDhhV2Kbh9I6N0-bA');"></div>
+<div class="w-10 h-10 rounded-full border-2 border-background-light dark:border-background-dark bg-gray-300 bg-cover" data-alt="Portrait of a male patient" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCTpetx4L5QH8jjTRoy9VA5k6IMBbJcUNXHZYqCozCvspa6EwJjz-NXjvh4ld_QOcR5RtHTt0yV95z7PC5pUpQWOy1T-4UCbcxeyFV8s7K2kPlGBPez2QR_90atk8Norq7V-XcmMvmbFVx0PXEPekbodfNrgriapjHWH8MV2PpKq95QU27J4_amIB8rYNcoBcC57vHQ6cNNmyZ_dOd3h371zFRq7A63s_D-hjsTXrP4ie8aGVn3LTY9I8-lPaTPs5BCy-5TIywX3bw');"></div>
+<div class="w-10 h-10 rounded-full border-2 border-background-light dark:border-background-dark bg-gray-300 bg-cover" data-alt="Portrait of a male patient smiling" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA3v7AVejgST6X78Y1F536ALAn1V3kdlUT8rD2HFIObJW02EdSCOi9GzvWwhrUdQIGrCVd4BbTh2KCdfw9vlC8bVjzRfNi-4vtCGud6gmdBnaLcJU8M_lFhkbynYer7QOgQH_Pu5XS2otw_V93Q9jRCW9dJ6McvN9punICyN5hFzpjeiUZBhU8c_jkpX8sdZcGSf3S9xRr-1VsP4I3BI0nsFbIqzZcUH7evWkxjcbiTHNfcnGqMtJBUspZi9sPsoP_KSTlGiRwJD8Q');"></div>
+<div class="w-10 h-10 rounded-full border-2 border-background-light dark:border-background-dark bg-primary flex items-center justify-center text-white text-xs font-bold">+2k</div>
+</div>
+<div class="flex flex-col">
+<div class="flex text-yellow-400 text-sm">
+<span class="material-symbols-outlined text-[16px] fill-current">star</span>
+<span class="material-symbols-outlined text-[16px] fill-current">star</span>
+<span class="material-symbols-outlined text-[16px] fill-current">star</span>
+<span class="material-symbols-outlined text-[16px] fill-current">star</span>
+<span class="material-symbols-outlined text-[16px] fill-current">star</span>
+</div>
+<span class="text-sm text-slate-500 dark:text-slate-400">Trusted by happy patients</span>
+</div>
+</div>
+</div>
+<div class="w-full flex-1 aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl relative group">
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark/80 to-transparent z-10"></div>
+<div class="w-full h-full bg-center bg-cover transform group-hover:scale-105 transition-transform duration-700" data-alt="Modern medical office with doctor explaining results on a tablet" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBvwqYN6D-q2i1of2G-OsmoMRpLBGlPWLBznXG-68WmAVac3P9CeRPDM5L3oiuHOa79VN2Gy6uuX7iDftNRPn6k8MeCC48Hb0v37Sfij5Xl5bV-j5I_ya_hgERn21teIKUCvYevT1nj-emQe44CZcwVU6PBr4anC5KmzkSclOXkRj-lcahYYLJAGPx8XM2s9BzfVyZcelUpLQ_YoMsUyox8a-LDZpRi-YVLdOUSFkGPhL7PPWXexP_njxt4kx_bQHTD0JE5HfX1Di8");'></div>
+<div class="absolute bottom-6 left-6 right-6 z-20 bg-card-dark/90 backdrop-blur-md p-4 rounded-xl border border-card-border">
+<div class="flex items-center gap-4">
+<div class="bg-primary/20 p-2 rounded-full text-primary">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<p class="text-white font-bold text-sm">Certified Specialists</p>
+<p class="text-slate-400 text-xs">Top rated medical professionals</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative flex flex-col" id="services">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-10">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+<div class="flex flex-col gap-2 px-4 pb-8 pt-5 text-center items-center">
+<span class="text-primary font-bold tracking-wider uppercase text-xs">Our Expertise</span>
+<h2 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em]">Comprehensive Healthcare Services</h2>
+<p class="text-slate-600 dark:text-slate-300 text-base max-w-[600px]">We offer a wide range of medical services designed to ensure your well-being at every stage of life.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-card-border bg-white dark:bg-card-dark p-6 hover:-translate-y-1 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-primary/10">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">cardiology</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold">Cardiology</h2>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Expert heart care including monitoring, diagnostics, and personalized treatment plans for heart health.</p>
+</div>
+</div>
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-card-border bg-white dark:bg-card-dark p-6 hover:-translate-y-1 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-primary/10">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">medical_services</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold">Telemedicine</h2>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Connect with certified doctors from the comfort of your home through secure video consultations.</p>
+</div>
+</div>
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-card-border bg-white dark:bg-card-dark p-6 hover:-translate-y-1 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-primary/10">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">psychology</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold">Mental Health</h2>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Compassionate support and therapy for your emotional well-being and mental resilience.</p>
+</div>
+</div>
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-card-border bg-white dark:bg-card-dark p-6 hover:-translate-y-1 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-primary/10">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">nutrition</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold">Nutrition Plans</h2>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Personalized diet and health plans created by expert nutritionists to meet your goals.</p>
+</div>
+</div>
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-card-border bg-white dark:bg-card-dark p-6 hover:-translate-y-1 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-primary/10">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">biotech</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold">Diagnostics</h2>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Advanced imaging and laboratory services for accurate and timely diagnosis.</p>
+</div>
+</div>
+<div class="group flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-card-border bg-white dark:bg-card-dark p-6 hover:-translate-y-1 hover:border-primary/50 transition-all duration-300 shadow-sm hover:shadow-lg hover:shadow-primary/10">
+<div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-3xl">child_care</span>
+</div>
+<div class="flex flex-col gap-2">
+<h2 class="text-slate-900 dark:text-white text-lg font-bold">Pediatrics</h2>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Gentle and specialized care for infants, children, and adolescents.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative flex flex-col bg-slate-100 dark:bg-[#0b1015]" id="prevention">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-20">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1 gap-24">
+<div class="flex flex-col items-center text-center">
+<h2 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em] mb-4">Preventative Care</h2>
+<p class="text-slate-600 dark:text-slate-300 max-w-2xl">Focusing on prevention is the key to long-term health. We provide the tools and knowledge you need to stay ahead.</p>
+</div>
+<div class="grid md:grid-cols-2 gap-12 items-center">
+<div class="rounded-2xl overflow-hidden shadow-xl aspect-video relative group">
+<div class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500"></div>
+<div class="w-full h-full bg-cover bg-center" data-alt="Person jogging in a park during sunset" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDGoJ0fhi0VM-0A-09p639m0_ehS1YXer7UDpL7LhS9ZR-jhKaHFINa1jMFEPEjPQXWE0cIswlcXUyu6MQEV9O2T7K8M5n6GS1feTRxNaB9BtkdedDkPpdCLgBGuP5QfN7AX2is1wuyXqqkRmYy02QqcVbyUxFbZqCDEnJAIBAgy7wx0COYHqQ-DuJEDnFU1XeqWlj82MUeJHhhS7WjDv2q5FNHUGeY1an-SDf_mnKqDnk7v7pCqpJ5mtV_g33pE-POZHLLFvFMTgo');"></div>
+</div>
+<div class="flex flex-col gap-6">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">directions_run</span>
+</div>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Active Lifestyle Management</h3>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                                    Regular physical activity is crucial for preventing chronic diseases. Our specialists help you design a fitness plan that fits your lifestyle, ensuring sustainable health improvements.
+                                </p>
+<ul class="flex flex-col gap-3">
+<li class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+                                        Personalized fitness routines
+                                    </li>
+<li class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+                                        Progress tracking tools
+                                    </li>
+<li class="flex items-center gap-3 text-slate-700 dark:text-slate-300">
+<span class="material-symbols-outlined text-green-500">check_circle</span>
+                                        Injury prevention guidance
+                                    </li>
+</ul>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-12 items-center">
+<div class="flex flex-col gap-6 order-2 md:order-1">
+<div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">vaccines</span>
+</div>
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Routine Check-ups &amp; Immunizations</h3>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                                    Early detection is your best defense. We provide comprehensive screening programs and immunization schedules to keep you and your family protected against preventable diseases.
+                                </p>
+<button class="text-primary font-bold hover:text-blue-400 flex items-center gap-2 mt-2 group">
+                                    Schedule a Check-up 
+                                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="rounded-2xl overflow-hidden shadow-xl aspect-video relative order-1 md:order-2 group">
+<div class="absolute inset-0 bg-primary/20 group-hover:bg-transparent transition-colors duration-500"></div>
+<div class="w-full h-full bg-cover bg-center" data-alt="Doctor holding a stethoscope and smiling" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD1Lblk6mueyLAFtStbrPo0HQqEI4HpOT5_gj6BAyBY-o8L292ZhT30-E7Kvh8gfFrDdxgf71wXRbgsQik8v9BFLA10tBf367xG8A4IqoHUJ70QHT4Gq52pLsFWY9jnK9DGOijcEfgEO3695Lp79obVFDKp-lj_PJcNNiNCLkIT3j9EGamjx16fwtXV2BxlseGKrG9DCDJqhMARWOrIThxrjHyoENSfoKdCcG3F9GHe9HlTUrXIgnxfTptL98LXixzBjm5Ok4z31Kw');"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative flex flex-col py-20 bg-background-light dark:bg-background-dark" id="blog">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+<div class="flex flex-col items-center text-center mb-12">
+<span class="text-primary font-bold tracking-wider uppercase text-xs mb-2">Our Latest Insights</span>
+<h2 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em] mb-4">Latest Health News &amp; Tips</h2>
+<p class="text-slate-600 dark:text-slate-300 max-w-2xl">Stay informed with the latest medical insights, wellness tips, and research updates from our expert doctors.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+<article class="flex flex-col bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-card-border hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
+<div class="h-48 w-full bg-gray-200 overflow-hidden relative">
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity"></div>
+<div class="w-full h-full bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700" data-alt="Doctor writing prescription" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCTpetx4L5QH8jjTRoy9VA5k6IMBbJcUNXHZYqCozCvspa6EwJjz-NXjvh4ld_QOcR5RtHTt0yV95z7PC5pUpQWOy1T-4UCbcxeyFV8s7K2kPlGBPez2QR_90atk8Norq7V-XcmMvmbFVx0PXEPekbodfNrgriapjHWH8MV2PpKq95QU27J4_amIB8rYNcoBcC57vHQ6cNNmyZ_dOd3h371zFRq7A63s_D-hjsTXrP4ie8aGVn3LTY9I8-lPaTPs5BCy-5TIywX3bw');"></div>
+<span class="absolute top-4 left-4 z-20 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">Health Tips</span>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-3">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>Oct 24, 2023</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-primary transition-colors line-clamp-2">5 Simple Habits to Boost Your Heart Health Today</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">
+                                Improving your cardiovascular health doesn't require a complete lifestyle overhaul. Discover five manageable changes you can start implementing right now.
+                            </p>
+<a class="mt-auto inline-flex items-center text-primary font-semibold text-sm hover:underline" href="#">
+                                Read More <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+</article>
+<article class="flex flex-col bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-card-border hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
+<div class="h-48 w-full bg-gray-200 overflow-hidden relative">
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity"></div>
+<div class="w-full h-full bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700" data-alt="Healthy food bowl" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD1Lblk6mueyLAFtStbrPo0HQqEI4HpOT5_gj6BAyBY-o8L292ZhT30-E7Kvh8gfFrDdxgf71wXRbgsQik8v9BFLA10tBf367xG8A4IqoHUJ70QHT4Gq52pLsFWY9jnK9DGOijcEfgEO3695Lp79obVFDKp-lj_PJcNNiNCLkIT3j9EGamjx16fwtXV2BxlseGKrG9DCDJqhMARWOrIThxrjHyoENSfoKdCcG3F9GHe9HlTUrXIgnxfTptL98LXixzBjm5Ok4z31Kw');"></div>
+<span class="absolute top-4 left-4 z-20 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">Nutrition</span>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-3">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>Oct 18, 2023</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-primary transition-colors line-clamp-2">Understanding the Impact of Nutrition on Mental Clarity</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">
+                                What you eat affects how you think. Learn about the connection between your diet and your cognitive function, and foods that fuel your brain.
+                            </p>
+<a class="mt-auto inline-flex items-center text-primary font-semibold text-sm hover:underline" href="#">
+                                Read More <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+</article>
+<article class="flex flex-col bg-white dark:bg-card-dark rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-card-border hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 group">
+<div class="h-48 w-full bg-gray-200 overflow-hidden relative">
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity"></div>
+<div class="w-full h-full bg-cover bg-center transform group-hover:scale-110 transition-transform duration-700" data-alt="Telemedicine consultation" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBvwqYN6D-q2i1of2G-OsmoMRpLBGlPWLBznXG-68WmAVac3P9CeRPDM5L3oiuHOa79VN2Gy6uuX7iDftNRPn6k8MeCC48Hb0v37Sfij5Xl5bV-j5I_ya_hgERn21teIKUCvYevT1nj-emQe44CZcwVU6PBr4anC5KmzkSclOXkRj-lcahYYLJAGPx8XM2s9BzfVyZcelUpLQ_YoMsUyox8a-LDZpRi-YVLdOUSFkGPhL7PPWXexP_njxt4kx_bQHTD0JE5HfX1Di8');"></div>
+<span class="absolute top-4 left-4 z-20 bg-primary text-white text-xs font-bold px-3 py-1 rounded-full">Telehealth</span>
+</div>
+<div class="p-6 flex flex-col flex-1">
+<div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs mb-3">
+<span class="material-symbols-outlined text-[16px]">calendar_today</span>
+<span>Oct 12, 2023</span>
+</div>
+<h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-primary transition-colors line-clamp-2">The Future of Telemedicine: What to Expect in 2024</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-4 line-clamp-3">
+                                Telehealth is evolving rapidly. We explore the upcoming trends in virtual care and how they will make healthcare more accessible for everyone.
+                            </p>
+<a class="mt-auto inline-flex items-center text-primary font-semibold text-sm hover:underline" href="#">
+                                Read More <span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</a>
+</div>
+</article>
+</div>
+<div class="flex justify-center">
+<button class="flex items-center justify-center rounded-lg h-12 px-8 border border-slate-300 dark:border-card-border hover:border-primary text-slate-700 dark:text-white hover:text-primary transition-all duration-200 font-bold bg-transparent">
+                        View All Posts
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative flex flex-col py-20" id="reviews">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+<h2 class="text-slate-900 dark:text-white text-[32px] font-bold leading-tight tracking-[-0.015em] px-4 pb-10 text-center">What Our Patients Say</h2>
+<div class="grid md:grid-cols-3 gap-6 px-4">
+<div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-card-border p-8 rounded-2xl shadow-sm flex flex-col gap-6 relative">
+<span class="material-symbols-outlined text-6xl text-slate-100 dark:text-card-border absolute top-4 right-4 -z-0">format_quote</span>
+<div class="flex text-yellow-400 gap-1 z-10">
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+</div>
+<p class="text-slate-700 dark:text-slate-300 z-10 relative italic">"The telemedicine service was a lifesaver. I got a diagnosis and prescription within minutes without leaving my bed. Highly recommended!"</p>
+<div class="flex items-center gap-4 mt-auto">
+<div class="w-10 h-10 rounded-full bg-gray-300 bg-cover" data-alt="Portrait of Sarah Jenkins" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBDasOk9qYLQmoRRkW_bIEGXIZ5pm221EKvjfFfiTM16qEbJzvj-cKnEQIjSABlc2Kbi4NYbSKpy1eUMf8Hiw-p8OMyngqALxiGHGhT_MO5RCdoOGvBlWwUG722kAeLtHQ8ndEy-48v7AiHeujzbRfqCk5DU0TOKBC5oCHOrXPYF3r5-dFNArYNsHDDVBkHM4Gn_UA8LAIPCSjpnwdQmCesb3LDZ9WcB9L5YIru3GQ_AIObNhLfBQYoK2CkfwOhLJ6XwdhCZOqfAkU');"></div>
+<div>
+<p class="text-slate-900 dark:text-white font-bold text-sm">Sarah Jenkins</p>
+<p class="text-slate-500 text-xs">Patient since 2021</p>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-card-border p-8 rounded-2xl shadow-sm flex flex-col gap-6 relative">
+<span class="material-symbols-outlined text-6xl text-slate-100 dark:text-card-border absolute top-4 right-4 -z-0">format_quote</span>
+<div class="flex text-yellow-400 gap-1 z-10">
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star_half</span>
+</div>
+<p class="text-slate-700 dark:text-slate-300 z-10 relative italic">"Wellness Wave makes tracking my heart health so easy. The app interface is clean, and the doctors are incredibly knowledgeable and caring."</p>
+<div class="flex items-center gap-4 mt-auto">
+<div class="w-10 h-10 rounded-full bg-gray-300 bg-cover" data-alt="Portrait of Mark Thompson" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA_u3m-VymQeHjAmTBwAU-ANVqgkaIXv7C9igizyjwP99KVGWlUhDMfQenBKbCvkDCot71oVzTDuX4f-uCA6KaL29Oe8Db-dTkzEUl4OyKiXBXmockGulwOkitUQgEVJwUkAdfAjTV4BCJ58FWbJ60Jufa6sXOYvCPJ6SVGA3XkhZD8P207p4SKimYBYqZZ6l-FL2LBys89z9SHrt7mW2AxiPtcJY-JA19EZhy3JeyiAZmPLEZLFD6-FMQxF6GSry4WqfsE7AgyXfI');"></div>
+<div>
+<p class="text-slate-900 dark:text-white font-bold text-sm">Mark Thompson</p>
+<p class="text-slate-500 text-xs">Patient since 2022</p>
+</div>
+</div>
+</div>
+<div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-card-border p-8 rounded-2xl shadow-sm flex flex-col gap-6 relative">
+<span class="material-symbols-outlined text-6xl text-slate-100 dark:text-card-border absolute top-4 right-4 -z-0">format_quote</span>
+<div class="flex text-yellow-400 gap-1 z-10">
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+<span class="material-symbols-outlined fill-current">star</span>
+</div>
+<p class="text-slate-700 dark:text-slate-300 z-10 relative italic">"Finally, a healthcare provider that actually listens. The preventative care plan they built for me has completely changed my energy levels."</p>
+<div class="flex items-center gap-4 mt-auto">
+<div class="w-10 h-10 rounded-full bg-gray-300 bg-cover" data-alt="Portrait of Emily Chen" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDeNGrmgRJt3ib5jPDxpNhxwcYdAgfKV1z9UU8I_4wUy4yDoL2zSCYVTTPKjP6hFxFya8pdtIKqZRDmvn9y-8PMLG06WniNwYhk0nYnHjrP87OINFoR5t97vRLnEFETqH-8uCGNPIjrOG9OjvJr00EjF8UXN9xShS3NPx71aJGJ6UweXmypWQVgdBQjNd_jnjD71vnUKML2udQ4fik3hyQ48lWf3gY4HHIWdFg-cqLfCeUFqk2BctdkYXKmq5HlnHarYYcoauvGuQI');"></div>
+<div>
+<p class="text-slate-900 dark:text-white font-bold text-sm">Emily Chen</p>
+<p class="text-slate-500 text-xs">Patient since 2023</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="relative flex flex-col py-20 bg-primary overflow-hidden" id="about">
+<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 32px 32px;"></div>
+<div class="layout-container flex h-full grow flex-col relative z-10">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center">
+<div class="layout-content-container flex flex-col max-w-[800px] flex-1 text-center items-center gap-8">
+<h2 class="text-white text-3xl md:text-5xl font-black leading-tight tracking-[-0.015em]">Ready to take control of your health?</h2>
+<p class="text-white/80 text-lg md:text-xl max-w-2xl">Join thousands of satisfied patients who have switched to a smarter, more connected healthcare experience.</p>
+<div class="flex flex-col sm:flex-row gap-4 w-full justify-center">
+<button class="bg-white text-primary hover:bg-slate-100 transition-colors font-bold py-4 px-8 rounded-lg shadow-xl text-lg min-w-[200px]">Sign Up Now</button>
+<button class="bg-transparent border-2 border-white text-white hover:bg-white/10 transition-colors font-bold py-4 px-8 rounded-lg text-lg min-w-[200px]">Contact Sales</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<footer class="bg-slate-50 dark:bg-[#080c10] border-t border-slate-200 dark:border-card-border pt-16 pb-8">
+<div class="layout-container flex flex-col h-full grow">
+<div class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
+<div class="md:col-span-1 flex flex-col gap-4">
+<div class="flex items-center gap-2 text-slate-900 dark:text-white">
+<div class="size-6 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-2xl">ecg_heart</span>
+</div>
+<h2 class="text-lg font-bold tracking-tight">Wellness Wave</h2>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">
+                                    Empowering you with the best in modern healthcare technology and compassionate medical expertise.
+                                </p>
+<div class="flex gap-4 mt-2">
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-symbols-outlined">alternate_email</span></a>
+<a class="text-slate-400 hover:text-primary" href="#"><span class="material-symbols-outlined">rss_feed</span></a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h3 class="text-slate-900 dark:text-white font-bold">Services</h3>
+<div class="flex flex-col gap-2">
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm" href="#">Primary Care</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm" href="#">Urgent Care</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm" href="#">Mental Health</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm" href="#">Diagnostic Labs</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h3 class="text-slate-900 dark:text-white font-bold">Company</h3>
+<div class="flex flex-col gap-2">
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm" href="#">About Us</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm" href="#">Careers</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm" href="#">Blog</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-primary text-sm" href="#">Contact</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h3 class="text-slate-900 dark:text-white font-bold">Newsletter</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Subscribe to get health tips and updates.</p>
+<div class="flex gap-2">
+<input class="bg-white dark:bg-card-dark border border-slate-200 dark:border-card-border rounded-lg px-3 py-2 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-primary w-full" placeholder="Enter your email" type="email"/>
+<button class="bg-primary hover:bg-blue-600 text-white rounded-lg px-3 py-2 text-sm font-bold">
+                                        Go
+                                    </button>
+</div>
+</div>
+</div>
+<div class="border-t border-slate-200 dark:border-card-border pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-slate-500 dark:text-slate-500 text-sm">© 2023 Wellness Wave. All rights reserved.</p>
+<div class="flex gap-6">
+<a class="text-slate-500 dark:text-slate-500 hover:text-primary text-sm" href="#">Privacy Policy</a>
+<a class="text-slate-500 dark:text-slate-500 hover:text-primary text-sm" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</footer>
+</div>
+</body></html>

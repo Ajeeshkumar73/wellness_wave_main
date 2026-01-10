@@ -1,0 +1,387 @@
+ .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header Styles */
+    .main-header {
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+
+    .main-header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      color: #333;
+      margin: 0;
+    }
+
+    .header-contact .btn.book-appointment {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .header-contact .phone-number {
+      font-size: 18px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .header-contact .phone-number .fas {
+      color: #007bff;
+      margin-right: 5px;
+    }
+
+    /* Page Content and Layout */
+    .page-content {
+      margin-top: 20px;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .breadcrumb a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    /* Search Section */
+    .search-section {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .search-section input {
+      width: 50%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      outline: none;
+      padding-left: 20px;
+      margin-top: 20px;
+    }
+
+    .search-section .search-btn {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      margin-left: -40px;
+      cursor: pointer;
+    }
+
+    /* Main Content Layout (Sidebar and Doctor List) */
+    .main-layout {
+      display: flex;
+      gap: 20px;
+    }
+
+    .sidebar {
+      flex: 1;
+      background-color: #fff;
+      padding: 20px;
+      margin-left: 20px;
+    }
+
+    .filter-section h3 {
+      margin-top: 0;
+      color: #333;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group h4 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .filter-group input[type="checkbox"] {
+      margin-right: 8px;
+    }
+
+    .sort-options label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    /* Doctor List and Cards */
+    .doctor-list {
+      flex: 3;
+      display: grid;
+      gap: 0px;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    }
+
+    .doctor-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      width: 90%;
+      min-height: 250px;
+      margin-left: 20px;
+      margin-bottom: 20px;
+    }
+
+    .doctor-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+
+    .card-details {
+      flex: 1;
+    }
+
+    .doctor-name {
+      margin: 0 0 5px;
+      color: #007bff;
+    }
+
+    .doctor-title, .specialty, .experience, .gender {
+      margin: 5px 0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .card-actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .card-actions .btn {
+      padding: 8px 15px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 14px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .card-actions .view-profile {
+      background-color: #e9ecef;
+      color: #333;
+    }
+
+    .card-actions .book-appointment {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .main-layout {
+        flex-direction: column;
+      }
+
+      .search-section input {
+        width: 10%;
+      }
+
+      .doctor-list {
+        grid-template-columns: 1fr;
+      }
+    }
+ .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 20px auto;
+      background-color: #fff;
+     border:none;
+      overflow: hidden;
+    }
+    .main-content {
+      flex: 2;
+      padding: 30px;
+    }
+    .sidebar {
+      flex: 1;
+      background-color: #fff;
+      padding: 30px;
+      border-left: 1px solid #e0e0e0;
+    }
+    .doctor-profile {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .doctor-photo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin-right: 20px;
+      border: 3px solid #005a8f;
+      object-fit: cover;
+    }
+    .profile-details h1 {
+      margin: 0 0 5px;
+      color: #005a8f;
+      font-size: 24px;
+    }
+    .profile-details p {
+      margin: 5px 0;
+      color: #555;
+      font-size: 14px;
+    }
+    .share-profile {
+      color: #005a8f;
+      font-size: 14px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .share-profile i {
+      margin-left: 5px;
+    }
+    .about-section h2, .sidebar h3 {
+      color: #333;
+      border-bottom: 2px solid #005a8f;
+      padding-bottom: 5px;
+      margin-bottom: 20px;
+    }
+    .booking-module {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+    .booking-module h3 {
+      text-align: left;
+      color: #005a8f;
+      margin-top: 0;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 10px;
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .calendar-header i {
+      cursor: pointer;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .day-label {
+      font-weight: bold;
+      color: #777;
+    }
+    .date {
+      background-color: #f0f2f5;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .date:hover {
+      background-color: #d6e9f8;
+    }
+    .date.active {
+      background-color: #005a8f;
+      color: #fff;
+    }
+    /* Time slots */
+    .time-slots {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .time-slots h4 {
+      color: #005a8f;
+      margin-bottom: 10px;
+    }
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .slot {
+      padding: 8px;
+      background-color: #f0f2f5;
+      border-radius: 4px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .slot:hover {
+      background-color: #005a8f;
+      color: #fff;
+    }
+    .slot.active {
+      background-color: #005a8f;
+      color: #fff;
+    }
+
+    .slot.booked {
+    background-color: #aeadadff !important;
+    color: #666 !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+    .btn-book-sidebar {
+      width: 100%;
+      margin-top: 20px;
+      background-color: #005a8f;
+      color: #fff;
+      padding: 12px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-book-sidebar:hover {
+      background-color: #004d7a;
+    }
+
+    .disabled-date {
+  background-color: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none; /* prevent click */
+}

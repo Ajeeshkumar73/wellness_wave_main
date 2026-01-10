@@ -1,0 +1,11 @@
+Flask
+pymongo
+Werkzeug
+pandas
+joblib
+groq
+python-dotenv
+flask_socketio
+flask-mail
+apscheduler 
+pytz

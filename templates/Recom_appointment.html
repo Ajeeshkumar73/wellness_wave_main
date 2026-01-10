@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
+    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
+    
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+  <style>
+    /* General Body and Container Styles */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header Styles */
+    .main-header {
+      background-color: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+
+    .main-header .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo h1 {
+      font-size: 24px;
+      color: #333;
+      margin: 0;
+    }
+
+    .header-contact .btn.book-appointment {
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .header-contact .phone-number {
+      font-size: 18px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    .header-contact .phone-number .fas {
+      color: #007bff;
+      margin-right: 5px;
+    }
+
+    /* Page Content and Layout */
+    .page-content {
+      margin-top: 20px;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .breadcrumb a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    /* Search Section */
+    .search-section {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .search-section input {
+      width: 50%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      outline: none;
+      padding-left: 20px;
+      margin-top: 20px;
+    }
+
+    .search-section .search-btn {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      margin-left: -40px;
+      cursor: pointer;
+    }
+
+    /* Main Content Layout (Sidebar and Doctor List) */
+    .main-layout {
+      display: flex;
+      gap: 20px;
+    }
+
+    .sidebar {
+      flex: 1;
+      background-color: #fff;
+      padding: 20px;
+      margin-left: 20px;
+    }
+
+    .filter-section h3 {
+      margin-top: 0;
+      color: #333;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group h4 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .filter-group input[type="checkbox"] {
+      margin-right: 8px;
+    }
+
+    .sort-options label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    /* Doctor List and Cards */
+    .doctor-list {
+      flex: 3;
+      display: grid;
+      gap: 0px;
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    }
+
+    .doctor-card {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      padding: 20px;
+      width: 90%;
+      min-height: 250px;
+      margin-left: 20px;
+      margin-bottom: 20px;
+    }
+
+    .doctor-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 20px;
+    }
+
+    .card-details {
+      flex: 1;
+    }
+
+    .doctor-name {
+      margin: 0 0 5px;
+      color: #007bff;
+    }
+
+    .doctor-title, .specialty, .experience, .gender {
+      margin: 5px 0;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .card-actions {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .card-actions .btn {
+      padding: 8px 15px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 14px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .card-actions .view-profile {
+      background-color: #e9ecef;
+      color: #333;
+    }
+
+    .card-actions .book-appointment {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .main-layout {
+        flex-direction: column;
+      }
+
+      .search-section input {
+        width: 10%;
+      }
+
+      .doctor-list {
+        grid-template-columns: 1fr;
+      }
+    }
+ .container {
+      display: flex;
+      max-width: 1200px;
+      margin: 20px auto;
+      background-color: #fff;
+     border:none;
+      overflow: hidden;
+    }
+    .main-content {
+      flex: 2;
+      padding: 30px;
+    }
+    .sidebar {
+      flex: 1;
+      background-color: #fff;
+      padding: 30px;
+      border-left: 1px solid #e0e0e0;
+    }
+    .doctor-profile {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .doctor-photo {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin-right: 20px;
+      border: 3px solid #005a8f;
+      object-fit: cover;
+    }
+    .profile-details h1 {
+      margin: 0 0 5px;
+      color: #005a8f;
+      font-size: 24px;
+    }
+    .profile-details p {
+      margin: 5px 0;
+      color: #555;
+      font-size: 14px;
+    }
+    .share-profile {
+      color: #005a8f;
+      font-size: 14px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .share-profile i {
+      margin-left: 5px;
+    }
+    .about-section h2, .sidebar h3 {
+      color: #333;
+      border-bottom: 2px solid #005a8f;
+      padding-bottom: 5px;
+      margin-bottom: 20px;
+    }
+    .booking-module {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+    .booking-module h3 {
+      text-align: left;
+      color: #005a8f;
+      margin-top: 0;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 10px;
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .calendar-header i {
+      cursor: pointer;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      text-align: center;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .day-label {
+      font-weight: bold;
+      color: #777;
+    }
+    .date {
+      background-color: #f0f2f5;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .date:hover {
+      background-color: #d6e9f8;
+    }
+    .date.active {
+      background-color: #005a8f;
+      color: #fff;
+    }
+    /* Time slots */
+    .time-slots {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .time-slots h4 {
+      color: #005a8f;
+      margin-bottom: 10px;
+    }
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .slot {
+      padding: 8px;
+      background-color: #f0f2f5;
+      border-radius: 4px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .slot:hover {
+      background-color: #005a8f;
+      color: #fff;
+    }
+    .slot.active {
+      background-color: #005a8f;
+      color: #fff;
+    }
+
+    .slot.booked {
+    background-color: #aeadadff !important;
+    color: #666 !important;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+    .btn-book-sidebar {
+      width: 100%;
+      margin-top: 20px;
+      background-color: #005a8f;
+      color: #fff;
+      padding: 12px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .btn-book-sidebar:hover {
+      background-color: #004d7a;
+    }
+
+    .disabled-date {
+  background-color: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+  pointer-events: none; /* prevent click */
+}
+
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light px-4">
+    <a class="navbar-brand d-flex align-items-center" href="#" style="padding-left: 30px;">
+      <span><strong>Wellness Wave</strong> <small class="text-danger">| Family Doctor</small></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="padding-right: 100px;">
+      <ul class="navbar-nav align-items-center">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('user_home') }}">Back</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="search-section">
+    <input type="text" placeholder="Search by Doctor">
+  </div>
+  
+
+    <main class="doctor-list">
+      {% for doctor in doctors %}
+      <div class="doctor-card">
+        <img src="{% if doctor.profile_pic %}{{ url_for('static', filename=doctor.profile_pic) }}{% else %}https://via.placeholder.com/150{% endif %}" 
+             alt="{{ doctor.name }}">
+        <div class="card-details">
+          <h3 class="doctor-name">{{ doctor.name }}</h3>
+          <p class="doctor-title">{{ doctor.qualification }}</p>
+          <p class="specialty">{{ doctor.specialization }}</p>
+          <p class="experience"><strong>Experience:</strong> {{ doctor.experience }} years</p>
+          <p class=""><strong><i class="fas fa-map-marker-alt"></i></strong> {{ doctor.address }}</p>
+          <div class="card-actions">
+            <a href="#" 
+           class="btn book-appointment"
+           data-bs-toggle="modal" 
+           data-bs-target="#appointmentModal"
+           data-id="{{ doctor._id }}"
+           data-name="{{ doctor.name }}"
+           data-qualification="{{ doctor.qualification }}"
+           data-specialization="{{ doctor.specialization }}"
+           data-experience="{{ doctor.experience }}"
+           data-phone="{{ doctor.phone or '+91 926 888 0303' }}"
+           data-bio="{{ doctor.bio or 'No bio available.' }}"
+           data-address="{{ doctor.address or 'Address not available' }}"
+           data-hospital="{{ doctor.hospital or 'Hospital not available' }}"
+           data-image="{% if doctor.profile_pic %}{{ url_for('static', filename=doctor.profile_pic) }}{% else %}https://via.placeholder.com/200{% endif %}">
+           Book an Appointment
+        </a>
+          </div>
+        </div>
+      </div>
+       {% endfor %}
+    {% if doctors|length == 0 %}
+      <p class="text-center text-muted">No doctors available for this specialization.</p>
+    {% endif %}
+    </main>
+  </div>
+
+  <!-- Appointment Popup Modal -->
+  <div class="modal fade" id="appointmentModal" tabindex="-1" aria-labelledby="appointmentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title" id="appointmentModalLabel">Book an Appointment</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="container">
+            <div class="main-content">
+              <div class="doctor-profile">
+  <img id="popupDoctorImage" src="https://via.placeholder.com/200" alt="Doctor" class="doctor-photo">
+  <div class="profile-details">
+    <h1 id="popupDoctorName"></h1>
+    <p id="popupDoctorQualification"></p>
+    <p id="popupDoctorSpecialization"></p>
+    <p id="popupDoctorExperience"></p>
+    <p>Working Hospital: <i class="fas fa-hospital"></i> <span id="popupDoctorHospital"></span></p>
+    <bold style="color:blue;">Consultation Location:</bold>
+    <p><i class="fas fa-map-marker-alt"></i> <span id="popupDoctorAddress"></span></p>
+    <p><i class="fas fa-phone"></i> <span id="popupDoctorPhone"></span></p>
+    <div class="share-profile">
+      <span>Share Doctor Profile</span>
+      <i class="fas fa-share-alt"></i>
+    </div>
+  </div>
+</div>
+
+<div class="about-section">
+  <h2>About <span id="popupDoctorNameAbout"></span></h2>
+  <div class="work-experience">
+                  <p id="popupDoctorBio"></p>
+                </div>
+              </div>
+            </div>
+
+            <div class="sidebar">
+              <div class="booking-module">
+                <h3>To Check Availability, Select the Date</h3>
+                <div class="calendar-header">
+                  <i class="fas fa-chevron-left" id="prevMonth"></i>
+                  <span id="monthYear"></span>
+                  <i class="fas fa-chevron-right" id="nextMonth"></i>
+                </div>
+                <div class="calendar-grid" id="calendar"></div>
+
+                <div class="time-slots">
+                  <h4>Select Time Slot</h4>
+                  <div class="slots-grid" id="slots">
+                    <div class="slot">5:00 PM</div>
+                    <div class="slot">5:30 PM</div>
+                    <div class="slot">6:00 PM</div>
+                    <div class="slot">6:30 PM</div>
+                    <div class="slot">7:00 PM</div>
+                    <div class="slot">7:30 PM</div>
+                    <div class="slot">8:00 PM</div>
+                    <div class="slot">8:30 PM</div>
+                    <div class="slot">9:00 PM</div>
+                  </div>
+                </div>
+
+                <button id="bookBtn" class="btn btn-primary w-100 mt-3">
+  Book an Appointment <i class="fas fa-chevron-right"></i>
+</button>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  let doctorId = null;
+  let selectedDate = null;
+  let selectedSlot = null;
+
+  const appointmentModal = document.getElementById("appointmentModal");
+  const slotsContainer = document.getElementById("slots");
+
+  function updateBookedSlots(bookedSlots) {
+    const slots = slotsContainer.querySelectorAll(".slot");
+    slots.forEach(slot => {
+      if (bookedSlots.includes(slot.textContent.trim())) {
+        slot.classList.add("booked");
+        slot.classList.remove("active");
+      } else {
+        slot.classList.remove("booked");
+      }
+    });
+  }
+
+  // When modal opens
+  appointmentModal.addEventListener("show.bs.modal", async (event) => {
+    const button = event.relatedTarget;
+    if (!button) return;
+
+    doctorId = button.getAttribute("data-id");
+    const name = button.getAttribute("data-name") || "Unknown Doctor";
+    const qualification = button.getAttribute("data-qualification") || "";
+    const specialization = button.getAttribute("data-specialization") || "";
+    const experience = button.getAttribute("data-experience") || "";
+    const phone = button.getAttribute("data-phone") || "";
+    const bio = button.getAttribute("data-bio") || "";
+    const hospital = button.getAttribute("data-hospital") || "Hospital not available";
+    const address = button.getAttribute("data-address") || "Address not available";
+    const image = button.getAttribute("data-image") || "https://via.placeholder.com/200";
+
+    document.getElementById("popupDoctorName").textContent = name;
+    document.getElementById("popupDoctorQualification").textContent = qualification;
+    document.getElementById("popupDoctorSpecialization").textContent = specialization;
+    document.getElementById("popupDoctorExperience").textContent = `Experience: ${experience} Years`;
+    document.getElementById("popupDoctorPhone").textContent = phone;
+    document.getElementById("popupDoctorAddress").textContent = address;
+    document.getElementById("popupDoctorBio").textContent = bio;
+    document.getElementById("popupDoctorHospital").textContent = hospital;
+    document.getElementById("popupDoctorImage").src = image;
+    document.getElementById("popupDoctorNameAbout").textContent = name;
+
+    selectedDate = null;
+    selectedSlot = null;
+
+    document.querySelectorAll(".date").forEach(el => el.classList.remove("active"));
+    document.querySelectorAll(".slot").forEach(el => el.classList.remove("active"));
+
+    // Fetch booked slots from backend (initial load)
+    try {
+      const res = await fetch(`/get_booked_slots?doctor_id=${doctorId}`);
+      const data = await res.json();
+      if (data.bookedSlots) {
+        updateBookedSlots(data.bookedSlots);
+      }
+    } catch (err) {
+      console.error("Failed to fetch booked slots:", err);
+    }
+  });
+
+  // ---------------- Calendar ----------------
+  const monthYear = document.getElementById("monthYear");
+  const calendar = document.getElementById("calendar");
+  const prevMonth = document.getElementById("prevMonth");
+  const nextMonth = document.getElementById("nextMonth");
+  let today = new Date();
+  today.setHours(0, 0, 0, 0); // normalize
+
+  let currentMonth = today.getMonth();
+  let currentYear = today.getFullYear();
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+  function renderCalendar(month, year) {
+    calendar.innerHTML = "";
+    monthYear.textContent = `${months[month]} ${year}`;
+
+    const dayLabels = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+    dayLabels.forEach(d => {
+      const label = document.createElement("div");
+      label.className = "day-label";
+      label.textContent = d;
+      calendar.appendChild(label);
+    });
+
+    const firstDay = new Date(year, month).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    for (let i = 0; i < firstDay; i++) {
+      calendar.appendChild(document.createElement("div"));
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = document.createElement("div");
+      date.className = "date";
+      date.textContent = d;
+
+      const fullDate = new Date(year, month, d);
+
+      if (fullDate < today) {
+        date.classList.add("disabled-date");
+      } else {
+        date.addEventListener("click", async () => {
+          document.querySelectorAll(".date").forEach(el => el.classList.remove("active"));
+          date.classList.add("active");
+          selectedDate = `${year}-${month + 1}-${d}`;
+
+          try {
+            const res = await fetch(`/get_booked_slots?doctor_id=${doctorId}&date=${selectedDate}`);
+            const data = await res.json();
+            if (data.bookedSlots) updateBookedSlots(data.bookedSlots);
+          } catch (err) {
+            console.error(err);
+          }
+        });
+      }
+
+      if (
+        d === today.getDate() &&
+        month === today.getMonth() &&
+        year === today.getFullYear()
+      ) {
+        date.classList.add("active");
+        selectedDate = `${year}-${month + 1}-${d}`;
+      }
+
+      calendar.appendChild(date);
+    }
+  }
+
+  prevMonth.addEventListener("click", () => {
+    currentMonth--;
+    if (currentMonth < 0) {
+      currentMonth = 11;
+      currentYear--;
+    }
+    renderCalendar(currentMonth, currentYear);
+  });
+
+  nextMonth.addEventListener("click", () => {
+    currentMonth++;
+    if (currentMonth > 11) {
+      currentMonth = 0;
+      currentYear++;
+    }
+    renderCalendar(currentMonth, currentYear);
+  });
+
+  renderCalendar(currentMonth, currentYear);
+
+  // ---------------- Time slot selection ----------------
+  slotsContainer.addEventListener("click", (e) => {
+    const slot = e.target;
+    if (!slot.classList.contains("slot") || slot.classList.contains("booked")) return;
+
+    slotsContainer.querySelectorAll(".slot").forEach(s => s.classList.remove("active"));
+    slot.classList.add("active");
+    selectedSlot = slot.textContent.trim();
+  });
+
+  // ---------------- Book appointment ----------------
+  document.getElementById("bookBtn").addEventListener("click", async () => {
+    if (!doctorId || !selectedDate || !selectedSlot) {
+      alert("Please select doctor, date, and time slot.");
+      return;
+    }
+
+    try {
+      const res = await fetch("/book_appointment", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({doctor_id: doctorId, date: selectedDate, time: selectedSlot})
+      });
+      const data = await res.json();
+
+      if (data.error) {
+        alert("❌ " + data.error);
+      } else {
+        alert("✅ Appointment booked successfully!");
+
+        // Fade slot permanently
+        const slotEls = slotsContainer.querySelectorAll(".slot");
+        slotEls.forEach(slot => {
+          if (slot.textContent.trim() === selectedSlot) {
+            slot.classList.add("booked");
+            slot.classList.remove("active");
+          }
+        });
+
+        selectedSlot = null;
+      }
+    } catch (err) {
+      console.error(err);
+      alert("❌ Something went wrong. Try again.");
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const searchInput = document.querySelector(".search-section input");
+  const checkboxes = document.querySelectorAll(".filter-group input[type='checkbox']");
+  const doctorCards = document.querySelectorAll(".doctor-card");
+
+  // ✅ Multiple specialties per disease
+  const diseaseToSpecialty = {
+    "heart diseases": ["cardiologist", "cardiac surgeon"],
+    "obesity": ["general medicine", "nutritionist", "endocrinologist", "Bariatric"],
+    "cholesterol": ["lipid specialist", "cardiologist", "general physician"],
+    "diabetic": ["endocrinologist", "diabetologist", "nutritionist"],
+    "hypertension": ["cardiologist", "general physician", "nephrologist"]
+  };
+
+  function filterDoctors() {
+    const searchValue = searchInput.value.toLowerCase();
+    const selectedFilters = Array.from(checkboxes)
+      .filter(cb => cb.checked)
+      .map(cb => cb.nextSibling.textContent.trim().toLowerCase());
+
+    doctorCards.forEach(card => {
+      const name = card.querySelector(".doctor-name").textContent.toLowerCase();
+      const specialty = card.querySelector(".specialty").textContent.toLowerCase();
+
+      // ✅ Search by doctor name or specialty
+      const matchesSearch = name.includes(searchValue) || specialty.includes(searchValue);
+
+      // ✅ Filter check
+      let matchesFilter = selectedFilters.length === 0;
+
+      if (!matchesFilter) {
+        matchesFilter = selectedFilters.some(filter => {
+          if (diseaseToSpecialty[filter]) {
+            // If filter maps to multiple specialties, check all
+            return diseaseToSpecialty[filter].some(spec => specialty.includes(spec.toLowerCase()));
+          } else {
+            // Otherwise match filter directly
+            return specialty.includes(filter);
+          }
+        });
+      }
+
+      card.style.display = (matchesSearch && matchesFilter) ? "flex" : "none";
+    });
+  }
+
+  searchInput.addEventListener("input", filterDoctors);
+  checkboxes.forEach(cb => cb.addEventListener("change", filterDoctors));
+});
+</script>
+
+
+</body>
+</html>

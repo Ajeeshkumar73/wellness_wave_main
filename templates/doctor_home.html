@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
+    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+  h2 {
+      font-weight: 600;
+      color: black;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 i {
+      color: #0d6efd;
+    }
+    .card {
+  
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
+    }
+    table thead {
+      border-radius: 12px 12px 0 0;
+    }
+    table tbody tr:hover {
+      background: #f8f9fa;
+      transition: background 0.2s ease-in-out;
+    }
+    .badge {
+      font-size: 0.85rem;
+      padding: 6px 10px;
+      border-radius: 8px;
+    }
+
+
+/* Sidebar customization */
+.offcanvas-body form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.offcanvas-body form .text-center {
+    position: relative;
+}
+
+.offcanvas-body form img,
+.offcanvas-body form .fa-user-circle {
+    border: 3px solid #0d6efd;
+    padding: 5px;
+    background-color: #f8f9fa;
+}
+
+.offcanvas-body form input[type="file"] {
+    padding: 5px;
+    font-size: 0.9rem;
+}
+
+.offcanvas-body form .form-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.offcanvas-body form textarea {
+    resize: none;
+}
+
+.offcanvas-body form button {
+    background-color: #0d6efd;
+    border: none;
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.offcanvas-body form button:hover {
+    background-color: #0b5ed7;
+}
+
+/* Optional: add a subtle card effect */
+.offcanvas-body {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+    padding: 20px;
+}
+ .notify {
+  position: relative;
+  cursor: pointer;
+}
+
+.notify-count {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: red;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  display: none;
+  z-index: 1001;
+}
+
+.dropdown {
+  position: absolute;
+  right: 0;
+  top: 32px;
+  width: 240px;
+  background: white;
+  box-shadow: 0 8px 20px rgba(0,0,0,.2);
+  border-radius: 8px;
+  display: none;
+  z-index: 2000;   /* 🔥 THIS FIXES HERO OVERLAP */
+}
+
+.dropdown a {
+  display: block;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+}
+
+.dropdown a:hover {
+  background: #f5f5f5;
+}
+
+.notification-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.notification-item:hover {
+  background: #f5f5f5;
+}
+
+.no-hover:hover,
+.no-hover:focus,
+.no-hover:active {
+    background-color: transparent !important;
+    color: #0d6efd !important;        /* primary text */
+    border-color: #0d6efd !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.note-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: none;              /* 🔥 hidden by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+}
+.note-modal.show {
+    display: flex;
+}
+
+/* Overlay */
+.note-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55); /* slate overlay */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(3px);
+    border-radius: 10px;
+}
+
+/* Show modal */
+.note-modal.show {
+    display: flex;
+}
+
+/* Modal box */
+.note-modal > div {
+    animation: slideFade 0.25s ease;
+}
+
+/* Heading */
+.note-modal h2 {
+    color: #0f172a;
+}
+
+/* Subtext */
+.note-modal p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: 0.75rem;
+}
+
+/* Textarea */
+#noteText {
+    resize: none;
+    border: 1px solid #cbd5f5;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    background: #f8fafc;
+}
+
+#noteText:focus {
+    outline: none;
+    border-color: #bcbdbdff;
+    box-shadow: 0 0 0 2px rgba(179, 179, 179, 0.25);
+    background: #ffffff;
+}
+
+/* Buttons */
+.note-modal button {
+    font-size: 0.875rem;
+    border-radius: 8px;
+    transition: all 0.15s ease-in-out;
+}
+
+/* Cancel */
+.note-modal button:first-child {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.note-modal button:first-child:hover {
+    background: #d1d5db;
+}
+
+/* Save */
+.note-modal button:last-child {
+    background: #13ec80;
+    color: #0f172a;
+}
+
+.note-modal button:last-child:hover {
+    background: #10d26e;
+}
+
+/* Dark mode */
+.dark .note-modal h2 {
+    color: #e5e7eb;
+}
+
+.dark .note-modal p {
+    color: #94a3b8;
+}
+
+.dark #noteText {
+    background: #020617;
+    border-color: #334155;
+    color: #e5e7eb;
+}
+
+.dark #noteText:focus {
+    background: #020617;
+    border-color: #13ec80;
+}
+
+/* Animation */
+@keyframes slideFade {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+</style>
+</head>
+<body style="background-color:#ffffff;">
+    
+    <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-4" >
+  <a class="navbar-brand d-flex align-items-center" href="#" style="padding-left: 30px;">
+
+    <span><strong>Wellness Wave</strong> <small class="text-danger">| Family Doctor</small></span>
+  </a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="padding-right: 100px;">
+    <ul class="navbar-nav align-items-center">
+         <li class="nav-item"><a class="nav-link" href="#appt"></i>Appointments</a></li>
+                 <li class="nav-item">
+    <a class="nav-link" href="{{ url_for('doctor_blog_page', doctor_id=(doctor._id)) }}">
+        <i class="bi bi-journal-text"></i> Blog
+    </a>
+</li>
+
+      <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="offcanvas" data-bs-target="#profileSidebar"><i class="fas fa-user me-1"></i>Profile</a></li>
+      <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">
+                                Logout
+                            </a></li>
+    </ul>
+  </div>
+ <ul class="navbar-nav align-items-center ms-3">
+  <li class="nav-item position-relative">
+    <div class="notify" onclick="toggleNotifications(event)">
+        <i class="bi bi-bell fs-5"></i>
+        <span id="notifyCount" class="notify-count">0</span>
+        <div id="notifyDropdown" class="dropdown"></div>
+    </div>
+  </li>
+</ul>
+
+
+</nav>
+    
+    <!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show flash-msg" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12" style="margin-top: 20px; margin-left: 20px;color:#007bff;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">
+                    {{ doctor.name }}
+                </h1>
+                <div class="text-muted" style="margin-right:50px; color:#007bff;">
+                    <i class="fas fa-stethoscope me-1"></i>
+                    {{ doctor.specialization }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+<section class="hero-section d-flex flex-column justify-content-center align-items-center text-center text-white position-relative" 
+       style="min-height: 70vh; background: url('{{ url_for('static', filename='images/herosection.png') }}') no-repeat center center/cover;">
+
+  <!-- Overlay for better text contrast -->
+  <div class="position-absolute top-0 start-0 w-100 " style="background-color: rgba(0,0,0,0.5);"></div>
+
+  <!-- Hero Content -->
+  <div class="position-relative z-1"style="padding-top:0px;font-sixe 20px">
+    <h1 class="fw-bold mb-3" >Welcome to Wellness Wave</h1>
+    <p class="mb-4 fs-5">Helping to Build a Healthy Community</p>
+  </div>
+</section>
+
+<!-- Profile Sidebar -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="profileSidebar" aria-labelledby="profileSidebarLabel">
+  <div class="offcanvas-header">
+    <h5 id="profileSidebarLabel"><i class="fas fa-user me-2"></i>My Profile</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form action="{{ url_for('doctor_home') }}" method="POST" enctype="multipart/form-data">
+      <div class="text-center mb-4">
+        {% if doctor.profile_pic %}
+          <img src="{{ url_for('static', filename=doctor.profile_pic) }}" class="rounded-circle" width="120" height="120">
+        {% else %}
+          <i class="fas fa-user-circle fa-5x text-secondary"></i>
+        {% endif %}
+        <input type="file" name="profile_pic" class="form-control mt-2">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input type="text" name="name" class="form-control" value="{{ doctor.name }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Specialization</label>
+        <input type="text" name="specialization" class="form-control" value="{{ doctor.specialization }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Qualification</label>
+        <input type="text" name="qualification" class="form-control" value="{{ doctor.qualification }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Experience</label>
+        <input type="text" name="experience" class="form-control" value="{{ doctor.experience }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Registration ID</label>
+        <input type="text" name="registration_id" class="form-control" value="{{ doctor.registration_id }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Hospital</label>
+        <input type="text" name="hospital" class="form-control" value="{{ doctor.hospital }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Phone</label>
+        <input type="text" name="phone" class="form-control" value="{{ doctor.phone }}">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Address</label>
+        <textarea name="address" class="form-control" rows="4">{{ doctor.address }}</textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Bio</label>
+        <textarea name="bio" class="form-control" rows="3">{{ doctor.bio }}</textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+   <div class="container py-5" id="appt">
+  <h2 class="mb-4">
+     Patients' Appointments
+  </h2>
+
+  <div class="card p-4">
+    {% if appointments %}
+      <!-- Navigation header -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <button id="prevDay" class="btn btn-outline-primary btn-sm no-hover">
+          <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <h4 id="currentDay"></h4>
+        <button id="nextDay" class="btn btn-outline-primary btn-sm no-hover">
+          Next <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Group and sort appointments by date -->
+      {% set grouped = {} %}
+      {% for appt in appointments %}
+        {% set day = appt.appointment_date %}
+        {% if day not in grouped %}
+          {% set _ = grouped.update({day: []}) %}
+        {% endif %}
+        {% set _ = grouped[day].append(appt) %}
+      {% endfor %}
+
+      {% for day in grouped.keys()|sort %}
+        <div class="day-table" data-date="{{ day }}" style="display: none;">
+          <h5 class="mb-3 text-secondary">
+           <i class="fas fa-calendar-day me-2"></i>
+  <span class="formatted-date" data-date="{{ day }}">{{ day }}</span>
+          </h5>
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-primary text-center">
+                <tr>
+                  <th>Patient</th>
+                  <th>Notes</th>
+                  <th>Chat with Patient</th>
+                  <th>Prediction summary</th>
+                  <th>Phone No</th>
+                  <th>Email</th>
+                  <th>Time</th>
+                </tr>
+              </thead>
+              <tbody class="text-center">
+                {% for appt in grouped[day] %}
+                  <tr>
+                    <td class="fw-semibold">{{ appt.user.username }}</td>
+
+<td><button onclick="openNoteModal('{{ appt.user._id }}')"
+class="btn btn-sm btn-outline-primary no-hover">
++ Note
+</button>
+</td>
+                    <td><a href="{{ url_for('doctor_chat', user_id=appt.user._id) }}"
+   class="btn btn-sm btn-outline-primary no-hover">
+    Chat
+</a>
+</td>
+<td><a href="{{ url_for('summary', user_id=appt.user._id) }}"><button 
+class="btn btn-sm btn-outline-primary no-hover">
+view
+</button></a>
+</td>
+                    <td>{{ appt.user.phone }}</td>
+                    <td>{{ appt.user.email }}</td>
+                    <td><span>{{ appt.time }}</span></td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No appointments yet.
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<div id="noteModal" class="note-modal">
+  <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-xl p-5 shadow-lg">
+
+    <h2 class="text-lg font-bold mb-3">Notes</h2>
+    <p>add notes in bullet points</p>
+
+    <!-- Bullet Textarea -->
+    <textarea
+      id="noteText"
+      rows="6"
+      placeholder="• Start typing your notes..." 
+      class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-primary text-sm"
+      onkeydown="handleBullet(event)"
+    ></textarea>
+
+    <div class="flex justify-end gap-3 mt-4">
+      <button onclick="closeNoteModal()" class="px-4 py-2 bg-gray-200 rounded">
+        Cancel
+      </button>
+      <button onclick="saveNote()" class="px-4 py-2 bg-primary rounded font-semibold">
+        Save
+      </button>
+    </div>
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4">
+  Existing Notes
+</h3>
+
+<div id="existingNotes"
+     class="bg-yellow-50 border border-yellow-100 p-3 rounded-lg max-h-48 overflow-y-auto">
+  <p class="text-xs text-gray-400">No notes yet.</p>
+</div>
+
+
+</div>
+
+<!--note-->
+<script>
+let currentPatientId = null;
+
+function closeNoteModal() {
+    document.getElementById("noteModal").classList.remove("show");
+}
+
+function handleBullet(e) {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        e.target.value += "\n• ";
+    }
+}
+
+document.getElementById("noteModal").addEventListener("click", function(e) {
+    if (e.target === this) closeNoteModal();
+});
+
+function openNoteModal(patientId) {
+    currentPatientId = patientId;
+
+    document.getElementById("noteModal").classList.add("show");
+    document.getElementById("noteText").value = "• ";
+
+    loadNotes(patientId);
+}
+
+function loadNotes(patientId) {
+    console.log("Loading notes for:", patientId);
+
+    const box = document.getElementById("existingNotes");
+    box.innerHTML = "<p class='text-xs text-gray-400'>Loading notes...</p>";
+
+    fetch(`/get-notes/${patientId}`)
+        .then(res => res.json())
+        .then(notes => {
+            console.log("Notes received:", notes);
+
+            if (!notes || notes.length === 0) {
+                box.innerHTML = "<p class='text-xs text-gray-400'>No notes yet.</p>";
+                return;
+            }
+
+            box.innerHTML = notes.map(n => `
+                <div class="mb-2">
+                    <ul class="list-disc ml-4 text-sm">
+                        ${n.notes.map(i => `<li>${i}</li>`).join("")}
+                    </ul>
+                    <p class="text-xs text-gray-400 mt-1">${n.created_at}</p>
+                </div>
+            `).join("");
+        })
+        .catch(err => {
+            console.error("Error loading notes:", err);
+            box.innerHTML = "<p class='text-xs text-red-500'>Failed to load notes</p>";
+        });
+}
+</script>
+
+
+
+<!--save note-->
+<script>
+function saveNote() {
+    const text = document.getElementById("noteText").value.trim();
+
+    if (!currentPatientId || !text) {
+        alert("Invalid note");
+        return;
+    }
+
+    fetch("/add-note", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            patient_id: currentPatientId,
+            notes: text
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.status === "ok") {
+            closeNoteModal();
+            alert("Note saved successfully");
+        } else {
+            alert(data.message || "Error saving note");
+        }
+    });
+}
+
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const tables = Array.from(document.querySelectorAll(".day-table"));
+  if (!tables.length) return;
+
+  const prevBtn = document.getElementById("prevDay");
+  const nextBtn = document.getElementById("nextDay");
+  const currentDayElem = document.getElementById("currentDay");
+
+  function toDate(dateStr) {
+    const parts = dateStr.split("-");
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  }
+
+  function formatDateDMY(dateStr) {
+    const d = toDate(dateStr);
+    return `${String(d.getDate()).padStart(2,"0")}-${String(d.getMonth()+1).padStart(2,"0")}-${d.getFullYear()}`;
+  }
+
+  // Sort tables ascending by date
+  tables.sort((a,b) => toDate(a.dataset.date) - toDate(b.dataset.date));
+
+  tables.forEach(t => t.style.display = "none");
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  // Find today's appointment table index
+  let currentIndex = tables.findIndex(t => toDate(t.dataset.date).getTime() === today.getTime());
+
+  // Flag to show "No appointments today" if today has no appointments
+  let showNoToday = false;
+
+  if (currentIndex === -1) {
+    showNoToday = true;
+    // For navigation, we still start at today, but don't show any table
+    currentIndex = -1;
+  }
+
+  function showCurrent() {
+    tables.forEach(t => t.style.display = "none");
+
+    if (currentIndex === -1) {
+      // Today has no appointments
+      currentDayElem.textContent = "No appointments today";
+      prevBtn.disabled = tables.length === 0;
+      nextBtn.disabled = tables.length === 0;
+    } else {
+      const tableDate = toDate(tables[currentIndex].dataset.date);
+      currentDayElem.textContent = formatDateDMY(tables[currentIndex].dataset.date);
+      tables[currentIndex].style.display = "block";
+
+      // Disable buttons at edges
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === tables.length - 1;
+    }
+  }
+
+  showCurrent();
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIndex === -1) {
+      // Today has no appointment, go to first appointment (future day)
+      currentIndex = 0;
+    } else if (currentIndex < tables.length - 1) {
+      currentIndex++;
+    }
+    showNoToday = false;
+    showCurrent();
+  });
+
+  prevBtn.addEventListener("click", () => {
+    if (currentIndex === -1) {
+      // Today has no appointment, go to last available appointment
+      currentIndex = tables.length - 1;
+    } else if (currentIndex > 0) {
+      currentIndex--;
+    }
+    showNoToday = false;
+    showCurrent();
+  });
+});
+</script>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // Format all dates with class "formatted-date"
+  const dateElements = document.querySelectorAll(".formatted-date");
+  dateElements.forEach(el => {
+    const rawDate = el.dataset.date; // e.g., "2025-09-17"
+    const parts = rawDate.split("-"); // ["2025","09","17"]
+    if (parts.length === 3) {
+      el.textContent = `${parts[2]}-${parts[1]}-${parts[0]}`; // DD-MM-YYYY
+    }
+  });
+});
+</script>
+
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+
+<!--flash hide-->   
+ <script>
+  setTimeout(function () {
+    const alerts = document.querySelectorAll(".flash-msg");
+    alerts.forEach(function(alert) {
+      const bsAlert = new bootstrap.Alert(alert);
+      bsAlert.close();
+    });
+  }, 1000); 
+</script>
+
+<!--notification-->
+<!-- Socket.IO -->
+<script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+
+<script>
+const socket = io({ transports: ["websocket"] });
+
+const doctorId = "{{ session['doctor_id'] }}";
+
+// ✅ JOIN DOCTOR ROOM (IMPORTANT)
+socket.emit("join_doctor", { doctor_id: doctorId });
+
+// 🔔 Realtime notification
+socket.on("new_notification", () => {
+    loadDoctorNotifications();
+});
+
+// 📥 Load notifications
+function loadDoctorNotifications() {
+    fetch("/notifications/doctor")
+        .then(res => res.json())
+        .then(data => {
+            const count = document.getElementById("notifyCount");
+            const dropdown = document.getElementById("notifyDropdown");
+
+            dropdown.innerHTML = "";
+
+            if (!data || data.length === 0) {
+                count.style.display = "none";
+                dropdown.innerHTML = "<a>No new messages</a>";
+                return;
+            }
+
+            count.innerText = data.length;
+            count.style.display = "block";
+
+            data.forEach(n => {
+                const a = document.createElement("a");
+                a.className = "notification-item";
+                a.innerText = "Message from " + n.sender;
+
+                // ✅ BACKEND DECIDES WHERE TO REDIRECT
+                a.href = "/notification/read/" + n.room;
+
+                dropdown.appendChild(a);
+            });
+        });
+}
+
+// 🔄 Toggle dropdown
+function toggleNotifications(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById("notifyDropdown");
+    dropdown.style.display =
+        dropdown.style.display === "block" ? "none" : "block";
+}
+
+// ❌ Close on outside click
+document.addEventListener("click", () => {
+    document.getElementById("notifyDropdown").style.display = "none";
+});
+
+// 🚀 Initial load
+loadDoctorNotifications();
+</script>
+
+
+
+
+</body>
+</html>

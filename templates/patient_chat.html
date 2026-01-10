@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with {{ doctor.name }}</title>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec80",
+                        "primary-dark": "#0ea65a",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#102219",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2e25",
+                        "text-main": "#0d1b14",
+                        "text-secondary": "#4c9a73",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem", 
+                        "lg": "0.5rem", 
+                        "xl": "0.75rem", 
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for cleaner look */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 20px;
+        }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #334155;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 flex flex-col h-screen overflow-hidden antialiased">
+<!-- Main Header -->
+<header class="flex items-center justify-between px-6 py-4 bg-surface-light dark:bg-surface-dark border-b border-gray-200 dark:border-gray-800 shadow-sm z-20">
+<div class="flex items-center gap-3">
+<div class="size-8 text-primary">
+</div>
+<h1 class="text-xl font-bold tracking-tight text-text-main dark:text-white">Wellness Wave</h1>
+<div class="hidden sm:flex items-center gap-1 ml-4 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded text-xs font-medium text-green-700 dark:text-green-400">
+            </div>
+</div>
+<a href="{{ url_for('user_home') }}"><button class="group flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
+<span class="text-sm font-bold text-gray-700 dark:text-gray-300">Close Chat</span>
+<span class="material-symbols-outlined text-gray-700 dark:text-gray-300  transition-transform">close</span>
+</button></a>
+</header>
+<!-- Doctor Profile Sub-header -->
+<div class="bg-surface-light dark:bg-surface-dark/50 border-b border-gray-200 dark:border-gray-800 z-10 px-6 py-3">
+<div class="flex items-center justify-between max-w-5xl mx-auto">
+<div class="flex items-center gap-4">
+<!--<div class="relative">
+<div class="w-12 h-12 rounded-full bg-cover bg-center border-2 border-white dark:border-gray-700 shadow-sm" data-alt="Dr. Sarah Smith professional portrait" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDYLZkODp6vHaTGPXnuq3n1sWa0ct-3ZHFkakFdiLfMrP5MH8qhUm512xWH0DuXyRYGhD2_bnh1ufVvTL-Z7TbirIOONxFOFzaD8rkmt_VBzGe2QHbmNUyhm6TeOCqnz87w2mcoqv_qL_KDq6ABZsPGfuv-vwItjdu9f1SvzQu0TJvCrv1vxzcbahEEYChx_ivvAta8V7MNEnGXPH5Unjxwcs0ElZFLHnpp_OfHBKjoWg0bdUUaY5yDoTGIPX48LRl9GakDomXoAm_Y");'>
+</div>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-primary border-2 border-white dark:border-gray-800 rounded-full"></span>
+</div>-->
+<div class="flex flex-col">
+<h2 class="text-base font-bold text-text-main dark:text-white leading-tight">{{ doctor.name }}</h2>
+<p class="text-sm text-text-secondary dark:text-gray-400">{{ doctor.specialization }}</p>
+</div>
+</div>
+<div class="hidden sm:flex gap-3">
+<!--<button class="p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">videocam</span>
+</button>
+<button class="p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">call</span>
+</button>-->
+<button class="p-2 text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-primary transition-colors rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Chat Area -->
+<main id="chatScroll"
+ class="flex-1 overflow-y-auto custom-scrollbar bg-background-light dark:bg-background-dark p-4 md:p-6 scroll-smooth">
+
+<div id="chatBody" class="max-w-4xl mx-auto flex flex-col gap-6">
+
+{% for msg in messages %}
+
+    {% if msg.sender == "doctor" %}
+    <!-- Doctor Message -->
+    <div class="flex items-end gap-3 group">
+        <div class="flex flex-col gap-1 max-w-[85%] md:max-w-[70%]">
+            <div class="flex items-baseline gap-2 ml-1">
+                <span class="text-xs font-bold text-gray-700 dark:text-gray-300">
+                    {{ doctor.name }}
+                </span>
+            </div>
+
+            <div class="bg-white dark:bg-surface-dark border border-gray-100 dark:border-gray-800
+                        text-text-main dark:text-gray-100 px-4 py-3 rounded-2xl rounded-tl-none shadow-sm">
+                {% if msg.file %}
+                    <a href="{{ msg.file }}" target="_blank"
+                       class="text-primary font-semibold underline">
+                        📎 View File
+                    </a>
+                {% else %}
+                    <p class="text-sm md:text-base leading-relaxed">
+                        {{ msg.message }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Patient Message -->
+    <div class="flex items-end gap-3 justify-end group">
+        <div class="flex flex-col gap-1 items-end max-w-[85%] md:max-w-[70%]">
+            <div class="flex items-baseline gap-2 mr-1">
+                <span class="text-xs font-bold text-gray-700 dark:text-gray-300">
+                    Me
+                </span>
+            </div>
+
+            <div class="bg-primary text-text-main px-4 py-3 rounded-2xl rounded-tr-none shadow-sm">
+                {% if msg.file %}
+                    <a href="{{ msg.file }}" target="_blank"
+                       class="font-semibold underline">
+                        📎 View File
+                    </a>
+                {% else %}
+                    <p class="text-sm md:text-base leading-relaxed">
+                        {{ msg.message }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+{% endfor %}
+
+</div>
+
+</main>
+
+<!-- Input Area (Composer) -->
+<footer class="bg-surface-light dark:bg-surface-dark border-t border-gray-200 dark:border-gray-800 p-4 md:px-6 md:py-5 z-20">
+<div class="max-w-4xl mx-auto">
+<div class="relative flex items-center gap-2 md:gap-4">
+<!-- Attachment Button -->
+<input type="file" id="fileInput" hidden onchange="uploadFile()">
+<button onclick="document.getElementById('fileInput').click()" aria-label="Attach file" class="p-3 text-text-secondary hover:text-primary dark:text-gray-400 dark:hover:text-primary bg-gray-50 dark:bg-gray-800 hover:bg-green-50 dark:hover:bg-gray-700 rounded-xl transition-colors shrink-0">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<!-- Input Field -->
+<div class="flex-1 relative">
+<input class="w-full bg-gray-50 dark:bg-gray-800 text-text-main dark:text-white placeholder-text-secondary dark:placeholder-gray-500 border-0 focus:ring-2 focus:ring-primary rounded-xl px-5 py-3 pr-12 text-base shadow-sm transition-all" id="message" placeholder="Type message..." type="text"/>
+</div>
+<!-- Send Button -->
+<button onclick="sendMessage()" class="hidden sm:flex items-center gap-2 bg-primary hover:bg-primary-dark text-text-main font-bold py-3 px-6 rounded-xl transition-colors shadow-sm shrink-0">
+<span>Send</span>
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+<p class="text-center text-xs text-gray-400 dark:text-gray-500 mt-3">
+                Do not share sensitive financial information. <a class="underline hover:text-primary" href="#">Privacy Policy</a>
+</p>
+</div>
+</footer>
+<script>
+const socket = io({ transports:["websocket"] });
+const room = "{{ room }}";
+const chatBody = document.getElementById("chatBody");
+
+socket.emit("join", { room });
+
+const chatScroll = document.getElementById("chatScroll");
+
+function scrollBottom() {
+    chatScroll.scrollTop = chatScroll.scrollHeight;
+}
+
+socket.on("receive_message", data => {
+
+    let html = "";
+
+    if (data.sender === "doctor") {
+        html = `
+        <div class="flex items-end gap-3">
+            <div class="flex flex-col gap-1 max-w-[70%]">
+                <span class="text-xs font-bold text-gray-700">${data.sender_name || "Doctor"}</span>
+                <div class="bg-white px-4 py-3 rounded-2xl rounded-tl-none shadow-sm">
+                    ${data.file 
+                        ? `<a href="${data.file}" target="_blank" class="underline text-primary">📎 View File</a>` 
+                        : `<p>${data.message}</p>`}
+                </div>
+            </div>
+        </div>`;
+    } else {
+        html = `
+        <div class="flex items-end gap-3 justify-end">
+            <div class="flex flex-col gap-1 items-end max-w-[70%]">
+                <span class="text-xs font-bold text-gray-700">Me</span>
+                <div class="bg-primary px-4 py-3 rounded-2xl rounded-tr-none shadow-sm">
+                    ${data.file 
+                        ? `<a href="${data.file}" target="_blank" class="underline">📎 View File</a>` 
+                        : `<p>${data.message}</p>`}
+                </div>
+            </div>
+        </div>`;
+    }
+
+    chatBody.insertAdjacentHTML("beforeend", html);
+    scrollBottom();
+});
+
+
+function sendMessage() {
+    const input = document.getElementById("message");
+    if (!input.value.trim()) return;
+
+    socket.emit("send_message", {
+        room: room,
+        sender:  "{{ patient.username }}",
+        sender_role:"user",
+        sender_id: "{{ user_id }}",
+        receiver_id: "{{ doctor_id }}",
+        message: input.value
+    });
+
+    input.value = "";
+}
+
+function uploadFile() {
+    const file = document.getElementById("fileInput").files[0];
+    if (!file) return;
+
+    const fd = new FormData();
+    fd.append("file", file);
+
+    fetch("/upload", { method:"POST", body:fd })
+        .then(res => res.json())
+        .then(data => {
+            socket.emit("send_message", {
+                room: room,
+                sender: "patient",
+                sender_id: "{{ user_id }}",
+                receiver_id: "{{ doctor_id }}",
+                file: data.file_url
+            });
+        });
+}
+
+window.onload = () => {
+    scrollBottom();
+};
+
+
+</script>
+
+</body>
+</html>

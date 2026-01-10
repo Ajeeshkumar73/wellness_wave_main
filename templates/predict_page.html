@@ -1,0 +1,864 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
+    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://kit.fontawesome.com/yourkitid.js" crossorigin="anonymous"></script>
+<style>
+    #resultsCard {
+      border-left: 6px solid #0d6efd;
+    }
+    #resultsCard .col-sm-3 {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    .status-normal { color: green; font-weight: 600; }
+    .status-moderate { color: orange; font-weight: 600; }
+    .status-high { color: red; font-weight: 600; }
+#precautionResults {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 20px;
+     margin:20px;
+  }
+
+  #precautionResults .precaution-card {
+    flex: 1 1 300px;
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #precautionResults .precaution-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+  }
+
+  #precautionResults .precaution-card h6 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #0d6efd;
+  }
+
+  #precautionResults .precaution-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  #precautionResults .precaution-card ul li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  #precautionResults .precaution-card ul li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #0d6efd;
+    font-weight: bold;
+  }
+
+  /* Category Colors */
+  .diet-card { border-left: 5px solid #28a745; }
+  .exercise-card { border-left: 5px solid #fd7e14; }
+  .habit-card { border-left: 5px solid #6f42c1; }
+
+  /* Optional icons */
+  .diet-card h6::before { content: "🥗"; }
+  .exercise-card h6::before { content: "🏃"; }
+  .habit-card h6::before { content: "🛌"; }
+
+  @media(max-width: 768px){
+    #precautionResults {
+      flex-direction: column;
+    }
+  }
+  #precautionResults + p {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: #555;
+}
+
+/* Doctor section styling */
+#doctor-section h4 {
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+#doctor-section h6 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+#doctor-section p {
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+/* Doctor cards */
+#doctor-list .card {
+  border: none;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  background: #ffffff;
+}
+
+#doctor-list .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Disease group heading */
+#doctor-list h6.fw-bold {
+  font-size: 1.1rem;
+  border-left: 4px solid #dc3545;
+  padding-left: 10px;
+  margin-bottom: 12px;
+  color: #333;
+}
+
+/* Doctor icons */
+#doctor-list i {
+  color: #0d6efd;
+}
+
+  </style>
+</head>
+<body class="bg-light text-dark">
+
+       <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light  px-4" style="background-color:#efefef;">
+  <a class="navbar-brand d-flex align-items-center" href="#" style="padding-left: 30px;">
+
+    <span><strong>Wellness Wave</strong> <small class="text-danger">| Family Doctor</small></span>
+  </a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="padding-right: 100px;">
+    <ul class="navbar-nav align-items-center">
+
+      <li class="nav-item"><a class="nav-link" href="{{ url_for('back_page') }}">Back</a></li>
+    </ul>
+  </div>
+</nav>
+
+    
+
+
+  <div class="container py-5">
+    <!-- Info Note -->
+    <p class="text-center text-muted mb-3 fst-italic">
+  For better accuracy, please fill in the health metrics after conducting proper lab tests.
+</p>
+
+    <!-- Form Card -->
+    <div class="card shadow-sm border-0 mb-5">
+      <div class="card-body p-4">
+        <h1 class="h4 fw-bold mb-4">
+           Health Assessment Form
+        </h1>
+
+        <form id="healthForm" class="row g-4">
+          <!-- Personal Info -->
+          <div class="col-md-6">
+            <h5 class="fw-semibold mb-3">Personal Information</h5>
+
+            <div class="mb-3">
+              <label for="age" class="form-label">Age</label>
+              <input type="number" id="age" name="age" value="30" class="form-control" min="1" max="120">
+            </div>
+
+            <div class="mb-3">
+              <label for="gender" class="form-label">Gender</label>
+              <select id="gender" name="gender" class="form-select">
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="height" class="form-label">Height (cm)</label>
+              <input type="number" id="height" name="height" value="170" class="form-control" min="50" max="250">
+            </div>
+
+            <div class="mb-3">
+              <label for="weight" class="form-label">Weight (kg)</label>
+              <input type="number" id="weight" name="weight" value="70" class="form-control" min="20" max="200">
+            </div>
+          </div>
+
+          <!-- Lifestyle -->
+          <div class="col-md-6">
+            <h5 class="fw-semibold mb-3">Lifestyle Factors</h5>
+
+            <div class="mb-3">
+              <label for="smoking" class="form-label">Smoking Status</label>
+              <select id="smoking" name="smoking" class="form-select">
+                <option>Never</option>
+                <option>Former</option>
+                <option>Current</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="alcohol" class="form-label">Alcohol Consumption</label>
+              <select id="alcohol" name="alcohol" class="form-select">
+                <option>None</option>
+                <option>Occasional</option>
+                <option>Daily</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="exercise" class="form-label">Exercise Frequency</label>
+              <select id="exercise" name="exercise" class="form-select">
+                <option>None</option>
+                <option>1-2 times/week</option>
+                <option>3-4 times/week</option>
+                <option>5+ times/week</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="sleep" class="form-label">Average Sleep Hours</label>
+              <input type="range" id="sleep" name="sleep" min="4" max="12" value="8" class="form-range">
+              <small class="text-muted">Selected: <span id="sleepValue">8</span> hours</small>
+            </div>
+          </div>
+
+          <!-- Health Metrics -->
+          <div class="col-md-6">
+            <h5 class="fw-semibold mb-3">Health Metrics</h5>
+
+            <div class="mb-3">
+              <label for="systolic" class="form-label">Systolic BP</label>
+              <input type="number" id="systolic" name="systolic" value="120" class="form-control" min="70" max="250">
+            </div>
+
+            <div class="mb-3">
+              <label for="diastolic" class="form-label">Diastolic BP</label>
+              <input type="number" id="diastolic" name="diastolic" value="80" class="form-control" min="40" max="150">
+            </div>
+
+            <div class="mb-3">
+              <label for="cholesterol" class="form-label">Cholesterol (mg/dL)</label>
+              <input type="number" id="cholesterol" name="cholesterol" value="200" class="form-control" min="100" max="400">
+            </div>
+
+            <div class="mb-3">
+              <label for="bloodSugar" class="form-label">Blood Sugar (mg/dL)</label>
+              <input type="number" id="bloodSugar" name="bloodSugar" value="100" class="form-control" min="50" max="300">
+            </div>
+          </div>
+
+          <!-- Family & Symptoms -->
+          <div class="col-md-6">
+            <h5 class="fw-semibold mb-3">Family History & Symptoms</h5>
+
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="familyDiabetes" name="familyDiabetes">
+              <label class="form-check-label" for="familyDiabetes">Diabetes</label>
+            </div>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="familyHeart" name="familyHeart">
+              <label class="form-check-label" for="familyHeart">Heart Disease</label>
+            </div>
+            <div class="form-check mb-3">
+              <input type="checkbox" class="form-check-input" id="familyHypertension" name="familyHypertension">
+              <label class="form-check-label" for="familyHypertension">Hypertension</label>
+            </div>
+
+  <label class="form-label">Select Symptoms</label>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="symptoms" value="Fever" id="symptomFever">
+        <label class="form-check-label" for="symptomFever">Fever</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="symptoms" value="Cough" id="symptomCough">
+        <label class="form-check-label" for="symptomCough">Cough</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="symptoms" value="Fatigue" id="symptomFatigue">
+        <label class="form-check-label" for="symptomFatigue">Fatigue</label>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="symptoms" value="Headache" id="symptomHeadache">
+        <label class="form-check-label" for="symptomHeadache">Headache</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="symptoms" value="Shortness of Breath" id="symptomBreath">
+        <label class="form-check-label" for="symptomBreath">Shortness of Breath</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="symptoms" value="Chest Pain" id="symptomChest">
+        <label class="form-check-label" for="symptomChest">Chest Pain</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+          </div>
+
+          <!-- Submit -->
+          <div class="col-12">
+            <button type="submit" class="btn btn-danger w-100">
+             Analyze Health Risks
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Results Card -->
+  <div class="card shadow-sm border-0" id="resultsCard" style="display:none;" data-aos="fade-up">
+    <div class="card-body">
+      <h5 class="fw-bold mb-4"> Health Risk Results</h5>
+      <div class="row text-center mb-3">
+        <div class="col-sm-3">
+          <h3 id="resultBMI">-</h3>
+          <p class="mb-0">BMI</p>
+          <small id="bmiStatus"></small>
+        </div>
+        <div class="col-sm-3">
+          <h3 id="resultBP">-</h3>
+          <p class="mb-0">Blood Pressure</p>
+          <small id="bpStatus"></small>
+        </div>
+        <div class="col-sm-3">
+          <h3 id="resultCholesterol">-</h3>
+          <p class="mb-0">Cholesterol</p>
+          <small id="cholStatus"></small>
+        </div>
+        <div class="col-sm-3">
+          <h3 id="resultBloodSugar">-</h3>
+          <p class="mb-0">Blood Sugar</p>
+          <small id="sugarStatus"></small>
+        </div>
+      </div>
+      <div id="diseaseResults" class="d-flex flex-wrap justify-content-center gap-3 mt-3"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Doctor Section -->
+<div id="doctor-section" class="container mt-4" style="display: none;">
+   <h2 class="fw-bold text-center mb-2">Recommended Doctors for High Risk Diseases</h2>
+      <p class="text-center text-muted mb-4">
+      These specialists are recommended based on your health assessment and the diseases identified as high risk. 
+    Consulting with the appropriate doctor early can help in managing your condition effectively, 
+    preventing complications, and guiding you with personalized treatment plans and lifestyle adjustments.
+      </p>
+  <div id="doctor-list" class="row g-4"></div>
+</div>
+
+
+
+
+<!--<div class="card shadow-sm border-0 mt-4 bg-light text-dark">
+  <div class="card-body">
+    <canvas id="diseaseChart" class="bg-light text-dark" style="margin-left:300px; height:400px"></canvas>
+  </div>
+</div>-->
+
+<div id="precautionResults" class="d-flex flex-column gap-3 mt-4" data-aos="fade-up"></div>
+
+
+<script>
+  // Sleep slider
+  const sleepInput = document.getElementById("sleep");
+  const sleepValue = document.getElementById("sleepValue");
+  sleepInput.addEventListener("input", () => sleepValue.textContent = sleepInput.value);
+
+  // Elements
+  const form = document.getElementById("healthForm");
+  const resultsCard = document.getElementById("resultsCard");
+  const resultBMI = document.getElementById("resultBMI");
+  const bmiStatus = document.getElementById("bmiStatus");
+  const resultBP = document.getElementById("resultBP");
+  const bpStatus = document.getElementById("bpStatus");
+  const resultCholesterol = document.getElementById("resultCholesterol");
+  const cholStatus = document.getElementById("cholStatus");
+  const resultBloodSugar = document.getElementById("resultBloodSugar");
+  const sugarStatus = document.getElementById("sugarStatus");
+  const diseaseDiv = document.getElementById("diseaseResults");
+  const precautionDiv = document.getElementById("precautionResults");
+
+  // Detailed Precaution rules
+  const precautions = {
+  "BMI": {
+    "Underweight": { 
+      diet: [
+        "Increase protein intake (eggs, lean meat, legumes) to support muscle growth and repair",
+        "Eat calorie-dense healthy foods like nuts, seeds, avocado, and whole grains to gain weight safely",
+        "Have 5-6 small meals daily instead of skipping meals to maintain steady energy and nutrient supply",
+        "Include healthy snacks between meals such as yogurt, smoothies, or nut butter on whole-grain toast"
+      ],
+      exercise: [
+        "Engage in light resistance training to build lean muscle mass without excessive strain",
+        "Avoid excessive cardio which can burn too many calories and hinder weight gain",
+        "Focus on exercises like squats, push-ups, and resistance band workouts that are manageable at your level"
+      ],
+      habit: [
+        "Maintain consistent meal timing every day to regulate metabolism",
+        "Get adequate sleep (7-9 hours) to support recovery and healthy weight gain",
+        "Track weight weekly and adjust diet/exercise based on progress",
+        "Reduce stress with relaxation techniques such as deep breathing or meditation"
+      ]
+    },
+    "Overweight": { 
+      diet: [
+        "Reduce sugar and refined carbs like white bread, pastries, and sugary drinks to avoid excess fat storage",
+        "Eat more vegetables, fiber, and lean proteins to improve satiety and nutrient intake",
+        "Control portion sizes using smaller plates and mindful eating practices",
+        "Avoid skipping meals which can lead to overeating later in the day"
+      ],
+      exercise: [
+        "Engage in 30-45 min of cardio 5 days/week (walking, jogging, cycling) to burn extra calories",
+        "Include strength training 2-3 times/week to build muscle and boost metabolism",
+        "Try interval training for higher calorie burn and cardiovascular benefit"
+      ],
+      habit: [
+        "Avoid late-night snacking, especially high-calorie foods",
+        "Track food intake and weight regularly to monitor progress",
+        "Manage stress through meditation, yoga, or breathing exercises",
+        "Maintain consistent sleep schedule to regulate appetite hormones"
+      ]
+    },
+    "Obese": { 
+      diet: [
+        "Consult a nutritionist for a personalized calorie-controlled diet plan to ensure safe weight loss",
+        "Follow a calorie deficit meal plan while ensuring adequate nutrition",
+        "Limit processed foods, sugary drinks, and high-fat items",
+        "Incorporate plenty of fiber-rich foods like vegetables, fruits, and whole grains to feel full"
+      ],
+      exercise: [
+        "Participate in a supervised daily exercise program suited to your fitness level",
+        "Include a mix of cardio (walking, swimming, cycling) and strength training",
+        "Start with shorter sessions and gradually increase intensity to avoid injury"
+      ],
+      habit: [
+        "Attend regular medical checkups to monitor health markers",
+        "Set realistic goals and track progress using apps or journals",
+        "Focus on improving sleep quality and stress management",
+        "Stay motivated by setting achievable milestones and rewarding progress"
+      ]
+    }
+  },
+  "BloodPressure": {
+    "Elevated": { 
+      diet: [
+        "Reduce sodium intake by avoiding processed foods, canned soups, and salty snacks",
+        "Limit sugary drinks and high-calorie beverages to support weight and blood pressure control",
+        "Increase potassium-rich foods like bananas, spinach, and sweet potatoes to help balance sodium levels",
+        "Eat a variety of fresh fruits, vegetables, lean proteins, and whole grains daily"
+      ],
+      exercise: [
+        "Walk briskly for at least 30 min every day to improve cardiovascular health",
+        "Include light strength exercises to enhance overall fitness",
+        "Gradually increase intensity as endurance improves while monitoring heart rate"
+      ],
+      habit: [
+        "Practice stress management techniques such as yoga, meditation, or deep breathing",
+        "Avoid smoking and limit alcohol consumption to protect heart and blood vessels",
+        "Monitor blood pressure regularly and keep a log for your doctor",
+        "Maintain healthy sleep patterns for overall cardiovascular support"
+      ]
+    },
+    "High Stage 1": { 
+      diet: [
+        "Adopt a low-salt, low-fat diet with emphasis on fresh vegetables and lean proteins",
+        "Avoid processed and fried foods that can raise blood pressure",
+        "Include whole grains and fiber-rich foods to support heart health",
+        "Limit red meat and sugary foods, and drink plenty of water"
+      ],
+      exercise: [
+        "Perform cardio exercises 30-45 min, 5 days/week",
+        "Incorporate strength training 2-3 times/week to maintain muscle mass",
+        "Include flexibility exercises like stretching or yoga to support circulation"
+      ],
+      habit: [
+        "Monitor blood pressure regularly and note changes",
+        "Limit alcohol intake and avoid smoking",
+        "Manage stress daily using meditation, deep breathing, or mindfulness",
+        "Get regular checkups to prevent progression to higher stages"
+      ]
+    },
+    "High Stage 2": { 
+      diet: [
+        "Consult a dietitian for a personalized low-salt, heart-healthy diet plan",
+        "Avoid processed, fried, and high-fat foods",
+        "Eat more vegetables, fruits, whole grains, and lean proteins",
+        "Follow meal timings and avoid skipping meals to maintain stable blood pressure"
+      ],
+      exercise: [
+        "Engage in a doctor-supervised exercise program",
+        "Include gentle cardio and resistance training suited to your condition",
+        "Start slow and increase intensity gradually under supervision"
+      ],
+      habit: [
+        "Follow prescribed medication regimen strictly",
+        "Monitor blood pressure at home daily and log readings",
+        "Incorporate stress management practices every day",
+        "Attend regular medical appointments for evaluation"
+      ]
+    }
+  },
+  "Cholesterol": {
+    "Borderline High": { 
+      diet: [
+        "Reduce saturated fats found in butter, cheese, and fatty meats",
+        "Eat more fiber-rich foods like oats, beans, and fruits to lower LDL cholesterol",
+        "Include fatty fish like salmon or mackerel twice a week for omega-3 benefits",
+        "Avoid trans fats found in fried foods and baked goods"
+      ],
+      exercise: [
+        "Engage in brisk walking or light jogging 30 min daily",
+        "Include moderate cardio and light strength exercises 2-3 times/week",
+        "Increase physical activity gradually to improve lipid profile"
+      ],
+      habit: [
+        "Quit smoking to improve heart health",
+        "Limit alcohol intake to recommended guidelines",
+        "Monitor cholesterol levels periodically",
+        "Maintain healthy weight and sleep routines"
+      ]
+    },
+    "High": { 
+      diet: [
+        "Consult a dietitian for a heart-healthy meal plan",
+        "Strictly limit fried, processed, and high-fat foods",
+        "Increase intake of fruits, vegetables, and whole grains",
+        "Focus on lean protein sources like chicken, fish, and legumes"
+      ],
+      exercise: [
+        "Follow a supervised exercise plan with cardio and strength training 4-5 times/week",
+        "Engage in at least 150 min of moderate-intensity exercise weekly",
+        "Include flexibility and stretching exercises to reduce injury risk"
+      ],
+      habit: [
+        "Take medications as prescribed by your doctor",
+        "Monitor cholesterol regularly with lab tests",
+        "Incorporate stress reduction techniques such as meditation",
+        "Avoid smoking and excessive alcohol consumption"
+      ]
+    }
+  },
+  "BloodSugar": {
+    "Prediabetes": { 
+      diet: [
+        "Reduce sugar, sugary drinks, and refined carbohydrates like white bread and pastries",
+        "Increase fiber intake through vegetables, legumes, and whole grains",
+        "Eat smaller, frequent meals to maintain stable blood glucose",
+        "Avoid skipping meals to prevent spikes in blood sugar"
+      ],
+      exercise: [
+        "Do 30 min of moderate exercise daily like brisk walking or cycling",
+        "Include strength training 2-3 times/week to improve insulin sensitivity",
+        "Incorporate light stretching or yoga to enhance circulation"
+      ],
+      habit: [
+        "Monitor blood sugar regularly",
+        "Maintain healthy weight through diet and exercise",
+        "Manage stress with mindfulness or relaxation techniques",
+        "Ensure adequate sleep every night (7-9 hours)"
+      ]
+    },
+    "High": { 
+      diet: [
+        "Consult a dietitian for a personalized low-sugar, high-fiber diet",
+        "Strictly limit sugar, processed foods, and refined carbs",
+        "Include plenty of vegetables, whole grains, and lean protein",
+        "Follow consistent meal timings and avoid late-night eating"
+      ],
+      exercise: [
+        "Follow a supervised exercise program with a mix of cardio and resistance training",
+        "Gradually increase exercise duration and intensity under supervision",
+        "Include daily walking or swimming to control blood sugar levels"
+      ],
+      habit: [
+        "Take prescribed medications as directed",
+        "Monitor glucose regularly and log readings",
+        "Practice stress management and ensure good sleep hygiene",
+        "Attend regular medical checkups to adjust treatment if needed"
+      ]
+    }
+  },
+   "Diabetes": { 
+      diet: ["Low glycemic index diet", "Eat more vegetables, whole grains, and lean protein", "Avoid sugary beverages"],
+      exercise: ["30-60 min daily walking or cardio", "Strength/resistance exercises 2-3 times/week"],
+      habit: ["Monitor blood glucose daily", "Take medications as prescribed", "Maintain healthy weight and stress control"]
+    },
+    "Heart Disease": { 
+      diet: ["Heart-healthy diet with fruits, vegetables, and whole grains", "Limit saturated fats and trans fats", "Include omega-3 rich foods like fish or flaxseeds"],
+      exercise: ["Moderate-intensity cardio 150 min/week", "Strength training 2-3 times/week"],
+      habit: ["Avoid smoking and excessive alcohol", "Regular checkups and ECG monitoring", "Stress management techniques"]
+    },
+    "Hypertension": { 
+      diet: ["Low-salt diet", "Eat potassium-rich foods", "Avoid processed and fried foods"],
+      exercise: ["30-45 min daily moderate exercise", "Strength training 2x/week"],
+      habit: ["Monitor blood pressure regularly", "Stress management", "Avoid alcohol and smoking"]
+    },
+    "Obesity": { 
+      diet: ["Calorie deficit diet with balanced nutrition", "Avoid sugary and processed foods", "Increase intake of vegetables, lean protein, and fiber"],
+      exercise: ["Daily physical activity (cardio + strength)", "Gradually increase intensity"],
+      habit: ["Track weight and meals", "Maintain good sleep hygiene", "Manage stress levels"]
+    }
+};
+
+  // Utility functions
+  function getStatusClass(status) {
+    if (["Normal", "Desirable"].includes(status)) return "status-normal";
+    if (["Prediabetes", "Elevated", "Borderline High", "Overweight"].includes(status)) return "status-moderate";
+    return "status-high";
+  }
+
+  function metricStatus(name, value) {
+    if (name === "BMI") {
+      if (value < 18.5) return "Underweight";
+      else if (value < 25) return "Normal";
+      else if (value < 30) return "Overweight";
+      else return "Obese";
+    }
+    if (name === "BloodSugar") {
+      if (value < 100) return "Normal";
+      else if (value < 126) return "Prediabetes";
+      else return "High";
+    }
+    if (name === "BloodPressure") {
+      const [s,d] = value;
+      if (s < 120 && d < 80) return "Normal";
+      else if (s < 130 && d < 80) return "Elevated";
+      else if (s < 140 || d < 90) return "High Stage 1";
+      else return "High Stage 2";
+    }
+    if (name === "Cholesterol") {
+      if (value < 200) return "Desirable";
+      else if (value < 240) return "Borderline High";
+      else return "High";
+    }
+    return "Unknown";
+  }
+
+  function getRiskClass(status) {
+    if (status === "Low Risk") return "text-success fw-bold";
+    if (status === "Intermediate Risk") return "text-warning fw-bold";
+    return "text-danger fw-bold";
+  }
+
+  // Format list
+  function formatList(items) {
+    return `<ul>${items.map(i => `<li>${i}</li>`).join("")}</ul>`;
+  }
+
+  // Generate combined precautions
+  function generatePrecautions(metrics, diseases) {
+    const combined = { diet: new Set(), exercise: new Set(), habit: new Set() };
+
+    // Metrics
+    for (const [metric, value] of Object.entries(metrics)) {
+      const status = metricStatus(metric, value);
+      if (["Underweight","Obese","Prediabetes","High Stage 1","High Stage 2","High", "Elevated", "Borderline High", "Overweight"].includes(status)) {
+        if (precautions[metric] && precautions[metric][status]) {
+          precautions[metric][status].diet.forEach(i => combined.diet.add(i));
+          precautions[metric][status].exercise.forEach(i => combined.exercise.add(i));
+          precautions[metric][status].habit.forEach(i => combined.habit.add(i));
+        }
+      }
+    }
+
+    // Diseases
+    for (const [disease, info] of Object.entries(diseases)) {
+      if (info.status === "Intermediate Risk") {
+        if (precautions[disease]) {
+          precautions[disease].diet.forEach(i => combined.diet.add(i));
+          precautions[disease].exercise.forEach(i => combined.exercise.add(i));
+          precautions[disease].habit.forEach(i => combined.habit.add(i));
+        }
+      }
+    }
+
+    return `
+    <div class="mb-4">
+      <h2 class="fw-bold text-center mb-2">Recommended Precautions for Low & Intermediate Risk</h2>
+      <p class="text-center text-muted mb-4">
+        Following these diet, exercise, and lifestyle recommendations consistently can help reduce the risk of lifestyle-related health issues, improve overall well-being, and maintain a healthier life.
+      </p>
+    </div>
+    <div id="precautionResults">
+      <div class="precaution-card diet-card">
+        <h6>Diet</h6>
+        <ul>${Array.from(combined.diet).map(i => `<li>${i}</li>`).join("")}</ul>
+      </div>
+      <div class="precaution-card exercise-card">
+        <h6>Exercise</h6>
+        <ul>${Array.from(combined.exercise).map(i => `<li>${i}</li>`).join("")}</ul>
+      </div>
+      <div class="precaution-card habit-card">
+        <h6>Habits</h6>
+        <ul>${Array.from(combined.habit).map(i => `<li>${i}</li>`).join("")}</ul>
+      </div>
+    </div>
+  `;
+}
+
+  // Form submit
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    data.sleep = sleepInput.value;
+
+    const height = parseFloat(data.height);
+    const weight = parseFloat(data.weight);
+    const systolic = parseFloat(data.systolic);
+    const diastolic = parseFloat(data.diastolic);
+    const cholesterol = parseFloat(data.cholesterol);
+    const bloodSugar = parseFloat(data.bloodSugar);
+    const bmi = (weight / ((height / 100) ** 2)).toFixed(1);
+
+    // Update metric cards
+    resultBMI.textContent = bmi;
+    let s = metricStatus("BMI", bmi); bmiStatus.textContent = s; bmiStatus.className = getStatusClass(s);
+    resultBP.textContent = systolic + "/" + diastolic;
+    s = metricStatus("BloodPressure", [systolic, diastolic]); bpStatus.textContent = s; bpStatus.className = getStatusClass(s);
+    resultCholesterol.textContent = cholesterol + " mg/dL";
+    s = metricStatus("Cholesterol", cholesterol); cholStatus.textContent = s; cholStatus.className = getStatusClass(s);
+    resultBloodSugar.textContent = bloodSugar + " mg/dL";
+    s = metricStatus("BloodSugar", bloodSugar); sugarStatus.textContent = s; sugarStatus.className = getStatusClass(s);
+
+    resultsCard.style.display = "block";
+
+    // Fetch disease predictions from server
+    const response = await fetch("/predict", { method: "POST", body: new URLSearchParams(data) });
+    const result = await response.json();
+
+    // Update disease cards
+    let diseaseHtml = "";
+    for (const [disease, info] of Object.entries(result.diseases)) {
+      diseaseHtml += `
+        <div class="card p-3 text-center" style="min-width: 160px; border:none;box-shadow: none !important;">
+          <h6 class="mb-1">${disease}</h6>
+          <p class="mb-0">${info.chance} <br> <span class="${getRiskClass(info.status)}">${info.status}</span></p>
+        </div>`;
+    }
+    diseaseDiv.innerHTML = diseaseHtml;
+
+  
+  // Show combined precautions
+    precautionDiv.innerHTML = generatePrecautions(
+      { BMI: parseFloat(bmi), BloodPressure: [systolic, diastolic], Cholesterol: cholesterol, BloodSugar: bloodSugar },
+      result.diseases
+    );
+
+    // Scroll to results
+    resultsCard.scrollIntoView({ behavior: "smooth" });
+
+    // --- Show Doctors only for High Risk diseases ---
+const doctorMap = {
+  "Diabetes": ["Endocrinologist", "Diabetologist"],
+  "Heart Disease": ["Cardiologist"],
+  "Hypertension": ["Cardiologist", "General Physician"],
+  "Obesity": ["Dietitian", "Nutritionist"]
+};
+
+const doctorSection = document.getElementById("doctor-section");
+const doctorList = document.getElementById("doctor-list");
+doctorList.innerHTML = "";
+
+let highRiskFound = false;
+
+Object.entries(result.diseases).forEach(([disease, info]) => {
+  // Normalize disease name (HeartDisease -> Heart Disease)
+  const diseaseName = disease.replace(/([a-z])([A-Z])/g, "$1 $2");
+
+  if (info.status === "High Risk" && doctorMap[diseaseName]) {
+    highRiskFound = true;
+
+    // Disease header
+    const groupCard = document.createElement("div");
+    groupCard.className = "col-12";
+    groupCard.innerHTML = `<h6 class="fw-bold text-danger mt-3">${diseaseName} Specialists</h6>`;
+    doctorList.appendChild(groupCard);
+
+    // Doctor cards
+    doctorMap[diseaseName].forEach(doc => {
+      const col = document.createElement("div");
+      col.className = "col-md-3";
+      col.innerHTML = `
+        <div class="card shadow-sm mb-3 doctor-card" style="cursor:pointer;">
+          <div class="card-body text-center">
+            <i class="fas fa-user-md fa-2x text-primary mb-2"></i>
+            <h6>${doc}</h6>
+            <p class="text-muted small">Specialist for ${diseaseName}</p>
+          </div>
+        </div>
+      `;
+      // Add click to go to appointments page with query parameter
+      col.querySelector(".doctor-card").addEventListener("click", () => {
+        const spec = encodeURIComponent(doc);
+        window.location.href = `/recom_appointment?specialization=${spec}`;
+      });
+
+      doctorList.appendChild(col);
+    });
+  }
+});
+
+// Show section only if at least one High Risk disease was found
+doctorSection.style.display = highRiskFound ? "block" : "none";
+
+
+  });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  AOS.init({ duration: 800, once: false, mirror: true, easing: 'ease-in-out' });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+ 
+
+</script>
+  
+</body>
+</html>

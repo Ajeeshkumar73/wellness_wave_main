@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Blog Upload and View</title>
+
+<!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        primary: "#137fec",
+        background: "#f6f7f8",
+      },
+      fontFamily: {
+        display: ["Newsreader", "serif"],
+      },
+      borderRadius: {
+        DEFAULT: "0.25rem",
+        lg: "0.5rem",
+        xl: "0.75rem",
+        full: "9999px",
+      },
+    },
+  },
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@200..800&family=Noto+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+<style>
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;
+}
+
+.blog-content {
+  max-height: 120px;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.blog-content.expanded {
+  max-height: 1000px;
+}
+
+.blog-card {
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.blog-card.expanded {
+  max-height: none;
+}
+html{
+    behavior:smooth;
+}
+</style>
+
+</head>
+
+<body class="bg-background font-display text-[#111418] min-h-screen flex flex-col">
+
+<!-- HEADER -->
+<header class="flex items-center justify-between border-b border-[#e5e7eb] px-6 py-4 md:px-10 bg-white sticky top-0 z-50">
+  <div class="flex items-center gap-4">
+    <div class="">
+      <!-- logo -->
+      <a class="navbar-brand d-flex align-items-center" href="/" style="padding-left: 30px;">
+
+    <span><strong>Wellness Wave</strong> <small class="text-danger">| Family Doctor</small></span>
+  </a>
+    </div>
+  </div>
+  <a href="{{ url_for('index') }}" class="text-gray-700 hover:text-blue-600 font-medium ml-6">Back</a>
+
+</header>
+
+    <!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show flash-msg" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+<!-- MAIN -->
+<main class="flex-1 flex justify-center py-10 px-4">
+<div class="max-w-[800px] w-full space-y-10">
+
+
+</section>
+
+<div class="w-full h-px bg-[#e5e7eb] dark:bg-[#283039]"></div>
+
+<section class="flex flex-col gap-8">
+
+  <div class="flex items-center justify-between">
+    <h3 class="text-[#111418] dark:text-black text-3xl font-bold leading-tight tracking-[-0.015em]">
+      Recent Publications
+    </h3>
+  </div>
+
+  <div class="flex flex-col gap-4">
+
+    {% for blog in latest_blogs %}
+<article class="blog-card blog-item group flex flex-col md:flex-row gap-6 p-6
+ rounded-xl bg-white border border-[#e5e7eb] shadow-sm transition-all relative">
+
+
+  <!-- IMAGE -->
+  <div class="w-full md:w-48 h-32 md:h-auto shrink-0 rounded-lg overflow-hidden bg-gray-200 dark:bg-gray-800">
+     <img src="{{ url_for('static', filename=blog.image if blog.image else 'images/default-blog.jpg') }}"
+     class="w-100 h-100 object-fit-cover"
+     alt="Blog Image">
+
+  </div>
+
+  <!-- CONTENT -->
+  <div class="flex flex-col flex-1 gap-3">
+    <div class="flex items-center gap-2 text-xs font-bold tracking-wider uppercase text-primary">
+      <span>Health care</span>
+      <span class="w-1 h-1 rounded-full bg-gray-400"></span>
+      <span class="text-gray-500 dark:text-gray-400">
+        {{ blog.date }}
+      </span>
+    </div>
+
+    <div class="flex items-center gap-2 text-sm text-gray-600">
+         <!-- Doctor Image -->
+  <img
+    src="{{ url_for('static', filename=blog.doctor_image) }}"
+    class="w-10 h-10 rounded-full object-cover border"
+    alt="Doctor Profile">
+    
+  <span class="font-semibold text-gray-800">
+    Dr. {{ blog.doctor_name }}
+  </span>
+  <span class="w-1 h-1 rounded-full bg-gray-400"></span>
+  <span class="italic">
+    {{ blog.doctor_specialization }}
+  </span>
+</div>
+
+
+    <h4 class="text-[#111418] dark:text-gray-800 text-2xl font-bold leading-tight
+               group-hover:text-primary transition-colors">
+      {{ blog.title }}
+    </h4>
+
+    <p class="blog-content text-black text-base leading-relaxed">
+      {{ blog.content }}
+    </p>
+
+    <div class="mt-auto pt-2 flex items-center gap-1 text-primary font-bold text-sm">
+      <button onclick="toggleBlog(this)" class="read-btn mt-auto pt-2 flex items-center gap-1 text-primary font-bold text-sm">
+        <span>Read Article</span>
+        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</article>
+
+      {% endfor %}
+
+  </div>
+
+
+
+</section>
+
+</div>
+</main>
+<!--<footer class="border-t border-[#e5e7eb] dark:border-[#283039] py-8 mt-12 bg-white dark:bg-[#101922]">
+<div class="flex justify-center items-center gap-6 text-[#637588] dark:text-[#9dabb9] text-sm font-medium">
+<a class="hover:text-primary transition" href="#">About</a>
+<a class="hover:text-primary transition" href="#">Privacy Policy</a>
+<a class="hover:text-primary transition" href="#">Terms of Service</a>
+<a class="hover:text-primary transition" href="#">Contact</a>
+</div>
+<div class="flex justify-center mt-4 text-[#637588] dark:text-[#9dabb9] text-xs">
+            © 2023 BlogApp Inc. All rights reserved.
+        </div>
+</footer>-->
+<!--view all blog.date-->
+<script>
+function toggleBlog(btn) {
+  const card = btn.closest(".blog-card");
+  const content = card.querySelector(".blog-content");
+  const textSpan = btn.querySelector("span:first-child");
+
+  content.classList.toggle("expanded");
+
+  textSpan.innerText =
+    content.classList.contains("expanded") ? "Show Less" : "Read Article";
+}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".blog-card").forEach(card => {
+    const content = card.querySelector(".blog-content");
+    const btn = card.querySelector(".read-btn");
+
+    // Temporarily remove max-height to measure real height
+    const originalMaxHeight = content.style.maxHeight;
+    content.style.maxHeight = "none";
+
+    const fullHeight = content.scrollHeight;
+
+    content.style.maxHeight = originalMaxHeight;
+
+    if (fullHeight <= 130) {
+      btn.style.display = "none";
+    }
+  });
+});
+</script>
+
+
+</body>
+</html>
+
+

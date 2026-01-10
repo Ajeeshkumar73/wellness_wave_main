@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat with {{ patient.username }}</title>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+
+   <!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec80",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#102219",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Scrollbar for cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background: #334155;
+        }
+        .dark ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden h-screen w-full flex flex-col">
+<!-- Top Navigation Bar -->
+<header class="flex items-center justify-between shrink-0 whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark px-6 py-3 z-20">
+<div class="flex items-center gap-4">
+<div class="size-8 flex items-center justify-center ">
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Wellness Wave</h2>
+<div class="hidden sm:flex items-center gap-2 px-3 py-1">
+</div>
+</div>
+<div class="flex gap-3">
+<a href="{{ url_for('doctor_home') }}"><button class="flex items-center justify-center overflow-hidden rounded-lg size-10 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-[#0d1b14] dark:text-white transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button></a>
+</div>
+</header>
+<!-- Main Layout -->
+<div class="flex flex-1 overflow-hidden relative">
+<!-- Chat Area -->
+<main class="flex-1 flex flex-col relative min-w-0 bg-background-light dark:bg-background-dark">
+<div id="chatBody" class="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col gap-6">
+
+{% for msg in messages %}
+    {% if msg.sender == "doctor" %}
+    <!-- Doctor message (right) -->
+    <div class="flex items-end gap-3 max-w-[85%] self-end flex-row-reverse">
+        <div class="flex flex-col gap-1 items-end">
+            <span class="text-xs text-slate-500">You</span>
+            <div class="p-3.5 rounded-2xl rounded-br-none bg-primary text-[#0d1b14]">
+                {% if msg.file %}
+                    <a href="{{ msg.file }}" target="_blank" class="underline">📎 View File</a>
+                {% else %}
+                    {{ msg.message }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- Patient message (left) -->
+    <div class="flex items-end gap-3 max-w-[85%] self-start">
+        <div class="flex flex-col gap-1 items-start">
+            <span class="text-xs text-slate-500">{{ patient.username }}</span>
+            <div class="p-3.5 rounded-2xl rounded-bl-none bg-white dark:bg-slate-800 border">
+                {% if msg.file %}
+                    <a href="{{ msg.file }}" target="_blank">📎 View File</a>
+                {% else %}
+                    {{ msg.message }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
+
+</div>
+
+
+
+<!-- Input Area -->
+<div class="shrink-0 p-4 sm:p-5 bg-white dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 z-10">
+<div class="flex items-end gap-2 sm:gap-4 max-w-5xl mx-auto">
+    <input type="file" id="fileInput" hidden onchange="uploadFile()">
+<button onclick="document.getElementById('fileInput').click()" class="shrink-0 size-10 rounded-full flex items-center justify-center text-slate-500 hover:text-slate-700 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800 transition-colors" title="Attach file">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<div class="flex-1 relative">
+<input class="w-full bg-gray-50 dark:bg-gray-800 text-text-main dark:text-white placeholder-text-secondary dark:placeholder-gray-500 border-0 focus:ring-2 focus:ring-primary rounded-xl px-5 py-3 pr-12 text-base shadow-sm transition-all" id="message" placeholder="Type message..." type="text"/>
+</div>
+<button onclick="sendMessage()" class="shrink-0 h-12 w-12 rounded-xl bg-primary hover:bg-green-400 text-[#0d1b14] flex items-center justify-center transition-all shadow-md hover:shadow-lg active:scale-95" title="Send message">
+<span class="material-symbols-outlined fill-current">send</span>
+</button>
+</div>
+<div class="text-center mt-2">
+<p class="text-[10px] text-slate-400 dark:text-slate-600">Messages are encrypted.</p>
+</div>
+</div>
+</main>
+<!-- Right Sidebar (Patient Info) -->
+<aside class="hidden lg:flex flex-col w-80 bg-white dark:bg-[#152e22] border-l border-slate-200 dark:border-slate-800 shrink-0 overflow-y-auto">
+<div class="p-6 flex flex-col gap-6">
+<!-- Patient Profile -->
+<div class="flex flex-col items-center text-center pb-6 border-b border-slate-100 dark:border-slate-800">
+<h1 class="text-[#0d1b14] dark:text-white text-lg font-bold leading-normal">{{ patient.username }}</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium">ID: {{ patient._id }}</p>
+</div>
+<!-- Quick Actions -->
+<!--<div class="flex flex-col gap-3">
+<button class="flex w-full cursor-pointer items-center justify-between rounded-lg px-4 py-3 bg-slate-50 hover:bg-slate-100 dark:bg-slate-800/50 dark:hover:bg-slate-800 transition-colors group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-400 group-hover:text-primary transition-colors">description</span>
+<span class="text-slate-700 dark:text-slate-200 text-sm font-bold">Patient Summary</span>
+</div>
+<span class="material-symbols-outlined text-slate-400 text-lg">chevron_right</span>
+</button>
+</div>-->
+<!-- Notes Section -->
+<div class="flex flex-col gap-2 mt-auto">
+<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-1">Private Notes</h3>
+<div class="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-100 dark:border-yellow-900/30 p-3 rounded-lg">
+ {% if notes %}
+    {% for note in notes %}
+      <div class="bg-yellow-50 dark:bg-yellow-900/10
+                  border border-yellow-100 dark:border-yellow-900/30
+                  p-3 rounded-lg mb-3">
+
+        <ul class="list-disc ml-4 space-y-1 text-xs text-yellow-800 dark:text-yellow-400">
+          {% for n in note.notes %}
+            <li>{{ n }}</li>
+          {% endfor %}
+        </ul>
+
+        <p class="text-[10px] text-gray-400 mt-2">
+          {{ note.created_at.strftime("%d %b %Y") }}
+        </p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-xs text-gray-400">No notes added yet.</p>
+  {% endif %}
+</div>
+</div>
+</div>
+</aside>
+
+<script>
+const socket = io({ transports:["websocket"] });
+const room = "{{ room }}";
+const chatBody = document.getElementById("chatBody");
+
+socket.emit("join", { room });
+
+function scrollBottom() {
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+socket.on("receive_message", data => {
+
+    let html = "";
+
+    if (data.sender === "doctor") {
+        html = `
+        <div class="flex items-end gap-3 max-w-[85%] self-end flex-row-reverse">
+            <div class="flex flex-col gap-1 items-end">
+                <span class="text-xs text-slate-500">You</span>
+                <div class="p-3.5 rounded-2xl rounded-br-none bg-primary text-[#0d1b14]">
+                    ${data.file 
+                        ? `<a href="${data.file}" target="_blank" class="underline">📎 View File</a>`
+                        : data.message}
+                </div>
+            </div>
+        </div>`;
+    } else {
+        html = `
+        <div class="flex items-end gap-3 max-w-[85%] self-start">
+            <div class="flex flex-col gap-1 items-start">
+                <span class="text-xs text-slate-500">${data.sender_name || "Patient"}</span>
+                <div class="p-3.5 rounded-2xl rounded-bl-none bg-white dark:bg-slate-800 border">
+                    ${data.file 
+                        ? `<a href="${data.file}" target="_blank">📎 View File</a>`
+                        : data.message}
+                </div>
+            </div>
+        </div>`;
+    }
+
+    chatBody.insertAdjacentHTML("beforeend", html);
+    scrollBottom();
+});
+window.onload = scrollBottom;
+
+function sendMessage() {
+    const input = document.getElementById("message");
+    if (!input.value.trim()) return;
+
+    socket.emit("send_message", {
+        room: room,
+        sender: "doctor",
+        sender_id: "{{ doctor_id }}",
+        receiver_id: "{{ user_id }}",
+        message: input.value
+    });
+
+    input.value = "";
+}
+
+
+function uploadFile() {
+    const file = document.getElementById("fileInput").files[0];
+    if (!file) return;
+
+    const fd = new FormData();
+    fd.append("file", file);
+
+    fetch("/upload", { method:"POST", body:fd })
+        .then(res => res.json())
+        .then(data => {
+            socket.emit("send_message", {
+                room: room,
+                sender: "doctor",
+                sender_id: "{{ doctor_id }}",
+                receiver_id: "{{ user_id }}",
+                file: data.file_url
+            });
+        });
+}
+</script>
+
+</body>
+</html>

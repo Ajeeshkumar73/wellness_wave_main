@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
+    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
+    
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+</head>
+<body class="bg-gray-100">
+  
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light  px-4" style="background-color:#efefef;">
+  <a class="navbar-brand d-flex align-items-center" href="#" style="padding-left: 30px;">
+    <span><strong>Admin Dashboard</strong> <small class="text-danger">| Wellness Wave</small></span>
+  </a>
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+  <!-- Hero Section -->
+<section class="relative text-white text-center py-20">
+  <!-- Background Image -->
+ <img src="{{ url_for('static', filename='images/herosection.png') }}" 
+       alt="Hero Image"
+       class="absolute inset-0 w-full h-full object-cover">
+
+  <!-- Content -->
+  <div class="relative z-10">
+    <h1 class="text-4xl font-bold mb-6">Welcome to the Management Panel</h1>
+    <p class="mb-8 text-lg">Choose whether you want to manage users or doctors.</p>
+    <div class="space-x-6">
+      <button onclick="showSection('userSection')" 
+              class="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-100">
+        Users
+      </button>
+      <button onclick="showSection('doctorSection')" 
+              class="bg-white text-blue-600 font-semibold px-6 py-3 rounded-lg shadow hover:bg-gray-100">
+        Doctors
+      </button>
+    </div>
+  </div>
+</section>
+
+
+        
+ <!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="container mt-3">
+      {% for category, message in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show flash-msg" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+
+  <!-- User Section -->
+  <section id="userSection" class="hidden p-8">
+    <h2 class="text-2xl font-bold mb-4">User List</h2>
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Join Date</th>
+            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Username</th>
+            <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Email</th>
+            <th class="px-6 py-3 text-right text-sm font-medium text-gray-500">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            {% for user in users %}
+          <tr onclick="showUserDetails('2023-01-15','Sophia Clark','sophia.clark@email.com')" class="cursor-pointer hover:bg-gray-50">
+            <td class="px-6 py-4 text-sm text-gray-700">{{ user.created_at.strftime('%Y-%m-%d') if user.created_at else "N/A" }}</td>
+            <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ user.username }}</td>
+            <td class="px-6 py-4 text-sm text-gray-700">{{ user.email }}</td>
+            <td class="px-6 py-4 text-right text-sm font-medium">
+             <form method="POST" action="{{ url_for('delete_user', user_id=user._id) }}" onsubmit="return confirm('Are you sure you want to delete this user?');">
+<button type="submit" class="text-red-600 hover:text-red-800">
+<span class="material-symbols-outlined text-base">delete</span>
+</button>
+</form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+<td colspan="4" class="text-center py-6 text-gray-500">No users found.</td>
+</tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+<!-- Doctor Section -->
+<section id="doctorSection" class="hidden p-8">
+  <h2 class="text-2xl font-bold mb-4">Doctor List</h2>
+  <div class="overflow-x-auto bg-white shadow rounded-lg">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Join Date</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Doctor Name</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Specialization</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Quqlification</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Experience</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Reg_id</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Working Hospital</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Phone No</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Address</th>
+          <th class="px-6 py-3 text-left text-sm font-medium text-gray-500">Status</th>
+          <th class="px-6 py-3 text-right text-sm font-medium text-gray-500">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        {% for doctor in doctors %}
+        <tr class="hover:bg-gray-50">
+          <td class="px-6 py-4 text-sm text-gray-700">
+            {{ doctor.created_at.strftime('%Y-%m-%d') if doctor.created_at else "N/A" }}
+          </td>
+          <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ doctor.name }}</td>
+          <td class="px-6 py-4 text-sm text-gray-700">{{ doctor.specialization }}</td>
+          <td class="px-6 py-4 text-sm text-gray-700">{{ doctor.qualification }}</td>
+          <td class="px-6 py-4 text-sm text-gray-700">{{ doctor.experience }} yrs</td>
+          <td class="px-6 py-4 text-sm text-gray-700">{{ doctor.registration_id }}</td>
+          <td class="px-6 py-4 text-sm text-gray-700">{{ doctor.hospital }}</td>
+          <td class="px-6 py-4 text-sm text-gray-700">{{ doctor.phone }}</td>
+          <td class="px-6 py-4 text-sm text-gray-700">{{ doctor.address }}</td>
+          <td class="px-6 py-4 text-sm text-gray-700">
+            {% if doctor.approved %}
+              <span class="text-green-600 font-semibold">Approved</span>
+            {% else %}
+              <span class="text-yellow-600 font-semibold">Pending</span>
+            {% endif %}
+          </td>
+          <td class="px-6 py-4 text-right text-sm font-medium flex space-x-2 justify-end">
+            {% if not doctor.approved %}
+            <!-- Approve button -->
+            <form method="POST" action="{{ url_for('approve_doctor', doctor_id=doctor._id) }}">
+              <button type="submit" class="text-green-600 hover:text-green-800" title="Approve">
+                <span class="material-symbols-outlined text-base">check_circle</span>
+              </button>
+            </form>
+            {% endif %}
+            
+            <!-- Delete button -->
+            <form method="POST" action="{{ url_for('reject_doctor', doctor_id=doctor._id) }}"
+                  onsubmit="return confirm('Are you sure you want to delete this doctor?');">
+              <button type="submit" class="text-red-600 hover:text-red-800" title="Delete">
+                <span class="material-symbols-outlined text-base">delete</span>
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5" class="text-center py-6 text-gray-500">No doctors found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+  
+
+  <!-- User Details Modal -->
+  <div id="userDetailModal" class="fixed inset-0 hidden bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative">
+      <button onclick="closeUserModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">User Details</h2>
+      <div id="userDetailsContent" class="space-y-2">
+        <p><strong>Join Date:</strong> <span id="detailJoinDate"></span></p>
+        <p><strong>Username:</strong> <span id="detailUsername"></span></p>
+        <p><strong>Email:</strong> <span id="detailEmail"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Show section
+    function showSection(sectionId) {
+      document.getElementById("userSection").classList.add("hidden");
+      document.getElementById("doctorSection").classList.add("hidden");
+      document.getElementById(sectionId).classList.remove("hidden");
+    }
+
+    // Open user modal with details
+    function showUserDetails(joinDate, username, email) {
+      document.getElementById("detailJoinDate").textContent = joinDate;
+      document.getElementById("detailUsername").textContent = username;
+      document.getElementById("detailEmail").textContent = email;
+      document.getElementById("userDetailModal").classList.remove("hidden");
+    }
+
+    // Close modal
+    function closeUserModal() {
+      document.getElementById("userDetailModal").classList.add("hidden");
+    }
+  </script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+const section = params.get("section");
+
+if (section === "user") {
+  showSection("userSection");   // open User section
+} else if (section === "doctor") {
+  showSection("doctorSection"); // open Doctor section
+}
+</script>
+
+<!--flash hide-->   
+ <script>
+  setTimeout(function () {
+    const alerts = document.querySelectorAll(".flash-msg");
+    alerts.forEach(function(alert) {
+      const bsAlert = new bootstrap.Alert(alert);
+      bsAlert.close();
+    });
+  }, 1000); 
+</script>
+
+
+
+</body>
+</html>
