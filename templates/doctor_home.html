@@ -3,444 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
-    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
+
+    <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
+<title>Wellness Wave - Doctor Dashboard</title>
     
-    
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-    <style>
-  h2 {
-      font-weight: 600;
-      color: black;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    h2 i {
-      color: #0d6efd;
-    }
-    .card {
-  
-      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
-    }
-    table thead {
-      border-radius: 12px 12px 0 0;
-    }
-    table tbody tr:hover {
-      background: #f8f9fa;
-      transition: background 0.2s ease-in-out;
-    }
-    .badge {
-      font-size: 0.85rem;
-      padding: 6px 10px;
-      border-radius: 8px;
-    }
+   <!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Manrope -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#0d69f2",
+              "background-light": "#f5f7f8",
+              "background-dark": "#0f1723",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
 
+        /* Notification wrapper */
+        .notify {
+          position: relative;
+          cursor: pointer;
+          padding: 8px;
+          border-radius: 8px;
+          background: #f1f5f9;
+          transition: background 0.2s ease;
+        }
 
-/* Sidebar customization */
-.offcanvas-body form {
-    max-width: 400px;
-    margin: 0 auto;
-}
+        .notify:hover {
+          background: #e2e8f0;
+        }
 
-.offcanvas-body form .text-center {
-    position: relative;
-}
+        /* Bell icon */
+        .bell-icon {
+          font-size: 22px;
+          color: #475569;
+        }
 
-.offcanvas-body form img,
-.offcanvas-body form .fa-user-circle {
-    border: 3px solid #0d6efd;
-    padding: 5px;
-    background-color: #f8f9fa;
-}
+        /* Notification count badge */
+        .notify-count {
+          position: absolute;
+          top: 2px;
+          right: 2px;
+          background: #ef4444;
+          color: white;
+          font-size: 11px;
+          font-weight: 600;
+          padding: 2px 6px;
+          border-radius: 999px;
+          display: none; /* JS controls visibility */
+        }
 
-.offcanvas-body form input[type="file"] {
-    padding: 5px;
-    font-size: 0.9rem;
-}
+        /* Dropdown */
+        .dropdown {
+          position: absolute;
+          top: 45px;
+          right: 0;
+          width: 260px;
+          background: white;
+          border-radius: 10px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+          overflow: hidden;
+          display: none;
+          z-index: 999;
+        }
 
-.offcanvas-body form .form-label {
-    font-weight: 600;
-    color: #495057;
-}
+        /* Notification item */
+        .notification-item {
+          display: block;
+          padding: 12px 14px;
+          font-size: 14px;
+          color: #334155;
+          text-decoration: none;
+          border-bottom: 1px solid #f1f5f9;
+          transition: background 0.2s ease;
+        }
 
-.offcanvas-body form textarea {
-    resize: none;
-}
+        .notification-item:hover {
+          background: #f8fafc;
+        }
 
-.offcanvas-body form button {
-    background-color: #0d6efd;
-    border: none;
-    font-weight: 600;
-    transition: background-color 0.2s ease-in-out;
-}
+        /* Empty message */
+        .dropdown a {
+          display: block;
+          padding: 14px;
+          text-align: center;
+          color: #64748b;
+          font-size: 14px;
+        }
 
-.offcanvas-body form button:hover {
-    background-color: #0b5ed7;
-}
-
-/* Optional: add a subtle card effect */
-.offcanvas-body {
-    background-color: #ffffff;
-    border-radius: 12px;
-    box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
-    padding: 20px;
-}
- .notify {
-  position: relative;
-  cursor: pointer;
-}
-
-.notify-count {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: red;
-  color: white;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 50%;
-  display: none;
-  z-index: 1001;
-}
-
-.dropdown {
-  position: absolute;
-  right: 0;
-  top: 32px;
-  width: 240px;
-  background: white;
-  box-shadow: 0 8px 20px rgba(0,0,0,.2);
-  border-radius: 8px;
-  display: none;
-  z-index: 2000;   /* 🔥 THIS FIXES HERO OVERLAP */
-}
-
-.dropdown a {
-  display: block;
-  padding: 10px 12px;
-  text-decoration: none;
-  color: #333;
-  font-size: 14px;
-}
-
-.dropdown a:hover {
-  background: #f5f5f5;
-}
-
-.notification-item {
-  padding: 10px 12px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.notification-item:hover {
-  background: #f5f5f5;
-}
-
-.no-hover:hover,
-.no-hover:focus,
-.no-hover:active {
-    background-color: transparent !important;
-    color: #0d6efd !important;        /* primary text */
-    border-color: #0d6efd !important;
-    box-shadow: none !important;
-    transform: none !important;
-}
-
-.note-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.4);
-    display: none;              /* 🔥 hidden by default */
-    align-items: center;
-    justify-content: center;
-    z-index: 1050;
-}
-.note-modal.show {
+        #noteModal.show {
     display: flex;
-}
+  }
 
-/* Overlay */
-.note-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.55); /* slate overlay */
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    backdrop-filter: blur(3px);
-    border-radius: 10px;
-}
+  html{
+    scroll-behavior:smooth;
+  }
 
-/* Show modal */
-.note-modal.show {
-    display: flex;
-}
-
-/* Modal box */
-.note-modal > div {
-    animation: slideFade 0.25s ease;
-}
-
-/* Heading */
-.note-modal h2 {
-    color: #0f172a;
-}
-
-/* Subtext */
-.note-modal p {
-    font-size: 0.875rem;
-    color: #64748b;
-    margin-bottom: 0.75rem;
-}
-
-/* Textarea */
-#noteText {
-    resize: none;
-    border: 1px solid #cbd5f5;
-    font-size: 0.9rem;
-    line-height: 1.6;
-    background: #f8fafc;
-}
-
-#noteText:focus {
-    outline: none;
-    border-color: #bcbdbdff;
-    box-shadow: 0 0 0 2px rgba(179, 179, 179, 0.25);
-    background: #ffffff;
-}
-
-/* Buttons */
-.note-modal button {
-    font-size: 0.875rem;
-    border-radius: 8px;
-    transition: all 0.15s ease-in-out;
-}
-
-/* Cancel */
-.note-modal button:first-child {
-    background: #e5e7eb;
-    color: #374151;
-}
-
-.note-modal button:first-child:hover {
-    background: #d1d5db;
-}
-
-/* Save */
-.note-modal button:last-child {
-    background: #13ec80;
-    color: #0f172a;
-}
-
-.note-modal button:last-child:hover {
-    background: #10d26e;
-}
-
-/* Dark mode */
-.dark .note-modal h2 {
-    color: #e5e7eb;
-}
-
-.dark .note-modal p {
-    color: #94a3b8;
-}
-
-.dark #noteText {
-    background: #020617;
-    border-color: #334155;
-    color: #e5e7eb;
-}
-
-.dark #noteText:focus {
-    background: #020617;
-    border-color: #13ec80;
-}
-
-/* Animation */
-@keyframes slideFade {
-    from {
-        opacity: 0;
-        transform: translateY(10px) scale(0.97);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-
-</style>
+    </style>
 </head>
-<body style="background-color:#ffffff;">
-    
-    <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light px-4" >
-  <a class="navbar-brand d-flex align-items-center" href="#" style="padding-left: 30px;">
-
-    <span><strong>Wellness Wave</strong> <small class="text-danger">| Family Doctor</small></span>
-  </a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="padding-right: 100px;">
-    <ul class="navbar-nav align-items-center">
-         <li class="nav-item"><a class="nav-link" href="#appt"></i>Appointments</a></li>
-                 <li class="nav-item">
-    <a class="nav-link" href="{{ url_for('doctor_blog_page', doctor_id=(doctor._id)) }}">
-        <i class="bi bi-journal-text"></i> Blog
-    </a>
-</li>
-
-      <li class="nav-item"><a class="nav-link" href="#" data-bs-toggle="offcanvas" data-bs-target="#profileSidebar"><i class="fas fa-user me-1"></i>Profile</a></li>
-      <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">
-                                Logout
-                            </a></li>
-    </ul>
-  </div>
- <ul class="navbar-nav align-items-center ms-3">
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation Bar -->
+<header class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 md:px-12 py-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="p-2">
+</div>
+<h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Wellness Wave</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold text-sm" href="#appt">Appointments</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="{{ url_for('doctor_blog_page', doctor_id=(doctor._id)) }}">Blog</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="{{ url_for('logout') }}">Logout</a>
+</nav>
+<div class="flex items-center gap-4">
+ <ul class="navbar-nav ms-3">
   <li class="nav-item position-relative">
     <div class="notify" onclick="toggleNotifications(event)">
-        <i class="bi bi-bell fs-5"></i>
+       <span class="material-symbols-outlined bell-icon">notifications</span>
         <span id="notifyCount" class="notify-count">0</span>
         <div id="notifyDropdown" class="dropdown"></div>
     </div>
   </li>
 </ul>
+  <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary bg-slate-100">
+          {% if doctor.profile_pic %}
+            <img src="{{ url_for('static', filename=doctor.profile_pic) }}"
+                 class="w-full h-full object-cover">
+          {% else %}
+            <span class="material-symbols-outlined text-4xl text-slate-400 flex h-full items-center justify-center">
+              person
+            </span>
+          {% endif %}
+        </div>
+</div>
+</header>
 
-
-</nav>
+<!--flash message-->
     
-    <!-- Flash Messages -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
-    <div class="container mt-3">
+    <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] w-full max-w-md px-4 space-y-3">
       {% for category, message in messages %}
-        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show flash-msg" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div 
+          class="flash-toast bg-[#f0fdf4] border border-emerald-200 rounded-full py-2.5 pl-4 pr-3 shadow-lg shadow-emerald-900/5 flex items-center justify-between backdrop-blur-sm
+          {% if category == 'error' %}
+            bg-red-50 border-red-200
+          {% endif %}"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined 
+              {% if category == 'error' %}
+                text-red-600
+              {% else %}
+                text-emerald-600
+              {% endif %}
+              text-[20px] leading-none">
+              {% if category == 'error' %}
+                error
+              {% else %}
+                check_circle
+              {% endif %}
+            </span>
+
+            <span class="text-[#1e293b] text-sm font-medium">
+              {{ message }}
+            </span>
+          </div>
+
+          <button 
+            onclick="this.closest('.flash-toast').remove()"
+            class="flex items-center justify-center p-1 rounded-full hover:bg-emerald-100 text-emerald-600 transition-colors
+            {% if category == 'error' %}
+              hover:bg-red-100 text-red-600
+            {% endif %}">
+            <span class="material-symbols-outlined text-lg">close</span>
+          </button>
         </div>
       {% endfor %}
     </div>
   {% endif %}
 {% endwith %}
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12" style="margin-top: 20px; margin-left: 20px;color:#007bff;">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3 mb-0">
-                    {{ doctor.name }}
-                </h1>
-                <div class="text-muted" style="margin-right:50px; color:#007bff;">
-                    <i class="fas fa-stethoscope me-1"></i>
+<main class="max-w-7xl mx-auto px-6 py-8">
+<!-- Hero / Summary Section -->
+<section class="mb-10">
+<div class="relative overflow-hidden rounded-xl bg-primary/10 dark:bg-primary/5 min-h-[220px] flex items-end group">
+<div class="absolute inset-0 bg-cover bg-center mix-blend-overlay opacity-30 group-hover:scale-105 transition-transform duration-700" data-alt="Modern medical facility with clean blue diagnostic screens" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgXm4T9HD4jTDkI_wVgyxNm6imUSZaaK7ZBHrTh_4CoT0cXNRDh5AKwmOzK32dfOb9Z-AFdf3lxHJsLWFME2fPyrMl-82F8Z8mJ0jkmXAN0Bw2HjkQrgj1J6AosOshnnoWYG08ISFuEe2WJDCxJT9I4pk8Kkt7ofZv-4QLVwNNiY18gAZtYkffGH2ZwHG6bZonnJHlPNxAqcIMMGjSMnGHUdaCwj155lFrfj6clBLuNenmG7MwfWr7AlGcjVMeInXkuP_JQ0wO-KA');"></div>
+<div class="relative p-8 md:p-12 w-full flex flex-col md:flex-row justify-between items-end md:items-center gap-6">
+<div>
+<h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Welcome back, {{ doctor.name }}</h2>
+ <div class="text-muted" style="margin-right:50px; color:#007bff;">
                     {{ doctor.specialization }}
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Hero Section -->
-<section class="hero-section d-flex flex-column justify-content-center align-items-center text-center text-white position-relative" 
-       style="min-height: 70vh; background: url('{{ url_for('static', filename='images/herosection.png') }}') no-repeat center center/cover;">
-
-  <!-- Overlay for better text contrast -->
-  <div class="position-absolute top-0 start-0 w-100 " style="background-color: rgba(0,0,0,0.5);"></div>
-
-  <!-- Hero Content -->
-  <div class="position-relative z-1"style="padding-top:0px;font-sixe 20px">
-    <h1 class="fw-bold mb-3" >Welcome to Wellness Wave</h1>
-    <p class="mb-4 fs-5">Helping to Build a Healthy Community</p>
-  </div>
+<p class="text-slate-600 dark:text-slate-400 max-w-lg">Your analytics dashboard is ready.</p>
+</div>
+<div class="flex flex-col items-end">
+<span id="todayDate"
+      class="px-4 py-1.5 bg-white dark:bg-slate-800 text-primary rounded-full text-sm font-bold shadow-sm mb-4">
+</span>
+<div class="flex gap-2">
+<button onclick="openProfile()" class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">edit</span>
+                                Edit Profile
+                            </button>
+</div>
+</div>
+</div>
+</div>
 </section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8" id="appt">
+  <div class="lg:col-span-12">
 
-<!-- Profile Sidebar -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="profileSidebar" aria-labelledby="profileSidebarLabel">
-  <div class="offcanvas-header">
-    <h5 id="profileSidebarLabel"><i class="fas fa-user me-2"></i>My Profile</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
-  </div>
-  <div class="offcanvas-body">
-    <form action="{{ url_for('doctor_home') }}" method="POST" enctype="multipart/form-data">
-      <div class="text-center mb-4">
-        {% if doctor.profile_pic %}
-          <img src="{{ url_for('static', filename=doctor.profile_pic) }}" class="rounded-circle" width="120" height="120">
-        {% else %}
-          <i class="fas fa-user-circle fa-5x text-secondary"></i>
-        {% endif %}
-        <input type="file" name="profile_pic" class="form-control mt-2">
-      </div>
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden">
 
-      <div class="mb-3">
-        <label class="form-label">Name</label>
-        <input type="text" name="name" class="form-control" value="{{ doctor.name }}">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Specialization</label>
-        <input type="text" name="specialization" class="form-control" value="{{ doctor.specialization }}">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Qualification</label>
-        <input type="text" name="qualification" class="form-control" value="{{ doctor.qualification }}">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Experience</label>
-        <input type="text" name="experience" class="form-control" value="{{ doctor.experience }}">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Registration ID</label>
-        <input type="text" name="registration_id" class="form-control" value="{{ doctor.registration_id }}">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Hospital</label>
-        <input type="text" name="hospital" class="form-control" value="{{ doctor.hospital }}">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Phone</label>
-        <input type="text" name="phone" class="form-control" value="{{ doctor.phone }}">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Address</label>
-        <textarea name="address" class="form-control" rows="4">{{ doctor.address }}</textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Bio</label>
-        <textarea name="bio" class="form-control" rows="3">{{ doctor.bio }}</textarea>
+      <!-- Header -->
+      <div class="p-6 border-b border-slate-100 dark:border-slate-800
+                  flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+          Patient Appointments
+        </h3>
+
+        <div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg w-fit">
+          <button id="prevDay"
+            class="px-4 py-1.5 rounded-md text-sm font-medium text-slate-500
+                   hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition">
+            Previous
+          </button>
+
+          <button id="currentDay"
+            class="px-4 py-1.5 rounded-md text-sm font-bold
+                   bg-white dark:bg-slate-700 text-primary shadow-sm">
+          </button>
+
+          <button id="nextDay"
+            class="px-4 py-1.5 rounded-md text-sm font-medium text-slate-500
+                   hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition">
+            Next
+          </button>
+        </div>
       </div>
 
-      <button type="submit" class="btn btn-primary w-100">Save Changes</button>
-    </form>
+      <!-- No appointments today placeholder -->
+<div id="noTodayTable" class="hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-slate-50/50 dark:bg-slate-800/30">
+          <th class="px-6 py-4 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+            Patient
+          </th>
+          <th class="px-6 py-4 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+            Contact
+          </th>
+          <th class="px-6 py-4 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+            Time
+          </th>
+          <th class="px-6 py-4 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+            Actions
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td colspan="4" class="px-6 py-12 text-center">
+            <span class="material-symbols-outlined text-4xl text-slate-400 mb-2 block">
+              event_busy
+            </span>
+            <p class="text-slate-500 font-medium">
+              No appointments today
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
-   <div class="container py-5" id="appt">
-  <h2 class="mb-4">
-     Patients' Appointments
-  </h2>
 
-  <div class="card p-4">
-    {% if appointments %}
-      <!-- Navigation header -->
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <button id="prevDay" class="btn btn-outline-primary btn-sm no-hover">
-          <i class="fas fa-chevron-left"></i> Previous
-        </button>
-        <h4 id="currentDay"></h4>
-        <button id="nextDay" class="btn btn-outline-primary btn-sm no-hover">
-          Next <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
+      {% if appointments %}
 
-      <!-- Group and sort appointments by date -->
       {% set grouped = {} %}
       {% for appt in appointments %}
         {% set day = appt.appointment_date %}
@@ -451,96 +313,334 @@
       {% endfor %}
 
       {% for day in grouped.keys()|sort %}
-        <div class="day-table" data-date="{{ day }}" style="display: none;">
-          <h5 class="mb-3 text-secondary">
-           <i class="fas fa-calendar-day me-2"></i>
-  <span class="formatted-date" data-date="{{ day }}">{{ day }}</span>
-          </h5>
-          <div class="table-responsive">
-            <table class="table table-hover align-middle">
-              <thead class="table-primary text-center">
-                <tr>
-                  <th>Patient</th>
-                  <th>Notes</th>
-                  <th>Chat with Patient</th>
-                  <th>Prediction summary</th>
-                  <th>Phone No</th>
-                  <th>Email</th>
-                  <th>Time</th>
-                </tr>
-              </thead>
-              <tbody class="text-center">
-                {% for appt in grouped[day] %}
-                  <tr>
-                    <td class="fw-semibold">{{ appt.user.username }}</td>
+      <!-- ❗ NO hidden class -->
+      <div class="day-table" data-date="{{ day }}" style="display:none">
 
-<td><button onclick="openNoteModal('{{ appt.user._id }}')"
-class="btn btn-sm btn-outline-primary no-hover">
-+ Note
-</button>
-</td>
-                    <td><a href="{{ url_for('doctor_chat', user_id=appt.user._id) }}"
-   class="btn btn-sm btn-outline-primary no-hover">
-    Chat
-</a>
-</td>
-<td><a href="{{ url_for('summary', user_id=appt.user._id) }}"><button 
-class="btn btn-sm btn-outline-primary no-hover">
-view
-</button></a>
-</td>
-                    <td>{{ appt.user.phone }}</td>
-                    <td>{{ appt.user.email }}</td>
-                    <td><span>{{ appt.time }}</span></td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
+        <!-- Optional visible date (used by 2nd script if needed) -->
+        <div class="px-6 py-3 text-sm text-slate-500 dark:text-slate-400">
+          Date:
+          <span class="formatted-date font-semibold" data-date="{{ day }}">
+            {{ day }}
+          </span>
         </div>
-      {% endfor %}
-    {% else %}
-      <div class="alert alert-info">
-        <i class="fas fa-info-circle me-2"></i>No appointments yet.
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+
+            <thead>
+              <tr class="bg-slate-50/50 dark:bg-slate-800/30">
+                <th class="px-6 py-4 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+                  Patient
+                </th>
+                <th class="px-6 py-4 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+                  Contact
+                </th>
+                <th class="px-6 py-4 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+                  Time
+                </th>
+                <th class="px-6 py-4 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+              {% for appt in grouped[day] %}
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition">
+
+                <td class="px-6 py-5">
+                  <div class="flex items-center gap-3">
+                    <div class="h-9 w-9 rounded-full bg-primary/10 text-primary
+                                flex items-center justify-center font-bold text-sm">
+                      {{ appt.user.username[:2]|upper }}
+                    </div>
+                    <div>
+                      <div class="text-sm font-bold text-slate-900 dark:text-white">
+                        {{ appt.user.username }}
+                      </div>
+                      <div class="text-xs text-slate-500">
+                        ID: {{ appt.user._id }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <td class="px-6 py-5">
+                  <div class="text-sm text-slate-600 dark:text-slate-400">
+                    {{ appt.user.phone }}
+                  </div>
+                  <div class="text-xs text-slate-400">
+                    {{ appt.user.email }}
+                  </div>
+                </td>
+
+                <td class="px-6 py-5">
+                  <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-sm text-primary">
+                      schedule
+                    </span>
+                    <span class="text-sm font-medium text-slate-900 dark:text-white">
+                      {{ appt.time }}
+                    </span>
+                  </div>
+                </td>
+
+                <td class="px-6 py-5">
+                  <div class="flex items-center gap-2">
+
+                    <button onclick="openNoteModal('{{ appt.user._id }}')"
+                      class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800
+                             text-slate-600 dark:text-slate-400
+                             hover:bg-primary hover:text-white transition">
+                      <span class="material-symbols-outlined text-[20px]">
+                        sticky_note_2
+                      </span>
+                    </button>
+
+                    <a href="{{ url_for('doctor_chat', user_id=appt.user._id) }}"
+                      class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800
+                             text-slate-600 dark:text-slate-400
+                             hover:bg-primary hover:text-white transition">
+                      <span class="material-symbols-outlined text-[20px]">
+                        chat
+                      </span>
+                    </a>
+
+                    <a href="{{ url_for('summary', user_id=appt.user._id) }}"
+                      class="px-3 py-1.5 rounded-lg bg-primary/10 text-primary
+                             text-xs font-bold hover:bg-primary hover:text-white transition">
+                      Prediction Summary
+                    </a>
+
+                  </div>
+                </td>
+
+              </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
       </div>
-    {% endif %}
+      {% endfor %}
+
+      {% else %}
+      <div class="py-12 text-center">
+        <span class="material-symbols-outlined text-5xl text-slate-400 mb-3">
+          event_busy
+        </span>
+        <p class="text-slate-500">No appointments yet</p>
+      </div>
+      {% endif %}
+
+    </div>
   </div>
 </div>
 
-<div id="noteModal" class="note-modal">
-  <div class="bg-white dark:bg-slate-900 w-full max-w-md rounded-xl p-5 shadow-lg">
+</main>
 
-    <h2 class="text-lg font-bold mb-3">Notes</h2>
-    <p>add notes in bullet points</p>
+<!-- Modal: Add Note -->
+<div id="noteModal"
+     class="fixed inset-0 z-[60] hidden items-center justify-center p-4
+            bg-slate-900/60 backdrop-blur-sm">
 
-    <!-- Bullet Textarea -->
-    <textarea
-      id="noteText"
-      rows="6"
-      placeholder="• Start typing your notes..." 
-      class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-primary text-sm"
-      onkeydown="handleBullet(event)"
-    ></textarea>
+  <div
+    class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-xl
+           shadow-2xl overflow-hidden border
+           border-slate-200 dark:border-slate-800">
 
-    <div class="flex justify-end gap-3 mt-4">
-      <button onclick="closeNoteModal()" class="px-4 py-2 bg-gray-200 rounded">
-        Cancel
-      </button>
-      <button onclick="saveNote()" class="px-4 py-2 bg-primary rounded font-semibold">
-        Save
+    <!-- Header -->
+    <div
+      class="px-6 py-4 border-b border-slate-100 dark:border-slate-800
+             flex justify-between items-center
+             bg-slate-50/50 dark:bg-slate-800/50">
+
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+        Add Patient Notes
+      </h3>
+
+      <button onclick="closeNoteModal()"
+              class="text-slate-400 hover:text-slate-600
+                     dark:hover:text-slate-200 transition">
+        <span class="material-symbols-outlined">close</span>
       </button>
     </div>
-<h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mt-4">
-  Existing Notes
-</h3>
 
-<div id="existingNotes"
-     class="bg-yellow-50 border border-yellow-100 p-3 rounded-lg max-h-48 overflow-y-auto">
-  <p class="text-xs text-gray-400">No notes yet.</p>
+    <!-- Body -->
+    <div class="p-6">
+      <p class="text-sm text-slate-500 mb-4">Type your clinical observation here...<span class="font-bold text-slate-700 dark:text-slate-300"></span></p>
+
+      <!-- Note input -->
+      <textarea
+        id="noteText"
+        onkeydown="handleBullet(event)"
+        class="w-full bg-slate-50 dark:bg-slate-800
+               border border-slate-200 dark:border-slate-700
+               rounded-lg p-4 text-sm
+               focus:ring-2 focus:ring-primary/20
+               focus:border-primary outline-none
+               min-h-[120px]"
+        placeholder="Type your clinical observation here...">
+      </textarea>
+
+      <!-- Existing notes -->
+      <div class="mt-6">
+        <h4
+          class="text-xs font-bold uppercase tracking-wider
+                 text-slate-400 mb-3">
+          Existing Notes
+        </h4>
+
+        <div id="existingNotes"
+             class="space-y-3 max-h-40 overflow-y-auto
+                    pr-2 custom-scrollbar">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+
+    </div>
+    <div class="p-6 bg-slate-50/50 dark:bg-slate-800/50 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3">
+<button onclick="closeNoteModal()" class="px-6 py-2 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">Cancel</button>
+<button onclick="saveNote()" class="px-6 py-2 rounded-lg text-sm font-bold bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all">Save Note</button>
+</div>
+  </div>
 </div>
 
+<!--profile update-->
+<!-- Profile Sidebar Overlay -->
+<div id="profileOverlay"
+     class="fixed inset-0 z-[80] hidden bg-black/40 backdrop-blur-sm"
+     onclick="closeProfile()"></div>
+
+<!-- Profile Sidebar -->
+<div id="profileSidebar"
+     class="fixed inset-y-0 right-0 z-[90] w-full max-w-md
+            bg-white dark:bg-slate-900 shadow-2xl
+            border-l border-slate-200 dark:border-slate-800
+            transform translate-x-full transition-transform duration-300">
+
+  <div class="h-full flex flex-col">
+
+    <!-- Header -->
+    <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+        Edit Profile
+      </h3>
+      <button onclick="closeProfile()" class="text-slate-400 hover:text-slate-600">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <form action="{{ url_for('doctor_home') }}"
+          method="POST"
+          enctype="multipart/form-data"
+          class="flex-1 overflow-y-auto p-6 space-y-6">
+
+      <!-- Avatar -->
+      <div class="flex items-center gap-6">
+        <div class="h-20 w-20 rounded-full overflow-hidden border-2 border-primary bg-slate-100">
+          {% if doctor.profile_pic %}
+            <img src="{{ url_for('static', filename=doctor.profile_pic) }}"
+                 class="w-full h-full object-cover">
+          {% else %}
+            <span class="material-symbols-outlined text-4xl text-slate-400 flex h-full items-center justify-center">
+              person
+            </span>
+          {% endif %}
+        </div>
+
+        <label class="cursor-pointer px-4 py-2 text-sm font-bold rounded-lg
+                      bg-primary/10 text-primary hover:bg-primary hover:text-white transition">
+          Change Photo
+          <input type="file" name="profile_pic" hidden>
+        </label>
+      </div>
+      <p class="text-xs text-slate-400 mt-2">JPG, GIF or PNG. Max size of 800K</p>
+      <div class="space-y-6">
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Full Name</label>
+<input name="name" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="{{ doctor.name }}"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Specialization</label>
+<input name="specialization" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="{{ doctor.specialization }}"/>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Experience</label>
+<input name="experience" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="{{ doctor.experience }}"/>
+</div>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Qualification</label>
+<input name="qualification" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="{{ doctor.qualification }}"/>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Registration ID</label>
+<input name="registration_id" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="{{ doctor.registration_id }}"/>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Hospital</label>
+<input name="hospital" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="{{ doctor.hospital }}"/>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Phone</label>
+<input name="phone" class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all" type="text" value="{{ doctor.phone }}"/>
+</div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Address</label>
+<textarea name="address"
+  class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700
+         rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20
+         focus:border-primary outline-none transition-all min-h-[100px] resize-none">
+{{ doctor.address }}
+</textarea>
 
 </div>
+<div>
+<label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Bio</label>
+<textarea name="bio"
+  class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700
+         rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary/20
+         focus:border-primary outline-none transition-all min-h-[120px] resize-none">
+{{ doctor.bio }}
+</textarea>
+
+</div>
+      <!-- Footer -->
+      <div class="pt-6 flex gap-3">
+        <button type="button"
+                onclick="closeProfile()"
+                class="flex-1 py-3 rounded-lg text-sm font-bold
+                       bg-slate-100 dark:bg-slate-800 text-slate-600">
+          Cancel
+        </button>
+
+        <button type="submit"
+                class="flex-1 py-3 rounded-lg text-sm font-bold
+                       bg-primary text-white shadow-lg shadow-primary/20">
+          Save Changes
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<!--profile update-->
+<script>
+function openProfile() {
+  document.getElementById("profileSidebar").classList.remove("translate-x-full");
+  document.getElementById("profileOverlay").classList.remove("hidden");
+}
+
+function closeProfile() {
+  document.getElementById("profileSidebar").classList.add("translate-x-full");
+  document.getElementById("profileOverlay").classList.add("hidden");
+}
+</script>
+
 
 <!--note-->
 <script>
@@ -676,23 +776,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function showCurrent() {
-    tables.forEach(t => t.style.display = "none");
+  tables.forEach(t => t.style.display = "none");
 
-    if (currentIndex === -1) {
-      // Today has no appointments
-      currentDayElem.textContent = "No appointments today";
-      prevBtn.disabled = tables.length === 0;
-      nextBtn.disabled = tables.length === 0;
-    } else {
-      const tableDate = toDate(tables[currentIndex].dataset.date);
-      currentDayElem.textContent = formatDateDMY(tables[currentIndex].dataset.date);
-      tables[currentIndex].style.display = "block";
+  const noTodayTable = document.getElementById("noTodayTable");
+  noTodayTable.classList.add("hidden");
 
-      // Disable buttons at edges
-      prevBtn.disabled = currentIndex === 0;
-      nextBtn.disabled = currentIndex === tables.length - 1;
-    }
+  if (currentIndex === -1) {
+    // 👉 Today has no appointments
+    const todayStr = formatDateDMY(
+      `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`
+    );
+
+    currentDayElem.textContent = `Today: ${todayStr}`;
+    noTodayTable.classList.remove("hidden");
+
+    prevBtn.disabled = tables.length === 0;
+    nextBtn.disabled = tables.length === 0;
+  } else {
+    const dateStr = tables[currentIndex].dataset.date;
+
+    currentDayElem.textContent = formatDateDMY(dateStr);
+    tables[currentIndex].style.display = "block";
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === tables.length - 1;
   }
+}
+
 
   showCurrent();
 
@@ -718,6 +828,8 @@ document.addEventListener("DOMContentLoaded", () => {
     showCurrent();
   });
 });
+
+
 </script>
 
 
@@ -745,14 +857,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 <!--flash hide-->   
- <script>
-  setTimeout(function () {
-    const alerts = document.querySelectorAll(".flash-msg");
-    alerts.forEach(function(alert) {
-      const bsAlert = new bootstrap.Alert(alert);
-      bsAlert.close();
+<script>
+  setTimeout(() => {
+    document.querySelectorAll('.flash-toast').forEach(toast => {
+      toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+      setTimeout(() => toast.remove(), 300);
     });
-  }, 1000); 
+  }, 3000);
 </script>
 
 <!--notification-->
@@ -821,8 +932,23 @@ document.addEventListener("click", () => {
 loadDoctorNotifications();
 </script>
 
+<!--today date-->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const today = new Date();
 
+    const options = {
+      weekday: "long",
+      month: "short",
+      day: "numeric"
+    };
 
+    const formattedDate = today.toLocaleDateString("en-US", options);
+
+    document.getElementById("todayDate").textContent =
+      `Today: ${formattedDate}`;
+  });
+</script>
 
 </body>
 </html>

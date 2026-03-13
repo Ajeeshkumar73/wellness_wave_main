@@ -4,192 +4,188 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
-    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Bootstrap Icons CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        :root {
-            --bs-blue-500: #0d6efd;
-            --bs-white: #fff;
-            --bs-gray-700: #495057;
-            --bs-gray-400: #ced4da;
+<title>Wellness Wave - User Login</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d69f2",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
         }
-
+    </script>
+<style>
         body {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), /* dark overlay */ 
-            url("{{ url_for('static', filename='images/herosection.png') }}");
             font-family: 'Inter', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
-
-        header{
-            position: fixed; top: 0; width: 100%; z-index: 1050;
-        }
-
-        .login-card {
-            background-color: var(--bs-white);
-            border-radius: 1.5rem;
-            padding: 2.5rem;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-            max-width: 450px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .login-card-icon {
-            font-size: 2.5rem;
-            color: var(--bs-blue-500);
-            background-color: #e0f2ff;
-            padding: 1rem;
-            border-radius: 50%;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .login-card h2 {
-            font-weight: 600;
-            color: #212529;
-            margin-bottom: 0.5rem;
-        }
-
-        .login-card p {
-            color: var(--bs-gray-700);
-            margin-bottom: 2rem;
-        }
-
-        .form-label {
-            font-weight: 500;
-            color: #212529;
-            text-align: left;
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-control {
-            border-radius: 0.75rem;
-            padding: 0.75rem 1.25rem;
-            border-color: var(--bs-gray-400);
-        }
-
-        .form-control:focus {
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-            border-color: var(--bs-blue-500);
-        }
-
-        .forgot-password {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: var(--bs-blue-500);
-            text-decoration: none;
-        }
-
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
-
-        .btn-primary {
-            background-color: var(--bs-blue-500);
-            border-color: var(--bs-blue-500);
-            border-radius: 0.75rem;
-            padding: 0.75rem 0;
-            font-weight: 600;
-        }
-
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-            border-color: #0b5ed7;
-        }
-
-        .sign-up-link {
-            font-size: 0.875rem;
-            color: var(--bs-gray-700);
-            margin-top: 2rem;
-        }
-
-        .sign-up-link a {
-            font-weight: 500;
-            color: var(--bs-blue-500);
-            text-decoration: none;
-        }
-
-        .sign-up-link a:hover {
-            text-decoration: underline;
+        .checkbox-custom {
+            --checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27white%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e');
         }
     </style>
 </head>
 <body>
-    <header>
- <!-- Flash Messages -->
+   <body class="bg-background-light dark:bg-background-dark font-display">
+<header class="fixed top-0 left-0 right-0 h-16 bg-white dark:bg-background-dark border-b border-[#ced9e8] dark:border-slate-800 z-50 px-4 md:px-8 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="p-1.5">
+</div>
+<span class="text-[#0d131c] dark:text-white text-xl font-bold tracking-tight">Wellness Wave</span>
+</div>
+<a class="flex items-center gap-2 text-[#496a9c] hover:text-primary transition-colors font-medium text-sm" href="{{ url_for('index') }}">
+<span class="material-symbols-outlined text-xl">arrow_back</span>
+        Back to Home
+    </a>
+</header>
+<!-- Flash Messages -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
-    <div class="container" style="margin-top:50px;">
+    <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] w-full max-w-md px-4 space-y-3">
       {% for category, message in messages %}
-        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show flash-msg" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div 
+          class="flash-toast bg-[#f0fdf4] border border-emerald-200 rounded-full py-2.5 pl-4 pr-3 shadow-lg shadow-emerald-900/5 flex items-center justify-between backdrop-blur-sm
+          {% if category == 'error' %}
+            bg-red-50 border-red-200
+          {% endif %}"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined 
+              {% if category == 'error' %}
+                text-red-600
+              {% else %}
+                text-emerald-600
+              {% endif %}
+              text-[20px] leading-none">
+              {% if category == 'error' %}
+                error
+              {% else %}
+                check_circle
+              {% endif %}
+            </span>
+
+            <span class="text-[#1e293b] text-sm font-medium">
+              {{ message }}
+            </span>
+          </div>
+
+          <button 
+            onclick="this.closest('.flash-toast').remove()"
+            class="flex items-center justify-center p-1 rounded-full hover:bg-emerald-100 text-emerald-600 transition-colors
+            {% if category == 'error' %}
+              hover:bg-red-100 text-red-600
+            {% endif %}">
+            <span class="material-symbols-outlined text-lg">close</span>
+          </button>
         </div>
       {% endfor %}
     </div>
   {% endif %}
 {% endwith %}
-</header>
-    
-    <div class="login-card">
 
-        <!-- Close Button -->
-    <button type="button" class="btn-close " aria-label="Close"
-        onclick="window.location.href='{{ url_for('index') }}'" style="margin-top:0px; margin-right:-367px"></button>
+<!--left section-->
+<div class="flex min-h-screen w-full overflow-hidden pt-16">
+<div class="hidden lg:flex lg:w-1/2 relative flex-col justify-center items-center p-12 overflow-hidden">
+<div class="absolute inset-0 bg-primary/60 mix-blend-multiply z-10"></div>
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Healthy lifestyle food and wellness items" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDLE-D2UOISjPKx88RlAXgmELK7VPkNGrgYiY_uyCX0uqur5FRxG4KFnAg2__P9VHCQr6Pv--rOQjl2VU3oG21UkkXuv66s6bRU4F-NwaaoAly9-vy8NORaLfaHz8-FhqhMsHuZs3cl9SQT6C3nb13cs--4y1JydE1cW0QfEeRcam5WM8EE8hdI7ondqHjvqBqVeyCxOWouMZzrQISyPGZ4bB6Yd07dLXTpAv0kqZkhO6zpHOm7vsEAEMtq_gHZp6lBh5YlwSoHmXM");'>
+</div>
+<div class="relative z-20 max-w-lg text-center lg:text-left">
+<div class="mb-8 flex items-center gap-2 justify-center lg:justify-start">
+<div class="p-2">
+<span class="material-symbols-outlined text-white text-3xl">health_and_safety</span>
+</div>
+<span class="text-white text-2xl font-bold tracking-tight">Wellness Wave</span>
+</div>
+<h1 class="text-white text-4xl lg:text-5xl font-black leading-tight mb-6">
+                Welcome back to Wellness Wave.
+            </h1>
+<p class="text-white/90 text-lg lg:text-xl font-normal leading-relaxed">
+                Your health journey continues here. Access your personalized lifestyle insights and medical data.
+            </p>
+</div>
+<div class="absolute bottom-10 left-10 z-20">
+<div class="flex gap-4">
+<div class="h-1 w-12 bg-white rounded-full"></div>
+<div class="h-1 w-4 bg-white/40 rounded-full"></div>
+<div class="h-1 w-4 bg-white/40 rounded-full"></div>
+</div>
+</div>
+</div>
 
-        <!-- Heading and Subheading -->
-        <h2 class="mb-2">Sign in</h2>
-        <p class="text-muted">Please enter your details to sign in.</p>
+<!--right section-->
+<div class="flex-1 flex flex-col justify-center items-center bg-white dark:bg-background-dark px-6 py-12 sm:px-12 lg:px-20">
+<div class="w-full max-w-[440px] flex flex-col gap-8">
+<div class="flex flex-col items-center lg:items-start gap-2">
+<h2 class="text-[#0d131c] dark:text-white text-3xl font-bold tracking-tight">Login to account</h2>
+<p class="text-[#496a9c] dark:text-slate-400 text-base">Enter your credentials to access your dashboard</p>
+</div>
+<!--form-->
+<form method="POST" action="{{ url_for('user_login') }}" class="flex flex-col gap-5">
+<div class="flex flex-col gap-2">
+<label class="text-[#0d131c] dark:text-slate-200 text-sm font-semibold">Email</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#496a9c] text-xl">mail</span>
+<input class="form-input flex w-full rounded-lg text-[#0d131c] dark:text-white focus:ring-2 focus:ring-primary/20 border border-[#ced9e8] dark:border-slate-700 bg-white dark:bg-slate-800 h-14 pl-12 pr-4 placeholder:text-[#496a9c]/60 text-base font-normal transition-all shadow-sm" placeholder="Enter your email" type="email" id="email" name="email" value=""/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-[#0d131c] dark:text-slate-200 text-sm font-semibold">Password</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#496a9c] text-xl">lock</span>
+<input class="form-input flex w-full rounded-lg text-[#0d131c] dark:text-white focus:ring-2 focus:ring-primary/20 border border-[#ced9e8] dark:border-slate-700 bg-white dark:bg-slate-800 h-14 pl-12 pr-4 placeholder:text-[#496a9c]/60 text-base font-normal transition-all shadow-sm" placeholder="••••••••" type="password" id="password" name="password" value=""/>
+</div>
+</div>
+<div class="flex items-center justify-between py-1">
+<label class="flex items-center gap-x-2 cursor-pointer group checkbox-custom">
+</label>
+<a class="text-sm font-semibold text-primary hover:underline" href="#">Forgot Password?</a>
+</div>
+<button class="flex w-full cursor-pointer items-center justify-center rounded-lg h-14 px-5 bg-primary hover:bg-primary/90 text-white text-base font-bold transition-all shadow-lg shadow-primary/20" type="submit">
+<span>Login</span>
+</button>
+</form>
+<div class="relative flex items-center py-2">
+<div class="flex-grow border-t border-[#ced9e8] dark:border-slate-700"></div>
+<span class="flex-shrink mx-4 text-[#496a9c] text-xs font-bold uppercase tracking-wider">or</span>
+<div class="flex-grow border-t border-[#ced9e8] dark:border-slate-700"></div>
+</div>
 
-        <!-- Form -->
-        <form method="POST" action="{{ url_for('user_login') }}">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" name="email" placeholder="enter ur email">
-            </div>
-
-            <div class="mb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <label for="password" class="form-label mb-0">Password</label>
-                </div>
-                <input type="password" class="form-control" id="password" name="password" placeholder="enter ur password">
-            </div>
-
-            <div class="d-grid gap-2 mt-4">
-                <button type="submit" class="btn btn-primary">Sign in</button>
-            </div>
-        </form>
-
-        <!-- Sign Up Link -->
-        <div class="sign-up-link">
-            Don't have an account? <a href="{{ url_for('user_reg') }}">Sign up</a>
+<p class="text-center text-[#496a9c] dark:text-slate-400 text-sm font-medium mt-4">
+                Don't have an account? 
+                <a class="text-primary font-bold hover:underline ml-1" href="{{ url_for('user_reg') }}">Sign Up</a>
+</p>
+</div>
+<div class="mt-auto pt-10 text-center text-[#496a9c]/60 text-xs">
+            © 2026 Wellness Wave Healthcare Platform. All rights reserved.
         </div>
-    </div>
+</div>
+</div>
 
-
-    <!--flash hide-->   
- <script>
-  setTimeout(function () {
-    const alerts = document.querySelectorAll(".flash-msg");
-    alerts.forEach(function(alert) {
-      const bsAlert = new bootstrap.Alert(alert);
-      bsAlert.close();
+<!--flash hide-->   
+<script>
+  setTimeout(() => {
+    document.querySelectorAll('.flash-toast').forEach(toast => {
+      toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+      setTimeout(() => toast.remove(), 300);
     });
-  }, 1000); 
+  }, 3000);
 </script>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 </body>
 </html>

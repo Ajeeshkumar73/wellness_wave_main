@@ -3,393 +3,385 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
-    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
-    
-
-    <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
-
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <title>Wellness Wave - Early Lifestyle Diseases Prediction & Precaution</title>
+   
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <style>
 
-
-  #popupForm {
-    display: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-  }
-
-  #popupForm .card {
-    width: 100%;
-    max-width: 700px;
-    position: relative;
-  }
-
-
-  .close-btn {
-    position: absolute;
-    right: 20px;
-    top: 15px;
-    font-size: 24px;
-    color: white;
-    cursor: pointer;
-    z-index: 10001;
-  }
-
-  #popupdr {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  display: none; /* initially hidden */
-}
-
-.container::-webkit-scrollbar {
-  width: 0;
-  background: transparent;
-}
-
-/* blog*/
-.blog-img {
-  height: 200px;
-}
-
-/* Prevent other cards stretching */
-.col-md-4 {
-  align-items: flex-start;
-}
-
-/* Smooth expansion */
-.blog-card {
-  transition: all 0.3s ease;
-}
-
-/* Expanded card */
-.blog-card.expanded {
-  height: auto !important;
-}
-html{
-  behavior:smooth;
-}
-</style>
-
+   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d6efd",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1723",
+                        "slate-gray": "#456aa1",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        html{
+          scroll-behavior:smooth;
+        }
+    </style>
 </head>
-
-    <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light px-4" >
-  <a class="navbar-brand d-flex align-items-center" href="/" style="padding-left: 30px;">
-
-    <span><strong>Wellness Wave</strong> <small class="text-danger">| Family Doctor</small></span>
-  </a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="padding-right: 100px;">
-    <ul class="navbar-nav align-items-center">
-       <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
-      <li class="nav-item"><a class="nav-link" href="#service">Services</a></li>
-      <li class="nav-item"><a class="nav-link" href="#blogs">Blogs</a></li>
-      <li class="nav-item"><a class="nav-link" href="#reviews">Reviews</a></li>
-      <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-    </ul>
-  </div>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0c131d] dark:text-white antialiased">
+<header class="sticky top-0 z-50 glass-nav border-b border-solid border-[#e6ecf4] dark:border-gray-800">
+<div class="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+</div>
+<h2 class="text-[#0c131d] dark:text-white text-xl font-bold tracking-tight">Wellness Wave</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-primary font-bold text-sm" href="#">Home</a>
+<a class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#services">Services</a>
+<a class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#blogs">Blogs</a>
+<a class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#reviews">Reviews</a>
+<a class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#about">About</a>
 </nav>
-
-    
- <!-- Flash Messages -->
+<div class="flex gap-3">
+  <form action="{{ url_for('user_loginpage') }}">
+<button class="bg-primary text-white text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all">Join as Patient</button>
+  </form>
+  <form action="{{ url_for('doctor_log') }}">
+<button class="border border-primary text-primary text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-primary/10 transition-all">Join as Doctor</button>
+  </form>
+</div>
+</div>
+</header>
+<!-- Flash Messages -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
-    <div class="container mt-3">
+    <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] w-full max-w-md px-4 space-y-3">
       {% for category, message in messages %}
-        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show flash-msg" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div 
+          class="flash-toast bg-[#f0fdf4] border border-emerald-200 rounded-full py-2.5 pl-4 pr-3 shadow-lg shadow-emerald-900/5 flex items-center justify-between backdrop-blur-sm
+          {% if category == 'error' %}
+            bg-red-50 border-red-200
+          {% endif %}"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined 
+              {% if category == 'error' %}
+                text-red-600
+              {% else %}
+                text-emerald-600
+              {% endif %}
+              text-[20px] leading-none">
+              {% if category == 'error' %}
+                error
+              {% else %}
+                check_circle
+              {% endif %}
+            </span>
+
+            <span class="text-[#1e293b] text-sm font-medium">
+              {{ message }}
+            </span>
+          </div>
+
+          <button 
+            onclick="this.closest('.flash-toast').remove()"
+            class="flex items-center justify-center p-1 rounded-full hover:bg-emerald-100 text-emerald-600 transition-colors
+            {% if category == 'error' %}
+              hover:bg-red-100 text-red-600
+            {% endif %}">
+            <span class="material-symbols-outlined text-lg">close</span>
+          </button>
         </div>
       {% endfor %}
     </div>
   {% endif %}
 {% endwith %}
 
-<!-- Hero Section -->
-<section class="hero-section d-flex flex-column justify-content-center align-items-center text-center text-white position-relative" 
-       style="min-height: 70vh; background: url('{{ url_for('static', filename='images/herosection.png') }}') no-repeat center center/cover;">
-
-  <!-- Overlay for better text contrast -->
-  <div class="position-absolute top-0 start-0 w-100 " style="background-color: rgba(0,0,0,0.5);"></div>
-
-  <!-- Hero Content -->
-  <div class="position-relative z-1"style="padding-top:0px;font-sixe 20px">
-    <h1 class="fw-bold mb-3" >Welcome to Wellness Wave</h1>
-    <p class="mb-4 fs-5">Helping to Build a Healthy Community</p>
-  </div>
-</section>
-
-
-    <!-- Hero Section2 -->
-    <div class="hero-section" style="background-color:white;padding-top:0px; margin-top:-150px;">
-        <div class="container">
-            <div class="row align-items-center min-vh-100" style="padding-top:0px;">
-                <div class="col-lg-6" data-aos="fade-up" style="margin-top:0px;">
-                    <h1 class="display-4 fw-bold text-primary mb-4" style="font-weight=400" >
-                        Wellness Wave
+<main>
+  <!--hero-section-->
+<section  class="relative w-full overflow-hidden px-6 py-10 md:py-20 bg-background-light dark:bg-background-dark">
+<div class="max-w-[1280px] mx-auto">
+<div class="relative rounded-xl overflow-hidden min-h-[560px] flex flex-col items-center justify-center p-8 text-center bg-cover bg-center" data-alt="High-impact digital health dashboard showing heart health and metabolic data overlaid on a professional blue-tinted healthcare setting" style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 82, 204, 0.5)), url({{ url_for('static', filename='images/herosection.png') }});">
+<div data-aos="fade-up" class="max-w-3xl space-y-6 relative z-10">
+<h1 class="text-white text-5xl md:text-6xl font-black leading-tight tracking-tight">
+                        Your Health, Our Priority
                     </h1>
-                    <p class="lead mb-4">
-                        Your comprehensive healthcare solution featuring AI-powered disease prediction, 
-                        expert consultations, and seamless appointment management.
+<p class="text-white/90 text-lg md:text-[1.2rem] font-normal leading-relaxed max-w-2xl mx-auto">
+                        A comprehensive web application using Deep Learning and AI to predict lifestyle disease risks early and provide personalized care paths.
                     </p>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                      <form action="{{ url_for('user_loginpage') }}">
-                        <button class="btn btn-primary btn-lg me-md-2">
-    <i class="fas fa-user-plus me-2"></i>Join as Patient
-</button></form>
-                    <a href="{{ url_for('doctor_log') }}" onclick="" class="btn btn-outline-primary btn-lg">
-                        <i class="fas fa-user-md me-2"></i>Join as Doctor
-                    </a>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <img src="{{ url_for('static', filename='images/medical-banner.jpg') }}" 
-                         alt="Healthcare Dashboard" class="img-fluid rounded shadow-lg">
-                </div>
-            </div>
-        </div>
-    </div>
-
-
- <!-- Features Section -->
-  <div id="service">
-    <div class="container my-5">
-      <div class="row text-center mb-5">
-        <div class="col-12">
-          <h2 class="display-5 fw-bold text-primary">Our Services</h2>
-          <p class="lead text-muted">Comprehensive healthcare solutions for better health outcomes</p>
-        </div>
-      </div>
-
-      <div class="row g-4">
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm" data-aos="fade-up">
-            <div class="card-body text-center">
-              <div class="feature-icon mb-3">
-                <i class="fas fa-brain fa-3x text-primary"></i>
-              </div>
-              <h5 class="card-title">Early Disease Prediction</h5>
-              <p class="card-text">
-                Advanced machine learning algorithms analyze your lifestyle data to predict potential health risks.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-          <div class="card h-100 shadow-sm" data-aos="fade-up">
-            <div class="card-body text-center">
-              <div class="feature-icon mb-3">
-                <i class="fas fa-calendar-check fa-3x text-success"></i>
-              </div>
-              <h5 class="card-title">Easy Appointments</h5>
-              <p class="card-text">
-                Book appointments with specialized doctors based on your health assessment results.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-4">
-  <div class="card h-100 shadow-sm" data-aos="fade-up">
-    <div class="card-body text-center">
-      <div class="feature-icon mb-3">
-       <i class="fas fa-heartbeat fa-3x text-danger"></i>
-
-      </div>
-      <h5 class="card-title">Prevention by Diet & Exercise</h5>
-      <p class="card-text">
-        Learn how balanced nutrition and regular physical activity can help prevent and manage lifestyle diseases.
-      </p>
-    </div>
-  </div>
+<div class="flex flex-wrap gap-4 justify-center pt-4">
 </div>
-
-
-
-
-    <!-- Prevention Section -->
-    <div class="bg-light py-5">
-        <div class="container">
-            <div class="row align-items-center" data-aos="fade-up">
-                <div class="col-lg-6">
-                    <h2 class="display-6 fw-bold text-primary mb-4">Prevention is Better Than Cure</h2>
-                    <p class="lead mb-4">
-                        Our platform focuses on preventive healthcare through lifestyle analysis and personalized recommendations.
-                    </p>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Lifestyle Disease Risk Assessment</li>
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Personalized Diet & Exercise Plans</li>
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Early Warning Systems</li>
-                        <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i>Expert Medical Guidance</li>
-                    </ul>
-                </div>
-                <div class="col-lg-6">
-                    <img src="{{ url_for('static', filename='images/banner.png') }}" 
-                         alt="Healthy Lifestyle" class="img-fluid rounded shadow">
-                </div>
-            </div>
-        </div>
-    </div>
-
-      <!-- About Section -->
-<section class="container py-5" id="about">
-  <div class="row align-items-center">
-    <div class="col-md-6">
-      <img src="" alt="" class="img-fluid rounded" />
-    </div>
-    <div class="col-md-6">
-      <h3 class="text-primary fw-bold">About </h3>
-        <p>Wellness Wave is a revolutionary platform designed to bridge the gap between patients and medical professionals. Our mission is to provide a seamless, secure, and user-friendly experience for online consultations, health management, and continuous care.</p>
-                    <p>We are committed to building a community where health and well-being are prioritized. Our platform ensures the highest standards of privacy and security, giving you peace of mind as you manage your health journey.</p>
-      <h5 class="fw-bold">Wellness Wave</h5>
-      
-    </div>
-    
-  </div>
+</div>
+</div>
+</div>
 </section>
-<!-- BLOG SECTION -->
-<section class="py-5 bg-light" id="blog">
-  <div class="container">
-    
-    <!-- Heading -->
-    <div id="blogs" class="text-center mb-5">
-      <span class="text-primary fw-bold text-uppercase small d-block mb-2">
-        Our Latest Insights
-      </span>
-      <h4 class="fw-bold display-6 mb-3">
-        Latest Health News & Tips
-      </h4>
-      <p class="text-muted mx-auto" style="max-width: 650px;">
-        Stay informed with the latest medical insights, wellness tips, and research updates from our expert doctors.
-      </p>
-    </div>
-<!-- Blog Cards -->
-<div class="row g-4 mb-5">
 
-  {% for blog in latest_blogs %}
-  <div class="col-md-4 d-flex align-items-start">
-
-    <article class="card h-100 w-100 shadow-sm border-0 hover-shadow blog-card">
-<div class="d-flex align-items-center gap-3 text-muted small">
-  <img
-    src="{{ url_for('static', filename=blog.doctor_image) }}"
-    class="rounded-circle border shadow-sm"
-    style="width:42px; height:42px; object-fit:cover;"
-    alt="Doctor Profile">
-
-  <div>
-    <div class="fw-semibold text-dark">
-      {{ blog.doctor_name }}
-    </div>
-    <div class="fst-italic">
-      {{ blog.doctor_specialization }}
-    </div>
-  </div>
+<!--Features-section-->
+<section id="services" class="max-w-[1280px] mx-auto px-6 py-20">
+<div class="mb-12">
+<h2 class="text-[#0c131d] dark:text-white text-4xl font-bold tracking-tight mb-4">Our Services</h2>
+<p class="text-slate-gray dark:text-gray-400 text-lg max-w-2xl">Empowering your wellness journey with cutting-edge medical technology and personalized care plans.</p>
 </div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div data-aos="fade-up" class="group bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">monitoring</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white">AI Risk Prediction</h3>
+<p class="text-slate-gray dark:text-gray-400 leading-relaxed">Utilizing advanced Deep Learning and AI to identify your lifestyle disease risks at the earliest possible stage.</p>
+</div>
+<div data-aos="fade-up" class="group bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">health_metrics</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white">Custom Precautions</h3>
+<p class="text-slate-gray dark:text-gray-400 leading-relaxed">Get personalized control plans for low and intermediate risk levels to manage your health proactively.</p>
+</div>
+<div data-aos="fade-up" class="group bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">medical_services</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white">Expert Consulting</h3>
+<p class="text-slate-gray dark:text-gray-400 leading-relaxed">For high-risk profiles, we instantly suggest a list of suitable doctors for professional consultation and care.</p>
+</div>
+<div data-aos="fade-up" class="group bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-xl transition-all hover:-translate-y-1">
+<div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+<span class="material-symbols-outlined text-primary group-hover:text-white text-3xl">chat</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-[#0c131d] dark:text-white">Interactive Care</h3>
+<p class="text-slate-gray dark:text-gray-400 leading-relaxed">Book appointments, chat directly with doctors, and use our AI chatbot to clear small disease-related doubts instantly.</p>
+</div>
+</div>
+</section>
 
+<!--prevention section-->
+<section class="bg-white dark:bg-gray-900 py-20 px-6 overflow-hidden">
+<div class="max-w-[1280px] mx-auto flex flex-col lg:flex-row items-center gap-16">
+<div data-aos="fade-right" class="lg:w-1/2 space-y-8">
+<span class="text-primary font-bold tracking-widest uppercase text-sm">Proactive Care</span>
+<h2 class="text-[#0c131d] dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-tight">
+                    Prevention is Better Than Cure
+                </h2>
+<p class="text-slate-gray dark:text-gray-300 text-lg leading-relaxed">
+                    Our platform focuses on identifying risks before they become problems. Take control of your health with data-driven insights and personalized prevention plans designed for your lifestyle.
+                </p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 text-sm font-semibold">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                        Early Risk Detection Models
+                    </li>
+<li class="flex items-center gap-3 text-sm font-semibold">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                        Personalized Wellness Precautions
+                    </li>
+<li class="flex items-center gap-3 text-sm font-semibold">
+<span class="material-symbols-outlined text-primary">check_circle</span>
+                        24/7 Health Monitoring Access
+                    </li>
+</ul>
+</div>
+<div class="lg:w-1/2 relative">
+<div class="aspect-square rounded-2xl bg-cover bg-center shadow-2xl relative z-10" data-alt="Vibrant, high-quality photograph representing proactive health showing fresh nutritious food and a doctor in a modern clinic providing guidance" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAHiandDwmdKujYr5ei98e4uFHEb2sB7noeqmchV1d9NvSRe4OR20-a7ls_hWGNkVXN53CHoFXJKQtRu-1EefC5SroOL0x7QHT14HW56Vk-tIdo8U6xD9uSWyVbrsjXBQ6HitMkuGsv3UFu8t0ztv7QdSAHBtWUF92Uw5DCQ-H3xjA4ROytrqLhNQLogGDTu84N4wNBHq0_wyYyxlu8pSPr9d0gdfdJHrLGtwZqcpTIbhFnbvw5ZJpAczyyI3AScW_rjqkISnvk9xo");'>
+</div>
+<div class="absolute -bottom-6 -left-6 w-48 h-48 bg-primary/10 rounded-2xl -z-10"></div>
+<div class="absolute -top-6 -right-6 w-64 h-64 bg-slate-100 dark:bg-gray-800 rounded-full -z-10"></div>
+</div>
+</div>
+</section>
 
-      <!-- Image -->
-      <div class="position-relative overflow-hidden blog-img">
-        <img src="{{ url_for('static', filename=blog.image) }}"
-             class="w-100 h-100 object-fit-cover"
-             alt="{{ blog.title }}">
-      </div>
+<!--about section-->
+<section id="about" class="bg-background-light dark:bg-background-dark py-24 px-6">
+<div class="max-w-[1280px] mx-auto flex flex-col lg:flex-row-reverse items-center gap-16">
+<div data-aos="fade-up" class="lg:w-1/2 space-y-8">
+<span class="text-primary font-bold tracking-widest uppercase text-sm">About Us</span>
+<h2 class="text-[#0c131d] dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-tight">
+                    Bridging the Gap in Healthcare
+                </h2>
+<div class="space-y-6">
+<p class="text-slate-gray dark:text-gray-300 text-lg leading-relaxed">
+                        Wellness Wave is a web application designed to bridge the gap between users and medical professionals. Our mission is to provide early risk prediction through Deep Learning, followed by actionable precautions or expert routing. From direct doctor chats and appointment booking to an intelligent chatbot for symptom support, we provide a seamless experience.
+                    </p>
+</div>
+<div class="grid grid-cols-2 gap-8 pt-4">
+<div>
+<div class="text-primary text-3xl font-bold mb-1">98%</div>
+<div class="text-xs font-bold uppercase tracking-wider text-slate-gray dark:text-gray-400">Accuracy Rate</div>
+</div>
+<div>
+<div class="text-primary text-3xl font-bold mb-1">24/7</div>
+<div class="text-xs font-bold uppercase tracking-wider text-slate-gray dark:text-gray-400">Expert Support</div>
+</div>
+</div>
+</div>
+<div class="lg:w-1/2 relative">
+<div class="aspect-[4/5] rounded-2xl bg-cover bg-center shadow-2xl relative z-10" data-alt="Vibrant lifestyle scene showing the balance of healthy living and professional medical guidance in a clean, airy medical-tech environment" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAD_0iqWEYxQHmgAmyDOErwd100ix2YiDh2HEN7fOs4KrMp_zpPUG5nnoXsgpkLNid54W0QpO4c211k9tYHYx4bFmfXikiRfDhVrkEUWbovYwu7IAUpOQEgprxu7-1LSevEKoJww1_tXZfj_FOwO1Xda5m_BKARNZFBm8Bb1SvHtlrGuIJ7hoRCC056azG5-K7b3IIRTJjj7hWdvKVSEZBboxp-hv0qU0lwpm8vASqP45CrkVmJjhpEQnCaNbUwhZPZWRKuA5n5XLs");'>
+</div>
+<div class="absolute -top-10 -left-10 w-40 h-40 border-8 border-primary/20 rounded-full -z-10"></div>
+<div class="absolute bottom-10 -right-10 w-32 h-32 bg-primary/5 rounded-xl rotate-12 -z-10"></div>
+</div>
+</div>
+</section>
 
-      <!-- Content -->
-      <div class="card-body d-flex flex-column">
+<!-- Blog Section -->
+<section id="blogs" class="max-w-[1280px] mx-auto px-6 py-20">
 
-        <small class="text-muted mb-2">
-          <i class="bi bi-calendar-event me-1"></i> {{ blog.date }}
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-2">
+    <h2 class="text-[#0c131d] dark:text-white text-3xl font-bold tracking-tight">
+      Latest Health Insights
+    </h2>
+    <a href="{{ url_for('all_blog') }}"
+       class="text-primary font-bold flex items-center gap-2 ">
+      View all posts
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+
+  <p class="text-slate-gray dark:text-gray-400 mb-12">
+    Stay informed with medical tips and insights uploaded directly by our verified doctors.
+  </p>
+
+  <!-- Blog Grid -->
+  <div data-aos="fade-up" class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+    {% for blog in latest_blogs %}
+
+    <div class="blog-card self-start bg-white dark:bg-gray-800 rounded-xl overflow-hidden
+                shadow-sm border border-gray-100 dark:border-gray-700 flex flex-col h-[600px] transition-all duration-300">
+
+      <!-- Blog Image -->
+      <img src="{{ url_for('static', filename=blog.image) }}"
+           alt="{{ blog.title }}"
+           class="h-52 w-full object-cover">
+
+      <!-- Card Content -->
+      <div class="p-6 flex flex-col flex-1">
+
+        <!-- Tag -->
+        <span class="text-[10px] font-bold uppercase tracking-widest
+                     bg-primary/10 text-primary px-2 py-1 rounded w-fit mb-3">
+          Health care
+        </span>
+
+        <!-- Date -->
+        <small class="text-gray-400 mb-2">
+          {{ blog.date }}
         </small>
 
-        <h5 class="fw-bold mb-3">
+        <!-- Title -->
+        <h3 class="text-lg font-bold mb-3 text-gray-900 dark:text-white">
           {{ blog.title }}
-        </h5>
+        </h3>
 
-        <p class="text-muted small mb-3 blog-short">
+        <!-- Short Content -->
+        <p class="blog-short text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-3">
           {{ blog.content[:120] }}{% if blog.content|length > 120 %}...{% endif %}
         </p>
 
-        <p class="text-muted small mb-3 blog-full d-none">
+        <!-- Full Content -->
+        <p class="blog-full hidden text-gray-600 dark:text-gray-400 text-sm mb-3 transition-all duration-300 ease-in-out">
           {{ blog.content }}
         </p>
 
+        <!-- Read More -->
         {% if blog.content|length > 120 %}
-        <a href="javascript:void(0)"
-           class="mt-auto text-primary fw-semibold text-decoration-none read-more-btn">
-          Read More <i class="bi bi-arrow-right"></i>
-        </a>
+        <button
+          class="read-more-btn mt-auto text-primary font-semibold text-sm flex items-center gap-1">
+          Read More
+          <span class="material-symbols-outlined text-base">arrow_forward</span>
+        </button>
         {% endif %}
 
+        <!-- Author -->
+        <div class="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
+          <!--<div class="w-8 h-8 rounded-full bg-gray-200 overflow-hidden">
+            <img src="{{ url_for('static', filename=blog.doctor_image) }}"
+                 alt="Doctor"
+                 class="w-full h-full object-cover">
+          </div>-->
+          <span class="text-sm text-gray-800 dark:text-gray-400">
+            {{ blog.doctor_name }}
+          </span>
+        </div>
+        <div>
+        <span class="text-xs text-slate-gray">{{ blog.doctor_specialization }}</span>
+        </div>
       </div>
-    </article>
-
-  </div>
-  {% endfor %}
-
-</div>
-
-
-    <!-- Button -->
-    <div class="text-center">
-      <a href="{{ url_for('all_blog') }}"
-      <button class="btn btn-outline-primary px-4 py-2 fw-bold">
-        View All Posts
-      </button></a>
     </div>
 
+    {% endfor %}
   </div>
 </section>
 
+<section id="reviews" class="bg-gray-100 dark:bg-gray-950 py-24 px-6">
 
-   <section class="py-5 bg-light-custom" id="reviews">
-  <div class="container">
-    <!-- Section Header -->
-    <div class="text-center mb-5" data-aos="fade-up">
-      <h2 class="section-title">Real People, Real Impact</h2>
-      <p class="lead section-subtitle">Don't just take our word for it.</p>
-    </div>
+  <div class="max-w-[1280px] mx-auto text-center mb-16">
+    <h2 class="text-4xl font-black text-[#0c131d] dark:text-white mb-4">
+      Real People, Real Impact
+    </h2>
+    <p class="text-slate-gray dark:text-gray-400 text-lg">
+      See how Wellness Wave is transforming lives through data and care.
+    </p>
+  </div>
 
-    {% if reviews %}
-    <div id="reviewsCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
-      <div class="carousel-inner">
+  {% if reviews %}
+  <div class="max-w-[1280px] mx-auto relative">
+
+    <!-- Slider viewport -->
+    <div class="overflow-hidden">
+
+      <!-- Slider -->
+      <div id="reviewSlider"
+           class="flex gap-8 transition-transform duration-700 ease-in-out will-change-transform">
 
         {% for r in reviews %}
-        <div class="carousel-item {% if loop.first %}active{% endif %}">
-          <div class="row justify-content-center">
-            
-            <div class="col-lg-4 col-md-6 mb-4">
-              <div class="card-custom shadow-sm p-4 rounded-4 h-100">
-                <!-- Review Text -->
-                <p class="fst-italic text-center">"{{ r.review }}"</p>
+        <div class="review-slide flex-shrink-0 w-full md:w-[calc(50%-16px)] lg:w-[calc(33.333%-22px)]">
+          <div class="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm relative h-full">
 
-                <!-- User Info -->
-                <div class="text-center mt-3">
-                  <h6 class="fw-bold mb-1">{{ r.username }}</h6>
-                  <small class="text-secondary">{{ r.created_at.strftime('%d %b %Y, %I:%M %p') }}</small>
-                </div>
-              </div>
+            <span class="material-symbols-outlined
+                         text-primary/20 text-6xl absolute top-4 right-8">
+              format_quote
+            </span>
+
+            <div class="flex gap-1 mb-4">
+              {% for i in range(5) %}
+              <span class="material-symbols-outlined text-yellow-400 text-sm">star</span>
+              {% endfor %}
+            </div>
+
+            <p class="text-slate-gray dark:text-gray-300 italic mb-8">
+              "{{ r.review }}"
+            </p>
+
+            <div>
+              <h5 class="font-bold text-[#0c131d] dark:text-white">
+                {{ r.username }}
+              </h5>
+              <span class="text-xs text-slate-gray">
+                {{ r.created_at.strftime('%d %b %Y, %I:%M %p') }}
+              </span>
             </div>
 
           </div>
@@ -397,89 +389,212 @@ html{
         {% endfor %}
 
       </div>
+    </div>
 
-      <!-- Controls -->
-      <button class="carousel-control-prev" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
+    <!-- Controls -->
+    <div class="flex justify-center gap-6 mt-10">
+      <button onclick="prevSlide()"
+              class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center">
+        <span class="material-symbols-outlined">arrow_back</span>
       </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#reviewsCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
+      <button onclick="nextSlide()"
+              class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center">
+        <span class="material-symbols-outlined">arrow_forward</span>
       </button>
     </div>
-    {% else %}
-      <p class="text-center text-muted">No reviews yet. Be the first to post!</p>
-    {% endif %}
+
   </div>
+  {% endif %}
 </section>
 
+</main>
 
-
-    <!-- Footer -->
-    <footer class="bg-dark text-white py-4 mt-5">
-        <div class="container text-center">
-            <p>&copy; 2025 Wellness Wave. All rights reserved.</p>
-            <p class="mb-0">
-                <i class="fas fa-envelope me-2"></i>support@wellnesswave.com
-            </p>
-        </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Custom JS -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+<!-- Footer -->
+<footer class="bg-slate-900 text-white py-20 px-6">
+<div class="max-w-[1280px] mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<h2 class="text-xl font-bold tracking-tight">Wellness Wave</h2>
+</div>
+<p class="text-gray-400 text-sm leading-relaxed mb-6">
+                    Pioneering the future of preventive healthcare through artificial intelligence and patient-centric design.
+                </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">share</span>
+</a>
+<a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">favorite</span>
+</a>
+</div>
+</div>
+<div>
+<h5 class="font-bold mb-6">Services</h5>
+<ul class="space-y-4 text-gray-400 text-sm">
+<li><a class="hover:text-primary" href="#">Risk Assessment</a></li>
+<li><a class="hover:text-primary" href="#">Precautions</a></li>
+<li><a class="hover:text-primary" href="#">Doctor Consultations</a></li>
+<li><a class="hover:text-primary" href="#">Chat with Doctor</a></li>
+<li><a class="hover:text-primary" href="#">Chat Bot</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6">Company</h5>
+<ul class="space-y-4 text-gray-400 text-sm">
+<li><a class="hover:text-primary" href="#about">About Us</a></li>
+<li><a class="hover:text-primary" href="#">Medical Team</a></li>
+<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold mb-6">Contact</h5>
+<ul class="space-y-4 text-gray-400 text-sm">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">mail</span>
+                        wellnesswave353@gmail.com
+                    </li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-sm">phone</span>
+                        +91 9567106498
+                    </li>
+<li class="flex items-start gap-3">
+                    </li>
+</ul>
+</div>
+</div>
+<div class="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4 text-gray-500 text-xs">
+<p>© 2026 Wellness Wave Healthcare Platform. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="hover:text-white transition-colors" href="#">Accessibility</a>
+<a class="hover:text-white transition-colors" href="#">Cookies Settings</a>
+<a class="hover:text-white transition-colors" href="#">Compliance</a>
+</div>
+</div>
+</div>
+</footer>
 
 
 <!--flash hide-->   
- <script>
-  setTimeout(function () {
-    const alerts = document.querySelectorAll(".flash-msg");
-    alerts.forEach(function(alert) {
-      const bsAlert = new bootstrap.Alert(alert);
-      bsAlert.close();
-    });
-  }, 1000); 
-</script>
-
 <script>
-  AOS.init({ duration: 800, once: false, mirror: true, easing: 'ease-in-out' });
+  setTimeout(() => {
+    document.querySelectorAll('.flash-toast').forEach(toast => {
+      toast.classList.add('opacity-0', 'transition-opacity', 'duration-300');
+      setTimeout(() => toast.remove(), 300);
+    });
+  }, 3000);
 </script>
 
-<!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<!--review-->
+<script>
+const slider = document.getElementById("reviewSlider");
+let slides = Array.from(document.querySelectorAll(".review-slide"));
 
-  <script>
-  const items = document.querySelectorAll('#reviewsCarousel .carousel-item');
+let index = 0;
+let autoSlide;
+const GAP = 32; // Tailwind gap-8 = 2rem = 32px
 
-  items.forEach((el) => {
-    const next = el.nextElementSibling || items[0];
-    el.querySelector('.row').appendChild(next.querySelector('.col-lg-4').cloneNode(true));
+function visibleCount() {
+  if (window.innerWidth >= 1024) return 3;
+  if (window.innerWidth >= 768) return 2;
+  return 1;
+}
 
-    const next2 = next.nextElementSibling || items[0];
-    el.querySelector('.row').appendChild(next2.querySelector('.col-lg-4').cloneNode(true));
+function cloneSlides() {
+  const count = visibleCount();
+  slides.slice(0, count).forEach(slide => {
+    slider.appendChild(slide.cloneNode(true));
   });
+}
+
+cloneSlides();
+slides = Array.from(document.querySelectorAll(".review-slide"));
+
+function slideWidth() {
+  return slides[0].offsetWidth + GAP;
+}
+
+function moveSlider() {
+  slider.style.transform = `translateX(-${index * slideWidth()}px)`;
+}
+
+function nextSlide() {
+  index++;
+  moveSlider();
+
+  if (index >= slides.length - visibleCount()) {
+    setTimeout(() => {
+      slider.classList.remove("transition-transform");
+      index = 0;
+      moveSlider();
+      slider.offsetHeight; // force repaint
+      slider.classList.add("transition-transform");
+    }, 700);
+  }
+}
+
+function prevSlide() {
+  if (index === 0) {
+    slider.classList.remove("transition-transform");
+    index = slides.length - visibleCount();
+    moveSlider();
+    slider.offsetHeight;
+    slider.classList.add("transition-transform");
+  }
+
+  index--;
+  moveSlider();
+}
+
+/* AUTO SLIDE */
+function startAuto() {
+  autoSlide = setInterval(nextSlide, 4000);
+}
+function stopAuto() {
+  clearInterval(autoSlide);
+}
+
+startAuto();
+
+/* Pause on hover */
+slider.addEventListener("mouseenter", stopAuto);
+slider.addEventListener("mouseleave", startAuto);
+
+/* Reset on resize */
+window.addEventListener("resize", () => {
+  index = 0;
+  slider.style.transform = "translateX(0)";
+});
 </script>
+
 <!--blog -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".read-more-btn").forEach(btn => {
-    btn.addEventListener("click", function () {
-      const card = this.closest(".blog-card");
-
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".blog-card");
       const shortText = card.querySelector(".blog-short");
-      const fullText  = card.querySelector(".blog-full");
+      const fullText = card.querySelector(".blog-full");
 
-      shortText.classList.toggle("d-none");
-      fullText.classList.toggle("d-none");
+      // Expand only this card
+      card.classList.toggle("h-[540px]");
+      card.classList.toggle("h-auto");
 
-      card.classList.toggle("expanded");
+      shortText.classList.toggle("line-clamp-3");
+      fullText.classList.toggle("hidden");
 
-      this.innerHTML = fullText.classList.contains("d-none")
-        ? 'Read More <i class="bi bi-arrow-right"></i>'
-        : 'Read Less <i class="bi bi-arrow-up"></i>';
+      btn.innerHTML = fullText.classList.contains("hidden")
+        ? 'Read More <span class="material-symbols-outlined text-base">arrow_forward</span>'
+        : 'Read Less <span class="material-symbols-outlined text-base">arrow_upward</span>';
     });
   });
 });
+</script>
+
+
+<script>
+  AOS.init({ duration: 800, once: false, mirror: true, easing: 'ease-in-out' });
 </script>
 
 </body>

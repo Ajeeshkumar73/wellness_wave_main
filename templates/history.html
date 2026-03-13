@@ -1,147 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
-    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
-    
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
+<title>Wellness Wave - Prediction History</title>
 
-  
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-  <style>
-    .card { margin-bottom: 20px; }
-    .precaution-card { border-radius: 12px; padding: 15px; margin-top: 10px; }
-    .diet-card { border-left: 5px solid #28a745; }
-    .exercise-card { border-left: 5px solid #fd7e14; }
-    .habit-card { border-left: 5px solid #6f42c1; }
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d6efd",
+                        "background-light": "#f5f7f8",
+                        "background-dark": "#0f1723",
+                        "slate-gray": "#456aa1",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "sans": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
 
-    /* Heading styling */
-    .page-heading {
-      font-weight: 700;
-      font-size: 2.2rem;
-      color: black;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-
-    /* Hide extra analyses by default */
-    .analysis-card.hidden {
-      display: none;
-    }
-
-    .d-flex.flex-column.gap-3 {
-    flex-direction: column !important;
-}
-.precaution-card {
-    min-width: 100%; /* Ensure full width in column */
-}
-
-/* Reduce top margin of View More button to bring it closer */
-.text-center.mt-2.mb-5 {
-    margin-top: 15px; /* slightly above previous spacing */
-    margin-bottom: 40px;
-}
-
-
-  </style>
+<style>
+.hidden{display:none;}
+</style>
 </head>
-<body class="bg-light text-dark">
-  
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light  px-4" style="background-color:#efefef;">
-  <a class="navbar-brand d-flex align-items-center" href="#" style="padding-left: 30px;">
-    <span><strong>Wellness Wave</strong> <small class="text-danger">| Family Doctor</small></span>
-  </a>
-  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse justify-content-end" id="navbarNav" style="padding-right: 100px;">
-    <ul class="navbar-nav align-items-center">
-      <li class="nav-item"><a class="nav-link" href="{{ url_for('back_page') }}">Back</a></li>
-    </ul>
-  </div>
-</nav>
 
-<div class="container py-5">
-  <h1 class="mb-4 text-center page-heading">Past Health Analyses</h1>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0c131d] dark:text-white antialiased">
+<header class="sticky top-0 z-50 bg-white border-b border-solid border-[#e6ecf4] dark:border-gray-800">
 
-  {% for analysis in analyses %}
-  <div class="card shadow-sm analysis-card {% if loop.index > 3 %}hidden{% endif %}" data-aos="fade-up">
-    <div class="card-body">
-      <h5 class="card-title">Analysis on {{ analysis.datetime.strftime('%d %b %Y') }}</h5>
-      <p><strong>Metrics:</strong></p>
-      <ul>
-        {% for m, val in analysis.metrics.items() %}
-        <li>{{ m }}: {{ val.value }} ({{ val.status }})</li>
-        {% endfor %}
-      </ul>
-      <p><strong>Diseases:</strong></p>
-      <ul>
-        {% for d, info in analysis.diseases.items() %}
-        <li>{{ d }}: {{ info.chance }} ({{ info.status }})</li>
-        {% endfor %}
-      </ul>
-      <div class="d-flex flex-wrap gap-2">
-       <div class="d-flex flex-column gap-3 mt-3">
-  <div class="precaution-card diet-card">
-    <h6>Diet</h6>
-    <ul>
-      {% for item in analysis.get('precautions', {}).get('diet', []) %}
-        <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class="precaution-card exercise-card">
-    <h6>Exercise</h6>
-    <ul>
-      {% for item in analysis.get('precautions', {}).get('exercise', []) %}
-        <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-
-  <div class="precaution-card habit-card">
-    <h6>Habits</h6>
-    <ul>
-      {% for item in analysis.get('precautions', {}).get('habit', []) %}
-        <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
-  </div>
+<div class="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+</div>
+<h2 class="text-[#0c131d] dark:text-white text-xl font-bold tracking-tight">Wellness Wave</h2>
+</div>
+<a class="flex items-center gap-1 text-sm font-medium text-slate-gray hover:text-primary transition-colors" href="{{ url_for('user_home') }}">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Back to Home
+                </a>
+</header>
+<main class="max-w-6xl mx-auto px-6 py-10">
+<!-- Headline Section -->
+<div class="text-center mb-10">
+<h1 class="text-4xl font-extrabold tracking-tight mb-2 text-slate-900 dark:text-white">Health Analysis Report</h1>
+<p class="text-slate-500 dark:text-slate-400">Personalized insights based on your latest clinical data</p>
 </div>
 
+{% for analysis in analyses %}
+<div class="analysis-card {% if loop.index > 3 %}hidden extra-card{% endif %}">
+<!-- Summary Card -->
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 p-6 mb-8">
+  <div class="flex flex-col md:flex-row items-center gap-6">
+
+    <!-- Report Date -->
+    <div class="flex-1">
+      <div class="flex items-center gap-2 text-primary mb-2">
+        <span class="material-symbols-outlined">event_note</span>
+        <span class="font-semibold text-sm uppercase tracking-wider">Report</span>
       </div>
+      <p class="text-xl font-bold text-slate-900 dark:text-white mb-1">
+        Generated on {{ analysis.datetime.strftime('%d %b %Y %I:%M %p') }}
+      </p>
     </div>
-  </div>
-  {% endfor %}
 
-  <!-- View More Button -->
-  <div class="text-center mt-4">
-    <button id="toggleBtn" class="btn btn-primary">View More</button>
-  </div>
+    <div class="hidden md:block h-20 w-px bg-slate-200 dark:bg-slate-700"></div>
+
+    <!-- Overall Health Score -->
+    <div class="flex-1 text-center md:text-left">
+
+      <p class="text-sm text-slate-500 dark:text-slate-400 mb-2 uppercase font-bold">
+        Overall Health Score
+      </p>
+
+      {% set overall = analysis.get('diseases',{}).get('overall_health',{}) %}
+{% set score = overall.get('health_score',0) %}
+{% set status = overall.get('status',"Moderate Risk") %}
+
+{% if score >= 80 %}
+    {% set text = "text-green-600 dark:text-green-400" %}
+    {% set badge = "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" %}
+{% elif score >= 50 %}
+    {% set text = "text-yellow-600 dark:text-yellow-400" %}
+    {% set badge = "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" %}
+{% else %}
+    {% set text = "text-red-600 dark:text-red-400" %}
+    {% set badge = "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" %}
+{% endif %}
+<div class="flex items-center justify-center md:justify-start gap-4">
+
+<div class="text-4xl font-black {{text}}">
+{{score|round(0)}}<span class="text-lg text-slate-400">/100</span>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-  const toggleBtn = document.getElementById("toggleBtn");
-  const hiddenCards = document.querySelectorAll(".analysis-card.hidden");
-  let expanded = false;
+<span class="{{badge}} px-3 py-1 rounded-full text-sm font-bold">
+{{status}}
+</span>
 
-  toggleBtn.addEventListener("click", () => {
+</div>
+
+    </div>
+
+  </div>
+</div>
+<!-- Health Metrics Grid -->
+<div class="mb-10">
+
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">monitoring</span>
+Biometric Health Metrics
+</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+{% for m,val in analysis.get('metrics',{}).items() %}
+
+{% set stat = val.get('status','Normal') %}
+
+{% if stat == "Normal" %}
+{% set badge="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" %}
+{% elif stat == "Intermediate" %}
+{% set badge="bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" %}
+{% elif stat == "High" %}
+{% set badge="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400" %}
+{% else %}
+{% set badge="bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300" %}
+{% endif %}
+
+<div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+
+<div class="flex justify-between items-start mb-4">
+
+<span class="material-symbols-outlined text-slate-400">
+monitoring
+</span>
+
+<span class="{{badge}} px-2 py-0.5 rounded text-xs font-bold">
+{{stat}}
+</span>
+
+</div>
+
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">
+{{m}}
+</p>
+
+<p class="text-2xl font-bold text-slate-900 dark:text-white">
+{{val.get('value')}}
+</p>
+
+</div>
+
+{% endfor %}
+
+</div>
+</div>
+<!-- Disease Risk Section -->
+<div class="mb-10">
+
+<div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+
+<div class="p-6 border-b border-slate-100 dark:border-slate-700">
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">analytics</span>
+Predicted Disease Risk
+</h2>
+</div>
+
+<div class="p-6">
+<div class="space-y-6">
+
+{% for d,info in analysis.get('diseases',{}).items() %}
+
+{% if d != "overall_health" %}
+
+{% set percent = (info.get('risk_percentage', info.get('chance',0)) | float) %}
+{% set level = info.get('risk_level', info.get('status',"Low")) %}
+
+{% if level == "Low" %}
+{% set text="text-green-600 dark:text-green-400" %}
+{% set bar="bg-green-500" %}
+{% elif level == "Intermediate" %}
+{% set text="text-yellow-600 dark:text-yellow-400" %}
+{% set bar="bg-yellow-500" %}
+{% else %}
+{% set text="text-red-600 dark:text-red-400" %}
+{% set bar="bg-red-500" %}
+{% endif %}
+
+<div>
+
+<div class="flex justify-between items-end mb-2">
+
+<div>
+<h4 class="font-bold text-slate-900 dark:text-white">
+{{d.replace('_',' ')}}
+</h4>
+
+<p class="text-sm text-slate-500 dark:text-slate-400">
+Risk Level : {{level}}
+</p>
+</div>
+
+<span class="{{text}} font-bold">
+{{level}} Risk ({{percent|round(2)}}%)
+</span>
+
+</div>
+
+<div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+<div class="{{bar}} h-full rounded-full"
+style="width: {{percent}}%">
+</div>
+</div>
+
+</div>
+
+{% endif %}
+{% endfor %}
+
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Precautions Section -->
+<div>
+<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">clinical_notes</span>
+                Recommended Precautions
+            </h2>
+            {% set prec = analysis.get('precautions',{}) %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Diet Card -->
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border-l-4 border-primary overflow-hidden">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-4">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Diet</h3>
+</div>
+<ul class="space-y-3">
+{% if prec is mapping %}
+{% for item in prec.get('diet',[]) %}
+<li class="flex items-start gap-2 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-sm mt-1">
+check_circle
+</span>
+<span>{{item}}</span>
+</li>
+{% endfor %}
+{% else %}
+<li class="text-slate-400">No diet recommendations</li>
+{% endif %}
+</ul>
+</div>
+</div>
+<!-- Exercise Card -->
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border-l-4 border-primary overflow-hidden">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-4">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Exercise</h3>
+</div>
+<ul class="space-y-3">
+{% if prec is mapping %}
+{% for item in prec.get('exercise',[]) %}
+<li class="flex items-start gap-2 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-sm mt-1">
+check_circle
+</span>
+<span>{{item}}</span>
+</li>
+{% endfor %}
+{% else %}
+<li class="text-slate-400">No exercise recommendations</li>
+{% endif %}
+</ul>
+</div>
+</div>
+<!-- Habits Card -->
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border-l-4 border-primary overflow-hidden">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-4">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Habits</h3>
+</div>
+<ul class="space-y-3">
+{% if prec is mapping %}
+{% for item in prec.get('habits',[]) %}
+<li class="flex items-start gap-2 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined text-primary text-sm mt-1">
+check_circle
+</span>
+<span>{{item}}</span>
+</li>
+{% endfor %}
+{% else %}
+<li class="text-slate-400">No habit recommendations</li>
+{% endif %}
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer / Action Area -->
+<div class="mt-16 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-slate-200 dark:border-slate-800 pt-8 mb-10">
+<div class="flex items-center gap-4">
+<div class="bg-primary/10 p-3 rounded-lg">
+<span class="material-symbols-outlined text-primary">smart_toy</span>
+</div>
+<div>
+<h5 class="font-bold text-slate-900 dark:text-white">Have questions about your report?</h5>
+<p class="text-sm text-slate-500 dark:text-slate-400">Consult with a Wellness Wave expert Doctor & Chat Bot.</p>
+</div>
+</div>
+<div class="flex gap-3">
+<a href="{{ url_for('appointments') }}"><button class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-colors">Book Consultation</button></a>
+</div>
+</div>
+</div>
+{% endfor %}
+</main>
+
+
+<div class="text-center">
+<button 
+  id="toggleBtn" 
+  class="px-4 py-2 
+         border border-slate-300 dark:border-slate-600 
+         rounded-lg font-semibold 
+         hover:bg-slate-50 dark:hover:bg-slate-800 
+         hover:border-primary 
+         focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary
+         transition-colors"
+  style="margin-bottom: 25px;">
+  View More
+</button>
+</div>
+
+
+<script>
+let expanded = false;
+const btn = document.getElementById("toggleBtn");
+const hiddenCards = document.querySelectorAll(".extra-card");
+
+btn.addEventListener("click", () => {
     hiddenCards.forEach(card => {
-      card.style.display = expanded ? "none" : "block";
+        card.classList.toggle("hidden");
     });
-    toggleBtn.textContent = expanded ? "View More" : "Show Less";
+
+    btn.innerText = expanded ? "View More" : "Show Less";
     expanded = !expanded;
-  });
+});
 </script>
 
-<script>
-  AOS.init({ duration: 800, once: false, mirror: true, easing: 'ease-in-out' });
-</script>
 </body>
 </html>

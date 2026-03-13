@@ -1,21 +1,33 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, send_from_directory, send_file
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from bson.objectid import ObjectId
 from datetime import datetime
 from werkzeug.utils import secure_filename
-import os
+import os, io
 import pandas as pd
+import numpy as np
 import joblib
 from flask_socketio import SocketIO, emit, join_room
 from flask_mail import Mail, Message
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 import pytz
+import json
+from pytorch_tabnet.tab_model import TabNetRegressor
 
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, Table,
+                                 TableStyle, HRFlowable, KeepTogether)
+from reportlab.graphics.shapes import Drawing, Rect, String
 
 
 from bot import lifestyle_disease_chat
+from precaution import ai_precautions_groq
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "your_secret_key")
@@ -45,12 +57,14 @@ app.config.update(
     MAIL_SERVER="smtp.gmail.com",
     MAIL_PORT=587,
     MAIL_USE_TLS=True,
-    MAIL_USERNAME="ajeeshexatech@gmail.com",
-    MAIL_PASSWORD="tttr ntvl prlq foqk",
-    MAIL_DEFAULT_SENDER="Wellness Wave <ajeeshexatech@gmail.com>"
+    MAIL_USERNAME="wellnesswave353@gmail.com",
+    MAIL_PASSWORD=os.environ.get("MAIL_PASSWORD"),
+    MAIL_DEFAULT_SENDER="Wellness Wave <wellnesswave353@gmail.com>"
 )
 
 mail = Mail(app)
+
+ADMIN_EMAIL = 'wellnesswave353@gmail.com'
 
 # MongoDB setup
 client = MongoClient("mongodb://localhost:27017/")
@@ -66,378 +80,721 @@ blog_col = db["blogs"]
 chat_col = db["chats"]
 notifications_col = db.notifications
 
+# ── Computed features (auto-calculated, not user input) ───────────────────────
+COMPUTED_FEATURES = {"BMI", "Body Fat %"}
 
-# Load all models
-diseases = ["Obesity", "Hypertension", "Diabetes", "HeartDisease"]
-models = {d: joblib.load(f"{d}_model.pkl") for d in diseases}
+# ── Binary checkbox features — only include if user checked them (value = 1) ──
+BINARY_CHECKBOX_FEATURES = {
+    "Family History: Diabetes",
+    "Family History: Heart Disease",
+    "Existing BP Issues",
+    "Shortness of Breath",
+    "Frequent Urination",
+    "Excessive Thirst",
+}
 
-def risk_status(prob):
-    if prob > 0.7:
-        return "High Risk"
-    elif prob > 0.4:
-        return "Intermediate Risk"
-    else:
-        return "Low Risk"
+NEUTRAL_VALUES = {
+    "Smoking":            {"Never"},
+    "Alcohol_Consumption": {"None"},
+    "Salt_intake":         {"Low"},
+    "Sleep_quality":       {"Good"},
+    "Junk_food_per_week":  {0},
+    "Red_meat_per_week":   {0},
+    "Fried_food_per_week": {0},
+}
 
-def metric_status(name, value):
-    if name == "BMI":
-        if value < 18.5: return "Underweight"
-        elif value < 25: return "Normal"
-        elif value < 30: return "Overweight"
-        else: return "Obese"
-    if name == "BloodSugar":
-        if value < 100: return "Normal"
-        elif value < 126: return "Prediabetes"
-        else: return "High"
-    if name == "BloodPressure":
-        s,d = value
-        if s < 120 and d < 80: return "Normal"
-        elif s < 130 and d < 80: return "Elevated"
-        elif s < 140 or d < 90: return "High BP Stage 1"
-        else: return "High BP Stage 2"
-    if name == "Cholesterol":
-        if value < 200: return "Desirable"
-        elif value < 240: return "Borderline High"
-        else: return "High"
-    return "Unknown"
+# ── Maps FEATURE_NAME → (input_data_key, display_label, unit) ─────────────────
+FEATURE_META = {
+    "Age":                            ("Age",                              "Age",                    "yrs"),
+    "Gender":                         ("Gender",                           "Gender",                 ""),
+    "Height (cm)":                    ("Height_cm",                        "Height",                 "cm"),
+    "Weight (kg)":                    ("Weight_kg",                        "Weight",                 "kg"),
+    "Family History: Diabetes":       ("Family_History_Diabetes",          "Family Hx: Diabetes",    ""),
+    "Family History: Heart Disease":  ("Family_History_Heart_Disease",     "Family Hx: Heart",       ""),
+    "Existing BP Issues":             ("Existing_BP_Issues",               "Existing BP Issues",     ""),
+    "Cholesterol (mg/dL)":            ("Cholesterol_mg_dL",                "Cholesterol",            "mg/dL"),
+    "Physical Activity (days/wk)":    ("Physical_Activity_days_per_week",  "Physical Activity",      "days/wk"),
+    "Smoking":                        ("Smoking",                          "Smoking",                ""),
+    "Sleep Hours":                    ("Sleep_hours",                      "Sleep",                  "hrs"),
+    "Junk Food (per wk)":             ("Junk_food_per_week",               "Junk Food",              "/wk"),
+    "Salt Intake":                    ("Salt_intake",                      "Salt Intake",            ""),
+    "Systolic BP":                    ("Systolic_BP",                      "Systolic BP",            "mmHg"),
+    "Diastolic BP":                   ("Diastolic_BP",                     "Diastolic BP",           "mmHg"),
+    "Shortness of Breath":            ("Shortness_of_breath",              "Shortness of Breath",    ""),
+    "Waist Circumference (cm)":       ("Waist_circumference_cm",           "Waist",                  "cm"),
+    "Frequent Urination":             ("Frequent_urination",               "Frequent Urination",     ""),
+    "Excessive Thirst":               ("Excessive_thirst",                 "Excessive Thirst",       ""),
+    "Sleep Quality":                  ("Sleep_quality",                    "Sleep Quality",          ""),
+    "Red Meat (per wk)":              ("Red_meat_per_week",                "Red Meat",               "/wk"),
+    "Fried Food (per wk)":            ("Fried_food_per_week",              "Fried Food",             "/wk"),
+    "Water Intake (L/day)":           ("Water_intake_liters_per_day",      "Water Intake",           "L/day"),
+    "Alcohol Consumption":            ("Alcohol_Consumption",              "Alcohol",                ""),
+    "Blood Sugar (mg/dL)":            ("Blood_Sugar_mg_dL",                "Blood Sugar",            "mg/dL"),
+}
 
-# Full precautions dictionary (converted from your JS object)
-precautions_dict = {
-    "BMI": {
-        "Underweight": {
-            "diet": [
-                "Increase protein intake (eggs, lean meat, legumes) to support muscle growth and repair",
-                "Eat calorie-dense healthy foods like nuts, seeds, avocado, and whole grains to gain weight safely",
-                "Have 5-6 small meals daily instead of skipping meals to maintain steady energy and nutrient supply",
-                "Include healthy snacks between meals such as yogurt, smoothies, or nut butter on whole-grain toast"
-            ],
-            "exercise": [
-                "Engage in light resistance training to build lean muscle mass without excessive strain",
-                "Avoid excessive cardio which can burn too many calories and hinder weight gain",
-                "Focus on exercises like squats, push-ups, and resistance band workouts that are manageable at your level"
-            ],
-            "habit": [
-                "Maintain consistent meal timing every day to regulate metabolism",
-                "Get adequate sleep (7-9 hours) to support recovery and healthy weight gain",
-                "Track weight weekly and adjust diet/exercise based on progress",
-                "Reduce stress with relaxation techniques such as deep breathing or meditation"
-            ]
-        },
-        "Overweight": {
-            "diet": [
-                "Reduce sugar and refined carbs like white bread, pastries, and sugary drinks to avoid excess fat storage",
-                "Eat more vegetables, fiber, and lean proteins to improve satiety and nutrient intake",
-                "Control portion sizes using smaller plates and mindful eating practices",
-                "Avoid skipping meals which can lead to overeating later in the day"
-            ],
-            "exercise": [
-                "Engage in 30-45 min of cardio 5 days/week (walking, jogging, cycling) to burn extra calories",
-                "Include strength training 2-3 times/week to build muscle and boost metabolism",
-                "Try interval training for higher calorie burn and cardiovascular benefit"
-            ],
-            "habit": [
-                "Avoid late-night snacking, especially high-calorie foods",
-                "Track food intake and weight regularly to monitor progress",
-                "Manage stress through meditation, yoga, or breathing exercises",
-                "Maintain consistent sleep schedule to regulate appetite hormones"
-            ]
-        },
-        "Obese": {
-            "diet": [
-                "Consult a nutritionist for a personalized calorie-controlled diet plan to ensure safe weight loss",
-                "Follow a calorie deficit meal plan while ensuring adequate nutrition",
-                "Limit processed foods, sugary drinks, and high-fat items",
-                "Incorporate plenty of fiber-rich foods like vegetables, fruits, and whole grains to feel full"
-            ],
-            "exercise": [
-                "Participate in a supervised daily exercise program suited to your fitness level",
-                "Include a mix of cardio (walking, swimming, cycling) and strength training",
-                "Start with shorter sessions and gradually increase intensity to avoid injury"
-            ],
-            "habit": [
-                "Attend regular medical checkups to monitor health markers",
-                "Set realistic goals and track progress using apps or journals",
-                "Focus on improving sleep quality and stress management",
-                "Stay motivated by setting achievable milestones and rewarding progress"
-            ]
-        }
-    },
-    "BloodPressure": {
-        "Elevated": {
-            "diet": [
-                "Reduce sodium intake by avoiding processed foods, canned soups, and salty snacks",
-                "Limit sugary drinks and high-calorie beverages to support weight and blood pressure control",
-                "Increase potassium-rich foods like bananas, spinach, and sweet potatoes to help balance sodium levels",
-                "Eat a variety of fresh fruits, vegetables, lean proteins, and whole grains daily"
-            ],
-            "exercise": [
-                "Walk briskly for at least 30 min every day to improve cardiovascular health",
-                "Include light strength exercises to enhance overall fitness",
-                "Gradually increase intensity as endurance improves while monitoring heart rate"
-            ],
-            "habit": [
-                "Practice stress management techniques such as yoga, meditation, or deep breathing",
-                "Avoid smoking and limit alcohol consumption to protect heart and blood vessels",
-                "Monitor blood pressure regularly and keep a log for your doctor",
-                "Maintain healthy sleep patterns for overall cardiovascular support"
-            ]
-        },
-        "High Stage 1": {
-            "diet": [
-                "Adopt a low-salt, low-fat diet with emphasis on fresh vegetables and lean proteins",
-                "Avoid processed and fried foods that can raise blood pressure",
-                "Include whole grains and fiber-rich foods to support heart health",
-                "Limit red meat and sugary foods, and drink plenty of water"
-            ],
-            "exercise": [
-                "Perform cardio exercises 30-45 min, 5 days/week",
-                "Incorporate strength training 2-3 times/week to maintain muscle mass",
-                "Include flexibility exercises like stretching or yoga to support circulation"
-            ],
-            "habit": [
-                "Monitor blood pressure regularly and note changes",
-                "Limit alcohol intake and avoid smoking",
-                "Manage stress daily using meditation, deep breathing, or mindfulness",
-                "Get regular checkups to prevent progression to higher stages"
-            ]
-        },
-        "High Stage 2": {
-            "diet": [
-                "Consult a dietitian for a personalized low-salt, heart-healthy diet plan",
-                "Avoid processed, fried, and high-fat foods",
-                "Eat more vegetables, fruits, whole grains, and lean proteins",
-                "Follow meal timings and avoid skipping meals to maintain stable blood pressure"
-            ],
-            "exercise": [
-                "Engage in a doctor-supervised exercise program",
-                "Include gentle cardio and resistance training suited to your condition",
-                "Start slow and increase intensity gradually under supervision"
-            ],
-            "habit": [
-                "Follow prescribed medication regimen strictly",
-                "Monitor blood pressure at home daily and log readings",
-                "Incorporate stress management practices every day",
-                "Attend regular medical appointments for evaluation"
-            ]
-        }
-    },
-    "Cholesterol": {
-        "Borderline High": {
-            "diet": [
-                "Reduce saturated fats found in butter, cheese, and fatty meats",
-                "Eat more fiber-rich foods like oats, beans, and fruits to lower LDL cholesterol",
-                "Include fatty fish like salmon or mackerel twice a week for omega-3 benefits",
-                "Avoid trans fats found in fried foods and baked goods"
-            ],
-            "exercise": [
-                "Engage in brisk walking or light jogging 30 min daily",
-                "Include moderate cardio and light strength exercises 2-3 times/week",
-                "Increase physical activity gradually to improve lipid profile"
-            ],
-            "habit": [
-                "Quit smoking to improve heart health",
-                "Limit alcohol intake to recommended guidelines",
-                "Monitor cholesterol levels periodically",
-                "Maintain healthy weight and sleep routines"
-            ]
-        },
-        "High": {
-            "diet": [
-                "Consult a dietitian for a heart-healthy meal plan",
-                "Strictly limit fried, processed, and high-fat foods",
-                "Increase intake of fruits, vegetables, and whole grains",
-                "Focus on lean protein sources like chicken, fish, and legumes"
-            ],
-            "exercise": [
-                "Follow a supervised exercise plan with cardio and strength training 4-5 times/week",
-                "Engage in at least 150 min of moderate-intensity exercise weekly",
-                "Include flexibility and stretching exercises to reduce injury risk"
-            ],
-            "habit": [
-                "Take medications as prescribed by your doctor",
-                "Monitor cholesterol regularly with lab tests",
-                "Incorporate stress reduction techniques such as meditation",
-                "Avoid smoking and excessive alcohol consumption"
-            ]
-        }
-    },
-    "BloodSugar": {
-        "Prediabetes": {
-            "diet": [
-                "Reduce sugar, sugary drinks, and refined carbohydrates like white bread and pastries",
-                "Increase fiber intake through vegetables, legumes, and whole grains",
-                "Eat smaller, frequent meals to maintain stable blood glucose",
-                "Avoid skipping meals to prevent spikes in blood sugar"
-            ],
-            "exercise": [
-                "Do 30 min of moderate exercise daily like brisk walking or cycling",
-                "Include strength training 2-3 times/week to improve insulin sensitivity",
-                "Incorporate light stretching or yoga to enhance circulation"
-            ],
-            "habit": [
-                "Monitor blood sugar regularly",
-                "Maintain healthy weight through diet and exercise",
-                "Manage stress with mindfulness or relaxation techniques",
-                "Ensure adequate sleep every night (7-9 hours)"
-            ]
-        },
-        "High": {
-            "diet": [
-                "Consult a dietitian for a personalized low-sugar, high-fiber diet",
-                "Strictly limit sugar, processed foods, and refined carbs",
-                "Include plenty of vegetables, whole grains, and lean protein",
-                "Follow consistent meal timings and avoid late-night eating"
-            ],
-            "exercise": [
-                "Follow a supervised exercise program with a mix of cardio and resistance training",
-                "Gradually increase exercise duration and intensity under supervision",
-                "Include daily walking or swimming to control blood sugar levels"
-            ],
-            "habit": [
-                "Take prescribed medications as directed",
-                "Monitor glucose regularly and log readings",
-                "Practice stress management and ensure good sleep hygiene",
-                "Attend regular medical checkups to adjust treatment if needed"
-            ]
-        }
-    },
-    "Diabetes": {
-        "diet": ["Low glycemic index diet", "Eat more vegetables, whole grains, and lean protein", "Avoid sugary beverages"],
-        "exercise": ["30-60 min daily walking or cardio", "Strength/resistance exercises 2-3 times/week"],
-        "habit": ["Monitor blood glucose daily", "Take medications as prescribed", "Maintain healthy weight and stress control"]
-    },
-    "Heart Disease": {
-        "diet": ["Heart-healthy diet with fruits, vegetables, and whole grains", "Limit saturated fats and trans fats", "Include omega-3 rich foods like fish or flaxseeds"],
-        "exercise": ["Moderate-intensity cardio 150 min/week", "Strength training 2-3 times/week"],
-        "habit": ["Avoid smoking and excessive alcohol", "Regular checkups and ECG monitoring", "Stress management techniques"]
-    },
-    "Hypertension": {
-        "diet": ["Low-salt diet", "Eat potassium-rich foods", "Avoid processed and fried foods"],
-        "exercise": ["30-45 min daily moderate exercise", "Strength training 2x/week"],
-        "habit": ["Monitor blood pressure regularly", "Stress management", "Avoid alcohol and smoking"]
-    },
-    "Obesity": {
-        "diet": ["Calorie deficit diet with balanced nutrition", "Avoid sugary and processed foods", "Increase intake of vegetables, lean protein, and fiber"],
-        "exercise": ["Daily physical activity (cardio + strength)", "Gradually increase intensity"],
-        "habit": ["Track weight and meals", "Maintain good sleep hygiene", "Manage stress levels"]
-    }
+# ── Categorical reverse-decode map (encoded int → original string) ─────────────
+# Used to show "Never" instead of "0" for Smoking, etc.
+CATEGORICAL_KEYS = {
+    "Smoking", "Salt_intake", "Sleep_quality", "Alcohol_Consumption", "Gender"
 }
 
 
-# Function to compute precautions
-def compute_precautions(metrics, disease_results):
-    """
-    metrics: dict of metric -> {'status': str}, e.g.,
-        {"BMI": {"status": "Overweight"}, "BloodPressure": {"status": "High Stage 1"}}
-    disease_results: dict of disease -> {'status': str}, e.g.,
-        {"Diabetes": {"status": "High Risk"}}
-    """
-    result_precautions = {"diet": [], "exercise": [], "habit": []}
+def _decode_value(input_key, raw_input_data_before_encode, label_encoders):
+    """Return the human-readable value for a feature."""
+    # For binary checkboxes
+    val = raw_input_data_before_encode.get(input_key)
+    if val in (0, 1):
+        return "Yes" if val == 1 else "No"
+    return str(val) if val is not None else "—"
 
-    # Metric-based precautions
-    for metric, val in metrics.items():
-        status = val['status']
-        if metric in precautions_dict:
-            metric_prec = precautions_dict[metric]
-            # Some metrics like BMI or BloodPressure have nested statuses
-            if isinstance(metric_prec, dict) and status in metric_prec:
-                for key in ["diet", "exercise", "habit"]:
-                    result_precautions[key] += metric_prec[status].get(key, [])
-            # Some metrics like Diabetes have direct lists
-            elif isinstance(metric_prec, dict):
-                for key in ["diet", "exercise", "habit"]:
-                    if key in metric_prec:
-                        result_precautions[key] += metric_prec[key]
+# import models
+def load_tabnet(path):
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Missing model file: {path}")
+    model = TabNetRegressor()
+    model.load_model(path)
+    return model
 
-    # Disease-based precautions
-    for disease, info in disease_results.items():
-        status = info['status']
-        if disease in precautions_dict:
-            disease_prec = precautions_dict[disease]
-            # Only apply if high risk or high status
-            if status in ["High Risk", "High"]:
-                for key in ["diet", "exercise", "habit"]:
-                    if key in disease_prec:
-                        result_precautions[key] += disease_prec[key]
+models = {
+    "Diabetes": load_tabnet("Diabetes_Risk_%_tabnet_model.zip"),
+    "Heart_Disease": load_tabnet("Heart_Disease_Risk_%_tabnet_model.zip"),
+    "Hypertension": load_tabnet("Hypertension_Risk_%_tabnet_model.zip"),
+    "Obesity": load_tabnet("Obesity_Risk_%_tabnet_model.zip")
+}
 
-    # Remove duplicates
-    for key in result_precautions:
-        result_precautions[key] = list(dict.fromkeys(result_precautions[key]))
+label_encoders = joblib.load("label_encoders.pkl")
 
-    return result_precautions
 
+# ─── Status helpers ───────────────────────────────────────────────────────────
+#bmistatus
+def bmi_status(bmi):
+    if bmi < 18.5:
+        return "Underweight"
+    elif bmi < 25:
+        return "Normal"
+    elif bmi < 30:
+        return "Overweight"
+    else:
+        return "Obese"
+
+#blood pressure status
+def bp_status(sys, dia):
+    if sys < 120 and dia < 80:
+        return "Normal"
+    elif sys < 140 or dia < 90:
+        return "Intermediate"
+    else:
+        return "High"
+
+# blood suger status
+def sugar_status(val):
+    if val < 100:
+        return "Normal"
+    elif val < 126:
+        return "Intermediate"
+    else:
+        return "High"
+    
+#cholesterol status
+def cholesterol_status(val):
+    if val < 200:
+        return "Normal"
+    elif val < 240:
+        return "Intermediate"
+    else:
+        return "High"
+
+# ─── TabNet explainability (CORRECT implementation) ───────────────────────────
+def get_feature_importance(model, features_array):
+
+    explain_matrix, _ = model.explain(features_array)
+    importance = explain_matrix[0]
+
+    total = importance.sum()
+
+    if total > 0:
+        pcts = (importance / total * 100)
+    else:
+        pcts = [100.0 / len(FEATURE_META)] * len(FEATURE_META)
+
+    paired = [
+        (fname, float(pct))
+        for fname, pct in zip(FEATURE_META, pcts)
+        if pct > 0.01        # ← removes 0 and near-zero values
+    ]
+
+    paired.sort(key=lambda x: x[1], reverse=True)
+
+    return paired
+
+
+#prediction page
 @app.route('/predict', methods=['POST'])
 def predict():
+    if "user_id" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+    
     data = request.form
+
     height = float(data['height'])
     weight = float(data['weight'])
-    bmi = weight / ((height / 100) ** 2)
+    bmi = round(weight / ((height / 100) ** 2), 2)
     
-    input_data = pd.DataFrame([{
-        "Age": int(data['age']),
-        "Gender": data['gender'],
-        "Height_cm": height,
-        "Weight_kg": weight,
-        "Smoking": data['smoking'],
-        "Alcohol": data['alcohol'],
-        "Exercise_Freq": data['exercise'],
-        "Sleep_Hours": float(data['sleep']),
-        "SystolicBP": float(data['systolic']),
-        "DiastolicBP": float(data['diastolic']),
-        "Cholesterol": float(data['cholesterol']),
-        "BloodSugar": float(data['bloodSugar']),
-        "BMI": bmi
-    }])
+    gender_flag = 1 if data['gender'] == "Male" else 0
+    age = int(data['age'])
 
-    input_data = pd.get_dummies(input_data)
+    body_fat = round(
+        (1.20 * bmi) + (0.23 * age) - (10.8 * gender_flag) - 5.4,2
+    )
+   
+
+    input_data = {
+        "Age":                             age,
+        "Gender":                          data["gender"],
+        "Height_cm":                       height,
+        "Weight_kg":                       weight,
+        "Body_fat_percent":                body_fat,
+        "Family_History_Diabetes":         int(data.get("family_diabetes") == "on"),
+        "Family_History_Heart_Disease":    int(data.get("family_heart") == "on"),
+        "Existing_BP_Issues":              int(data.get("existing_bp") == "on"),
+        "Shortness_of_breath":             int(data.get("breath") == "on"),
+        "Frequent_urination":              int(data.get("urination") == "on"),
+        "Excessive_thirst":                int(data.get("thirst") == "on"),
+        "Cholesterol_mg_dL":               float(data["cholesterol"]),
+        "Physical_Activity_days_per_week": int(data["activity"]),
+        "Sleep_hours":                     float(data["sleep"]),
+        "Junk_food_per_week":              int(data["junk"]),
+        "Systolic_BP":                     float(data["systolic"]),
+        "Diastolic_BP":                    float(data["diastolic"]),
+        "Waist_circumference_cm":          float(data["waist"]),
+        "Red_meat_per_week":               int(data["redmeat"]),
+        "Fried_food_per_week":             int(data["fried"]),
+        "Water_intake_liters_per_day":     float(data["water"]),
+        "Blood_Sugar_mg_dL":               float(data.get("bloodSugar", 0)),
+        "Smoking":                         data["smoking"],
+        "Salt_intake":                     data["salt"],
+        "Sleep_quality":                   data["sleep_quality"],
+        "Alcohol_Consumption":             data["alcohol"],
+        "BMI":                             bmi,
+    }
     
 
-    results = {}
-
-    # Run predictions for each model
-    for disease in diseases:
-        model = models[disease]
-        # align features for this model
-        model_input = input_data.copy()
-        for col in model.feature_names_in_:
-            if col not in model_input.columns:
-                model_input[col] = 0
-        model_input = model_input[model.feature_names_in_]
-
-        prob = model.predict_proba(model_input)[0][1]
-        status = risk_status(prob)
-
-        results[disease] = {
-            "chance": f"{prob*100:.1f}%",
-            "status": status
-        }
-
-
+    disease_results, explain_results, _  = predict_risk(input_data)
 
     metrics = {
-        "BMI": {"value": round(bmi,1), "status": metric_status("BMI", bmi)},
-        "BloodPressure": {"value": f"{data['systolic']}/{data['diastolic']}", 
-                          "status": metric_status("BloodPressure", (float(data['systolic']), float(data['diastolic'])))},
-        "BloodSugar": {"value": data['bloodSugar'], "status": metric_status("BloodSugar", float(data['bloodSugar']))},
-        "Cholesterol": {"value": data['cholesterol'], "status": metric_status("Cholesterol", float(data['cholesterol']))},
+        "BMI": {"value": bmi, "status": bmi_status(bmi)},
+        "BloodPressure": {
+            "value": f"{data['systolic']}/{data['diastolic']}",
+            "status": bp_status(float(data['systolic']), float(data['diastolic']))
+        },
+        "BloodSugar": {
+            "value": float(data['bloodSugar']),
+            "status": sugar_status(float(data['bloodSugar']))
+        },
+        "Cholesterol": {
+            "value": float(data['cholesterol']),
+            "status": cholesterol_status(float(data['cholesterol']))
+        }
     }
 
-     # Compute precautions
-    precautions = compute_precautions(metrics, results)
+    # 🔹 GROQ AI PRECAUTIONS
+    precautions_raw = ai_precautions_groq(metrics, disease_results,input_data)
 
-    # Save analysis to MongoDB
+    if isinstance(precautions_raw, dict):
+        precautions = precautions_raw          # new format: {type, diet, exercise, habits}
+    elif isinstance(precautions_raw, str):
+        try:
+            precautions = json.loads(precautions_raw)
+        except json.JSONDecodeError:
+            precautions = []
+    elif isinstance(precautions_raw, list):
+        precautions = precautions_raw
+    else:
+        precautions = []
+
+        # 🔹 Collect numeric risk values
+    risk_values = [
+        v["risk_percentage"]
+        for k, v in disease_results.items()
+    ]
+
+    # 🔹 Overall health score (higher = better)
+    avg_risk = float(np.mean(risk_values))
+    health_score = round(100 - avg_risk, 2)
+
+    # 🔹 Health status classification
+    if health_score >= 75:
+        health_status = "Good Standing"
+    elif health_score >= 50:
+        health_status = "Moderate Risk"
+    else:
+        health_status = "High Risk"
+
+    # 🔹 Add to results
+    disease_results["overall_health"] = {
+        "health_score": health_score,
+        "status": health_status
+    }
+
+    payload = {
+        "metrics": metrics, 
+        "diseases": disease_results,
+        "overall_health": disease_results["overall_health"],
+        "precautions": precautions, 
+        "explain": explain_results,
+        "generated_at": datetime.now().strftime("%d %b %Y, %H:%M"),
+    }
+    session["last_report"] = payload
+
+
     analysis_collection.insert_one({
-         "user_id": session["user_id"], 
+        "user_id": session["user_id"],
         "metrics": metrics,
-        "diseases": results,
-        "precautions": precautions if precautions else {"diet": [], "exercise": [], "habit": []},
+        "diseases": disease_results,
+        "precautions": precautions,
+        "explain": {k: v.get("top5",[]) for k,v in explain_results.items()},
         "datetime": datetime.now()
     })
-                
-    return jsonify({"diseases": results, "metrics": metrics, "precautions": precautions})
+
+    return jsonify(payload)
+
+@app.route("/download_report")
+def download_report():
+    if "user_id" not in session: return redirect(url_for("login"))
+    payload = session.get("last_report")
+    if not payload: return "No report available. Run an analysis first.", 400
+    buf   = build_pdf_report(payload)
+    fname = f"Wellnesswave_report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+    return send_file(buf, as_attachment=True, download_name=fname, mimetype="application/pdf")
+
+# anlaysis by deeping model
+def predict_risk(input_data):
+    # Encode categorical values
+    raw_input = dict(input_data)
+
+    categorical_cols = [
+        "Gender",
+        "Smoking",
+        "Salt_intake",
+        "Sleep_quality",
+        "Alcohol_Consumption"
+    ]
+
+        # Encode categorical
+    for col in categorical_cols:
+        encoder = label_encoders[col]
+
+        if input_data[col] not in encoder.classes_:
+            input_data[col] = encoder.classes_[0]
+
+        input_data[col] = int(encoder.transform([input_data[col]])[0])
 
 
+    # 27 features — EXACT same order as train_model.py
+    features = np.array([[
+        input_data["Age"],                              # 0
+        input_data["Gender"],                           # 1
+        input_data["Height_cm"],                        # 2
+        input_data["Weight_kg"],                        # 3
+        input_data["Family_History_Diabetes"],          # 4
+        input_data["Family_History_Heart_Disease"],     # 5
+        input_data["Existing_BP_Issues"],               # 6
+        input_data["Cholesterol_mg_dL"],                # 7
+        input_data["Physical_Activity_days_per_week"],  # 8
+        input_data["Smoking"],                          # 9
+        input_data["Sleep_hours"],                      # 10
+        input_data["Junk_food_per_week"],               # 11
+        input_data["Salt_intake"],                      # 12
+        input_data["Systolic_BP"],                      # 13
+        input_data["Diastolic_BP"],                     # 14
+        input_data["Shortness_of_breath"],              # 15
+        input_data["Waist_circumference_cm"],           # 16
+        input_data["Frequent_urination"],               # 17
+        input_data["Excessive_thirst"],                 # 18
+        input_data["Body_fat_percent"],                 # 19
+        input_data["Sleep_quality"],                    # 20
+        input_data["Red_meat_per_week"],                # 21
+        input_data["Fried_food_per_week"],              # 22
+        input_data["Water_intake_liters_per_day"],      # 23
+        input_data["BMI"],                              # 24
+        input_data["Alcohol_Consumption"],              # 25
+        input_data["Blood_Sugar_mg_dL"],                # 26
+    ]], dtype=np.float32)
 
+    assert features.shape == (1, 27), f"Feature shape error: {features.shape}"
+
+
+    results = {}
+    explain_results = {}
+
+
+    for disease, model in models.items():
+        prediction = float(model.predict(features)[0][0])
+
+        # Clamp between 0–100
+        prediction = max(0, min(100, prediction))
+
+        if prediction >= 85:
+            risk = "High"
+        elif prediction >= 65:
+            risk = "Borderline"    
+        elif prediction >= 30:
+            risk = "Intermediate"
+        else:
+            risk = "Low"
+
+
+        results[disease] = {
+            "risk_percentage": round(prediction, 2),
+            "risk_level": risk,
+        }
+
+        # ── Explainability ────────────────────────────────────────────────────
+        try:
+            all_importance = get_feature_importance(model, features)
+            # → [(feature_name, pct), ...] sorted desc
+
+            filtered = []
+            for feat_name, pct in all_importance:
+
+                # Skip computed features
+                if feat_name in COMPUTED_FEATURES:
+                    continue
+
+                # Skip features not in our user-input map
+                if feat_name not in FEATURE_META:
+                    continue
+
+                input_key, display_label, unit = FEATURE_META[feat_name]
+
+                # Skip binary checkboxes the user did NOT tick
+                if feat_name in BINARY_CHECKBOX_FEATURES:
+                    if raw_input.get(input_key, 0) == 0:
+                        continue
+
+                user_raw_val = raw_input.get(input_key)
+                if input_key in NEUTRAL_VALUES:
+                    if user_raw_val in NEUTRAL_VALUES[input_key]:
+                        continue
+
+                # Get the human-readable value the user entered
+                user_val = raw_input.get(input_key)
+                if user_val in (0, 1) and feat_name in BINARY_CHECKBOX_FEATURES:
+                    display_val = "Yes" if user_val == 1 else "No"
+                else:
+                    display_val = str(user_val) if user_val is not None else "—"
+
+                filtered.append({
+                    "name":        feat_name,       # original feature name
+                    "label":       display_label,   # short friendly label
+                    "value":       display_val,     # what the user entered
+                    "unit":        unit,            # e.g. "mg/dL", "yrs"
+                    "pct":         pct,             # raw importance weight
+                })
+
+            # Re-normalise percentages to sum to 100%
+            total = sum(f["pct"] for f in filtered)
+            if total > 0:
+                for f in filtered:
+                    f["pct"] = round(f["pct"] / total * 100, 2)
+
+            # Sort descending by contribution
+            filtered.sort(key=lambda x: x["pct"], reverse=True)
+
+            # Serialise as list of tuples for top5 (backward compat with frontend)
+            # and full list of dicts for all27 (new richer format)
+            explain_results[disease] = {
+                "top5":  [(f["label"], f["pct"], f["value"], f["unit"]) for f in filtered[:5]],
+                "all27": [(f["label"], f["pct"], f["value"], f["unit"]) for f in filtered],
+            }
+
+        except Exception as e:
+            explain_results[disease] = {
+                "top5":  [], "all27": [], "error": str(e)
+            }
+
+    return results, explain_results, features
+
+def build_pdf_report(payload):
+    buf = io.BytesIO()
+
+    doc = SimpleDocTemplate(
+        buf,
+        pagesize=A4,
+        leftMargin=2*cm,
+        rightMargin=2*cm,
+        topMargin=2*cm,
+        bottomMargin=2*cm,
+        title="Wellness Wave Health Risk Report"
+    )
+
+    W = A4[0] - 4*cm
+
+    def S(name, **kw): return ParagraphStyle(name, **kw)
+
+    sTitle  = S("T",  fontSize=20, fontName="Helvetica-Bold",
+                alignment=TA_CENTER, spaceAfter=6)
+    sSub    = S("Su", fontSize=10, fontName="Helvetica",
+                alignment=TA_CENTER, spaceAfter=4)
+    sH1     = S("H1", fontSize=13, fontName="Helvetica-Bold",
+                spaceBefore=16, spaceAfter=8,
+                borderPad=4, backColor=colors.HexColor("#f0f4f8"))
+    sBody   = S("B",  fontSize=9,  fontName="Helvetica",
+                spaceAfter=3, leading=13)
+    sBold   = S("Bd", fontSize=9,  fontName="Helvetica-Bold",
+                spaceAfter=3)
+    sCenter = S("C",  fontSize=28, fontName="Helvetica-Bold",
+                alignment=TA_CENTER, spaceAfter=4)
+    sStatus = S("St", fontSize=12, fontName="Helvetica-Bold",
+                alignment=TA_CENTER, spaceAfter=6)
+    sFooter = S("F",  fontSize=7,  fontName="Helvetica",
+                alignment=TA_CENTER, textColor=colors.grey)
+
+    def hr():
+        return HRFlowable(width="100%", thickness=0.5,
+                          color=colors.HexColor("#cccccc"),
+                          spaceAfter=10, spaceBefore=6)
+
+    def risk_color(level):
+        return {
+            "High":         colors.HexColor("#ff5e57"),
+            "Borderline":   colors.HexColor("#ff7f50"),
+            "Intermediate": colors.HexColor("#ff9f43"),
+            "Low":          colors.HexColor("#00c896"),
+        }.get(level, colors.grey)
+
+    def status_color(status):
+        sl = (status or "").lower()
+        if sl == "normal":                          return colors.HexColor("#00c896")
+        if sl in ("intermediate", "overweight"):    return colors.HexColor("#ff9f43")
+        return colors.HexColor("#ff5e57")
+
+    metrics  = payload["metrics"]
+    diseases = payload["diseases"]
+    explain  = payload.get("explain", {})
+    prec     = payload.get("precautions", {})
+    oh       = payload["overall_health"]
+    gen      = payload.get("generated_at",
+                           datetime.now().strftime("%d %b %Y, %H:%M"))
+
+    story = []
+
+    # ═══════════════════════════════════════════════
+    # HEADER
+    # ═══════════════════════════════════════════════
+    story += [
+        Spacer(1, .3*cm),
+        Paragraph("Wellness Wave", sTitle),
+        Paragraph("Health Risk Assessment Report", sSub),
+        Paragraph(f"Generated: {gen}", sSub),
+        Spacer(1, .4*cm),
+        hr(),
+    ]
+
+    # ═══════════════════════════════════════════════
+    # OVERALL HEALTH SCORE
+    # ═══════════════════════════════════════════════
+    score  = oh.get("health_score", 0)
+    status = oh.get("status", "")
+    sc     = "#00c896" if score >= 75 else ("#ff9f43" if score >= 50 else "#ff5e57")
+
+    story += [
+        Paragraph("OVERALL HEALTH SCORE", sH1),
+        Paragraph(
+            f'<font color="{sc}">{score}%</font>',
+            sCenter
+        ),
+        Spacer(1, 14),
+        Paragraph(
+            f'<font color="{sc}">{status}</font>',
+            sStatus
+        ),
+        Spacer(1, .5*cm),
+        hr(),
+    ]
+
+    # ═══════════════════════════════════════════════
+    # VITAL METRICS TABLE
+    # ═══════════════════════════════════════════════
+    story += [Paragraph("VITAL METRICS", sH1)]
+
+    mrows = [[
+        Paragraph("<b>Metric</b>", sBold),
+        Paragraph("<b>Value</b>", sBold),
+        Paragraph("<b>Status</b>", sBold),
+    ]]
+    for lbl, key in [
+        ("BMI",                "BMI"),
+        ("Blood Pressure",     "BloodPressure"),
+        ("Blood Sugar (mg/dL)","BloodSugar"),
+        ("Cholesterol (mg/dL)","Cholesterol"),
+    ]:
+        m  = metrics.get(key, {})
+        st = str(m.get("status", "—"))
+        mrows.append([
+            Paragraph(lbl, sBody),
+            Paragraph(f"<b>{m.get('value','—')}</b>", sBold),
+            Paragraph(
+                f'<font color="{status_color(st).hexval() if hasattr(status_color(st),"hexval") else "#000"}">{st}</font>',
+                sBody
+            ),
+        ])
+
+    mt = Table(mrows, colWidths=[W*.42, W*.28, W*.30])
+    mt.setStyle(TableStyle([
+        ("BACKGROUND",    (0,0), (-1,0), colors.HexColor("#e8f0fe")),
+        ("GRID",          (0,0), (-1,-1), 0.5, colors.HexColor("#cccccc")),
+        ("FONTNAME",      (0,0), (-1,0),  "Helvetica-Bold"),
+        ("ALIGN",         (1,1), (-1,-1), "CENTER"),
+        ("VALIGN",        (0,0), (-1,-1), "MIDDLE"),
+        ("TOPPADDING",    (0,0), (-1,-1), 7),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 7),
+        ("ROWBACKGROUNDS",(0,1), (-1,-1),
+         [colors.white, colors.HexColor("#f8f9fa")]),
+    ]))
+    story += [mt, Spacer(1, .6*cm), hr()]
+
+    # ═══════════════════════════════════════════════
+    # DISEASE RISK TABLE
+    # ═══════════════════════════════════════════════
+    story += [Paragraph("DISEASE RISK ANALYSIS", sH1)]
+
+    labels = {
+        "Diabetes":     "Diabetes",
+        "Heart_Disease":"Heart Disease",
+        "Hypertension": "Hypertension",
+        "Obesity":      "Obesity",
+    }
+
+    drows = [[
+        Paragraph("<b>Disease</b>",    sBold),
+        Paragraph("<b>Risk %</b>",     sBold),
+        Paragraph("<b>Risk Level</b>", sBold),
+    ]]
+    for key, lbl in labels.items():
+        d = diseases.get(key)
+        if not d: continue
+        level = d["risk_level"]
+        rc    = risk_color(level)
+        drows.append([
+            Paragraph(lbl, sBody),
+            Paragraph(f"<b>{d['risk_percentage']:.1f}%</b>", sBold),
+            Paragraph(
+                f'<font color="#{rc.hexval() if hasattr(rc,"hexval") else "000000"}">'
+                f'<b>{level}</b></font>',
+                sBody
+            ),
+        ])
+
+    dt = Table(drows, colWidths=[W*.42, W*.28, W*.30])
+    dt.setStyle(TableStyle([
+        ("BACKGROUND",    (0,0), (-1,0), colors.HexColor("#e8f0fe")),
+        ("GRID",          (0,0), (-1,-1), 0.5, colors.HexColor("#cccccc")),
+        ("FONTNAME",      (0,0), (-1,0),  "Helvetica-Bold"),
+        ("ALIGN",         (1,1), (-1,-1), "CENTER"),
+        ("VALIGN",        (0,0), (-1,-1), "MIDDLE"),
+        ("TOPPADDING",    (0,0), (-1,-1), 7),
+        ("BOTTOMPADDING", (0,0), (-1,-1), 7),
+        ("ROWBACKGROUNDS",(0,1), (-1,-1),
+         [colors.white, colors.HexColor("#f8f9fa")]),
+    ]))
+    story += [dt, Spacer(1, .6*cm), hr()]
+
+    # ═══════════════════════════════════════════════
+    # EXPLAINABILITY — KEY RISK FACTORS
+    # ═══════════════════════════════════════════════
+    story += [Paragraph("MODEL EXPLAINABILITY — KEY RISK FACTORS", sH1)]
+    story += [
+        Paragraph(
+            "The table below shows which factors from your input contributed most "
+            "to each disease risk prediction, along with the value you provided.",
+            sBody
+        ),
+        Spacer(1, .3*cm),
+    ]
+
+    for disease_key, disease_label in labels.items():
+
+        exp          = explain.get(disease_key, {})
+        all_features = exp.get("all27", [])
+        if not all_features:
+            continue
+
+        d     = diseases.get(disease_key, {})
+        level = d.get("risk_level", "Low")
+        rc    = risk_color(level)
+
+        story += [
+            Spacer(1, .2*cm),
+            Paragraph(
+                f'<b>{disease_label}</b> — '
+                f'Risk: <b>{d.get("risk_percentage", 0):.1f}%</b> | '
+                f'Level: <b>{level}</b>',
+                sBold
+            ),
+            Spacer(1, .1*cm),
+        ]
+
+        erows = [[
+            Paragraph("<b>#</b>",            sBold),
+            Paragraph("<b>Factor</b>",       sBold),
+            Paragraph("<b>Your Value</b>",   sBold),
+            Paragraph("<b>Contribution</b>", sBold),
+        ]]
+
+        for i, feat_item in enumerate(all_features, 1):
+            # 4-tuple: (label, pct, user_val, unit)  ← new format
+            # 2-tuple: (label, pct)                  ← old format fallback
+            if len(feat_item) == 4:
+                fname, fpct, user_val, unit = feat_item
+                display_val = f"{user_val} {unit}".strip()
+            else:
+                fname, fpct = feat_item
+                display_val = "—"
+
+            erows.append([
+                Paragraph(str(i),              sBody),
+                Paragraph(str(fname),          sBody),
+                Paragraph(str(display_val),    sBody),
+                Paragraph(f"{fpct:.2f}%",      sBold),
+            ])
+
+        et = Table(erows, colWidths=[W*.06, W*.42, W*.28, W*.24])
+        et.setStyle(TableStyle([
+            ("BACKGROUND",    (0,0), (-1,0), colors.HexColor("#e8f0fe")),
+            ("GRID",          (0,0), (-1,-1), 0.5, colors.HexColor("#cccccc")),
+            ("FONTNAME",      (0,0), (-1,0),  "Helvetica-Bold"),
+            ("ALIGN",         (3,1), (3,-1),  "CENTER"),
+            ("VALIGN",        (0,0), (-1,-1), "MIDDLE"),
+            ("TOPPADDING",    (0,0), (-1,-1), 6),
+            ("BOTTOMPADDING", (0,0), (-1,-1), 6),
+            ("LEFTPADDING",   (0,0), (-1,-1), 6),
+            ("ROWBACKGROUNDS",(0,1), (-1,-1),
+             [colors.white, colors.HexColor("#f8f9fa")]),
+        ]))
+
+        story += [et, Spacer(1, .5*cm)]
+
+    story += [hr()]
+
+
+    # ═══════════════════════════════════════════════
+    # DISCLAIMER
+    # ═══════════════════════════════════════════════
+    story += [
+        Spacer(1, .4*cm),
+        Paragraph(
+            "DISCLAIMER: This report is generated by an AI system and is for "
+            "informational purposes only. It does not constitute medical advice, "
+            "diagnosis, or treatment. Always consult a qualified healthcare "
+            "professional for any health concerns.",
+            sFooter
+        ),
+    ]
+
+    doc.build(story)
+    buf.seek(0)
+    return buf
 
 # Home page
 @app.route("/")
@@ -528,7 +885,9 @@ def admin_page():
     users = [normalize_created_at(u) for u in users]
     doctors = [normalize_created_at(d) for d in doctors]
 
-    return render_template("admin_page.html", users=users, doctors=doctors)
+    return render_template("admin_page.html", users=users, doctors=doctors,  user_count=len(users),
+        doctor_count=len(doctors),
+        pending_doctor_count=len([d for d in doctors if not d.get("approved")]))
 
 
 # ---------------- DELETE USER ----------------
@@ -602,11 +961,8 @@ def doctor_register():
         profile_pic_filename = None
         if profile_pic and profile_pic.filename != "":
             filename = secure_filename(profile_pic.filename)
-
             save_path = os.path.join(UPLOAD_FOLDER, filename)
             profile_pic.save(save_path)
-
-              # Store only relative path for DB
             profile_pic_filename = f"uploads/{filename}"
 
         # Prevent duplicate
@@ -631,11 +987,39 @@ def doctor_register():
             "created_at": datetime.now()
         })
 
+        # Send email to admin
+        try:
+            msg = Message(
+                subject="New Doctor Registration",
+                sender=app.config['MAIL_USERNAME'],
+                recipients=[ADMIN_EMAIL],
+                body=f"""
+Hello Admin of Wellness Wave,
+
+A new doctor has registered on Wellness Wave.
+
+Name: {name}
+Email: {email}
+Specialization: {specialization}
+Qualification: {qualification}
+Experience: {experience} years
+Registration ID: {registration_id}
+Hospital: {hospital}
+Phone: {phone}
+Address: {address}
+
+Please review and approve the account.
+"""
+            )
+            mail.send(msg)
+        except Exception as e:
+            print("Failed to send admin email:", e)
+
         flash("Doctor registered successfully! Waiting for admin approval.", "success")
         return redirect(url_for("index", open_login="true"))
 
-    # If GET → render the registration form
     return render_template("doctor_register.html")
+
 
 
 @app.route("/doctor_loginpage")
@@ -643,8 +1027,6 @@ def doctor_loginpage():
     return render_template("doctor_login.html")
 
 
-
-    
 #----------Approve/reject------------
 @app.route("/admin/approve_doctor/<doctor_id>", methods=["POST"])
 def approve_doctor(doctor_id):
@@ -764,15 +1146,18 @@ def doctor_home():
 
 @app.route("/add_review", methods=["POST"])
 def add_review():
-    if "username" not in session:
+    if "user_id" not in session:
         flash("You must be logged in to post a review.", "error")
         return redirect(url_for("user_login"))
 
     review_text = request.form.get("review", "").strip()
 
     if review_text:
+        user = users_col.find_one({"_id": ObjectId(session["user_id"])})
+
         reviews_col.insert_one({
-            "username": session["username"],
+            "user_id": ObjectId(session["user_id"]),
+            "username": user["username"],
             "review": review_text,
             "created_at": datetime.now()
         })
@@ -781,6 +1166,7 @@ def add_review():
         flash("Review cannot be empty.", "error")
 
     return redirect(url_for("user_home"))
+
 
 @app.route("/appointments")
 def appointments():
@@ -817,12 +1203,14 @@ def recom_appointment():
 
     approved_doctors = list(doctors_col.find(query).sort("created_at", -1))
 
+    user = users_col.find_one({"_id": ObjectId(session["user_id"])})
+
     for doc in approved_doctors:
         doc["_id"] = str(doc["_id"])
         if "created_at" in doc and isinstance(doc["created_at"], datetime):
             doc["created_at"] = doc["created_at"].strftime("%d-%m-%Y")
 
-    return render_template("recom_appointment.html", doctors=approved_doctors)
+    return render_template("recom_appointment.html", doctors=approved_doctors,user=user)
 
 # ----------------- Book Appointment -----------------
 @app.route("/book_appointment", methods=["POST"])
@@ -897,6 +1285,7 @@ def book_appointment():
 
     return jsonify({
         "success": True,
+        "message": "Appointment booked successfully!",
         "appointment_id": str(result.inserted_id)
     })
 
@@ -1463,7 +1852,7 @@ Please be ready.
         except Exception as e:
             print("REMINDER ERROR:", e)
     
-# 3️⃣ Initialize scheduler
+#  Initialize scheduler
 scheduler = BackgroundScheduler(timezone="Asia/Kolkata")
 scheduler.add_job(appointment_email_reminder, "interval", minutes=1)
 scheduler.start()

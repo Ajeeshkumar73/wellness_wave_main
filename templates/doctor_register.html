@@ -1,309 +1,649 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
-    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-             background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), /* dark overlay */ 
-            url("{{ url_for('static', filename='images/herosection.png') }}");
-        }
-        .form-container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #ffffff;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-         header{
-            position: fixed; top: 0; width: 100%; z-index: 1050;
-        }
+<link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
+<title>Wellness Wave - Doctor Registration</title>
 
-        .step-progress-bar {
-            height: 8px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            margin-bottom: 25px;
+ <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+:root {
+  --primary: #0d69f2;
+}
+@layer base {
+  body { font-family: 'Inter', sans-serif; }
+}
+.step-content { display: none; }
+.step-content.active { display: block; }
+
+.is-invalid {
+  border-color: red !important;
+}
+
+
+</style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d69f2",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#0f172a",
+                    },
+                },
+            },
         }
-        .step-progress-bar-fill {
-            height: 100%;
-            background-color: #0d6efd;
-            border-radius: 4px;
-            transition: width 0.5s ease-in-out;
-        }
-        .step-content {
-            display: none;
-        }
-        .step-content.active {
-            display: block;
-        }
-        .form-control:focus {
-            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-            border-color: #0d6efd;
-        }
-        h2 {
-            color: #343a40;
-            margin-bottom: 20px;
-        }
-    </style>
+    </script>
 </head>
-<body>
-    <header>
- <!-- Flash Messages -->
+
+<body class="bg-slate-100 min-h-screen">
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 px-6 md:px-20 py-3 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-50">
+<div class="flex items-center gap-4 text-primary">
+<div class="size-6">
+</div>
+<h2 class="text-[#0d131c] dark:text-white text-xl font-bold leading-tight tracking-tight">Wellness Wave</h2>
+</div>
+<div class="flex items-center gap-6">
+<a class="hidden md:block text-[#0d131c] dark:text-slate-300 text-sm font-medium hover:text-primary transition-colors" href="/">Home</a>
+<a href="{{ url_for('doctor_loginpage') }}"><button class="flex min-w-[84px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary/90 transition-all">
+                Log In
+            </button></a>
+</div>
+</header>
+<!-- Flash Messages -->
 {% with messages = get_flashed_messages(with_categories=true) %}
   {% if messages %}
-    <div class="container" style="margin-top:50px;">
+    <div class="fixed top-20 left-1/2 -translate-x-1/2 z-[60] w-full max-w-md px-4 space-y-3">
       {% for category, message in messages %}
-        <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show flash-msg" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <div 
+          class="flash-toast bg-[#f0fdf4] border border-emerald-200 rounded-full py-2.5 pl-4 pr-3 shadow-lg shadow-emerald-900/5 flex items-center justify-between backdrop-blur-sm
+          {% if category == 'error' %}
+            bg-red-50 border-red-200
+          {% endif %}"
+        >
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined 
+              {% if category == 'error' %}
+                text-red-600
+              {% else %}
+                text-emerald-600
+              {% endif %}
+              text-[20px] leading-none">
+              {% if category == 'error' %}
+                error
+              {% else %}
+                check_circle
+              {% endif %}
+            </span>
+
+            <span class="text-[#1e293b] text-sm font-medium">
+              {{ message }}
+            </span>
+          </div>
+
+          <button 
+            onclick="this.closest('.flash-toast').remove()"
+            class="flex items-center justify-center p-1 rounded-full hover:bg-emerald-100 text-emerald-600 transition-colors
+            {% if category == 'error' %}
+              hover:bg-red-100 text-red-600
+            {% endif %}">
+            <span class="material-symbols-outlined text-lg">close</span>
+          </button>
         </div>
       {% endfor %}
     </div>
   {% endif %}
 {% endwith %}
-</header>
-    
 
-<div class="container">
+<!-- FORM CARD -->
+<div class="flex justify-center p-4">
+<div class="w-full max-w-3xl bg-white rounded-2xl shadow-xl p-8">
 
-    <div class="form-container" style="height: 700px;">
-        
-          <!-- Close Button -->
-    <button type="button" class="btn-close " aria-label="Close"
-        onclick="window.location.href='{{ url_for('index') }}'" style="margin-top:0px; margin-left:500px"></button>
-
-        <h2 class="text-center mb-4">Doctor Registration</h2>
-        <div class="step-progress-bar">
-            <div id="progressBar" class="step-progress-bar-fill" style="width: 0%;"></div>
-        </div>
-
-        <form id="multiStepForm" action="{{ url_for('doctor_register') }}" method="POST" enctype="multipart/form-data" novalidate>
-            <!-- Step 1: Personal Details -->
-         <div id="step1" class="step-content active">
-                <h3 class="mb-4">1. Personal Details</h3>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email address</label>
-                    <input type="email" class="form-control " id="email" name="email" required>
-                    <div class="invalid-feedback">Please enter a valid email address.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="fullName" class="form-label">Full Name</label>
-                    <input type="text" class="form-control " id="fullName" name="name" required>
-                    <div class="invalid-feedback">Please enter your full name.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" class="form-control " id="password" name="password" required>
-                    <div class="invalid-feedback">Password must be at least 6 characters.</div>
-                </div>
-                <button type="button" class="btn btn-primary float-end  px-4" onclick="nextStep(1)">Next</button>
-            </div>
-
-            <!-- Step 2: Professional Details -->
-            <div id="step2" class="step-content">
-                <h3 class="mb-4">2. Professional Details</h3>
-                <div class="mb-3">
-                    <label for="specialization" class="form-label">Specialization</label>
-                    <input type="text" class="form-control " id="specialization" name="specialization" required>
-                    <div class="invalid-feedback">Please enter your specialization.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="qualification" class="form-label">Qualification</label>
-                    <input type="text" class="form-control " id="qualification" name="qualification" required>
-                    <div class="invalid-feedback">Please enter your qualification.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="experience" class="form-label">Experience (in years)</label>
-                    <input type="number" class="form-control " id="experience" name="experience" required>
-                    <div class="invalid-feedback">Please enter your years of experience.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="registrationId" class="form-label">Doctor Registration ID</label>
-                    <input type="text" class="form-control " id="registrationId" name="registration_id" required>
-                    <div class="invalid-feedback">Please enter your registration ID.</div>
-                </div>
-                <button type="button" class="btn btn-secondary  px-4" onclick="prevStep(2)">Previous</button>
-                <button type="button" class="btn btn-primary float-end  px-4" onclick="nextStep(2)">Next</button>
-            </div>
-
-            <!-- Step 3: Contact and Hospital Info -->
-            <div id="step3" class="step-content">
-                <h3 class="mb-4">3. Contact & Hospital Details</h3>
-                <div class="mb-3">
-                    <label for="hospital" class="form-label">Currently Working Hospital</label>
-                    <input type="text" class="form-control " id="hospital" name="hospital" required>
-                    <div class="invalid-feedback">Please enter your hospital name.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="phoneNo" class="form-label">Phone Number</label>
-                    <input type="tel" class="form-control" id="phoneNo" name="phone" pattern="\d{10}" required>
-                    <div class="invalid-feedback">Please enter a valid 10-digit phone number.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="address" class="form-label">Address</label>
-                    <textarea class="form-control " id="address" name="address" rows="3" required></textarea>
-                    <div class="invalid-feedback">Please enter your address.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="profilePic" class="form-label">Profile Picture Upload</label>
-                    <input type="file" class="form-control" id="profilePic" name="profile_pic" required>
-                    <div class="invalid-feedback">Please upload your profile picture.</div>
-                </div>
-                <button type="button" class="btn btn-secondary px-4" onclick="prevStep(3)">Previous</button>
-                <button type="button" class="btn btn-primary float-end  px-4" onclick="nextStep(3)">Next</button>
-            </div>
-
-            <!-- Step 4: Summary and Submission -->
-            <div id="step4" class="step-content">
-                <h3 class="mb-4">4. Review & Submit</h3>
-                <ul class="list-group mb-4">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">Email:</span>
-                        <span id="summaryEmail"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">Full Name:</span>
-                        <span id="summaryName"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">Specialization:</span>
-                        <span id="summarySpecialization"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">Qualification:</span>
-                        <span id="summaryQualification"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">Experience:</span>
-                        <span id="summaryExperience"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">Registration ID:</span>
-                        <span id="summaryRegistration"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">Hospital:</span>
-                        <span id="summaryHospital"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">Phone No:</span>
-                        <span id="summaryPhone"></span>
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <span class="fw-bold">Address:</span>
-                        <span id="summaryAddress"></span>
-                    </li>
-                </ul>
-                <button type="button" class="btn btn-secondary px-4" onclick="prevStep(4)">Previous</button>
-                <button type="submit" class="btn btn-success float-end  px-4">Submit</button>
-            </div>
-        </form>
-        
-    </div>
+<!-- PROGRESS -->
+<div class="px-8 pt-8">
+<div class="flex items-center justify-between max-w-2xl mx-auto mb-2">
+<div class="flex flex-col items-center gap-2">
+<div id="circle1" class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white text-sm font-bold ring-4 ring-blue-50">1</div>
+<span class="text-xs font-semibold text-primary">Personal</span>
+</div>
+<div class="h-px bg-slate-200 dark:bg-slate-800 flex-1 mx-4 -mt-6"></div>
+<div class="flex flex-col items-center gap-2">
+<div id="circle2" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 text-sm font-bold">2</div>
+<span class="text-xs font-semibold text-slate-400">Professional</span>
+</div>
+<div class="h-px bg-slate-200 dark:bg-slate-800 flex-1 mx-4 -mt-6"></div>
+<div class="flex flex-col items-center gap-2">
+<div id="circle3" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 text-sm font-bold">3</div>
+<span class="text-xs font-semibold text-slate-400">Contact</span>
+</div>
+<div class="h-px bg-slate-200 dark:bg-slate-800 flex-1 mx-4 -mt-6"></div>
+<div class="flex flex-col items-center gap-2">
+<div id="circle4" class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 text-sm font-bold">4</div>
+<span class="text-xs font-semibold text-slate-400">Review</span>
+</div>
+</div>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<form id="multiStepForm" action="{{ url_for('doctor_register') }}" method="POST" enctype="multipart/form-data" novalidate>
+
+<!-- STEP 1 -->
+<div id="step1" class="step-content active">
+  <div class="mb-8">
+<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Personal Information</h3>
+<p class="text-slate-500 dark:text-slate-400 mt-1">Please provide your basic contact and identity details.</p>
+</div>
+
+<div class="grid md:grid-cols-2 gap-6">
+  <div class="col-md-6">
+  <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Full Name</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary transition-colors">person</span>
+<input name="name" id="fullName" required class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white" placeholder="Dr. Alexander Wright" type="text"/>
+</div>
+  </div>
+
+  <div class="flex flex-col gap-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Email Address</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary transition-colors">mail</span>
+<input name="email" id="email" required class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white" placeholder="alex.wright@medical.com" type="email"/>
+</div>
+<p id="emailError" class="text-red-500 text-xs mt-1 hidden">
+  Please enter a valid email address
+</p>
+</div>
+
+ <div class="flex flex-col gap-2 md:col-span-2">
+<label class="text-sm font-semibold text-slate-700 dark:text-slate-200">Password</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary transition-colors">lock</span>
+<input name="password" id="password" required class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white" placeholder="••••••••••••" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary" type="button">
+<span class="material-symbols-outlined text-xl">visibility</span>
+</button>
+</div>
+<p id="passwordError" class="text-red-500 text-xs mt-1 hidden">
+  Password must be at least 8 characters and include uppercase,number, and special character.
+</p>
+<p class="text-[11px] text-slate-400">Must contain at least 8 characters, one number and one special character.</p>
+</div>
+</div>
+<div class="pt-8 border-t border-slate-100 dark:border-slate-800">
+<div class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 flex items-start gap-3">
+<span class="material-symbols-outlined text-primary">info</span>
+<div class="text-sm text-slate-600 dark:text-slate-300">
+<p class="font-medium text-slate-900 dark:text-white">Upcoming: Professional Credentials</p>
+<p>In the next step, you'll need to provide your medical license and specialization certificates.</p>
+</div>
+  </div>
+</div>
+
+<button type="button" class="px-7 py-2.5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl mt-4 float-end shadow-lg flex items-center gap-2 transition-all group" onclick="nextStep(1)">Next
+      <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm">
+        arrow_forward
+      </span></button>
+</div>
+
+<!-- STEP 2 -->
+<div id="step2" class="step-content hidden">
+
+  <div class="mb-8">
+    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">
+      Professional Details
+    </h3>
+    <p class="text-slate-500 dark:text-slate-400 mt-1">
+      Please provide your professional credentials.
+    </p>
+  </div>
+
+  <!-- FORM GRID -->
+  <div class="grid md:grid-cols-2 gap-6">
+
+    <!-- Specialization -->
+    <div>
+      <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+        Specialization
+      </label>
+      <div class="relative group">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary transition-colors">
+          medical_services
+        </span>
+        <input
+          id="specialization"
+          name="specialization"
+          required
+          type="text"
+          placeholder="Specialization"
+          class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+        />
+      </div>
+    </div>
+
+    <!-- Qualification -->
+    <div>
+      <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+        Qualification
+      </label>
+      <div class="relative group">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary transition-colors">
+          school
+        </span>
+        <input
+          id="qualification"
+          name="qualification"
+          required
+          type="text"
+          placeholder="MBBS, MD"
+          class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+        />
+      </div>
+    </div>
+
+    <!-- Experience -->
+    <div>
+      <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+        Experience (Years)
+      </label>
+      <div class="relative group">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary transition-colors">
+          timeline
+        </span>
+        <input
+          id="experience"
+          name="experience"
+          required
+          type="number"
+          placeholder="5"
+          class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+        />
+      </div>
+    </div>
+
+    <!-- Registration ID -->
+    <div>
+      <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+        Registration ID
+      </label>
+      <div class="relative group">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary transition-colors">
+          badge
+        </span>
+        <input
+          id="registrationId"
+          name="registration_id"
+          required
+          type="text"
+          placeholder="MED123456"
+          class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all dark:text-white"
+        />
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="flex justify-between mt-10">
+    <button
+      type="button"
+      class="px-6 py-2.5 rounded-xl text-slate-400 font-semibold flex items-center gap-2 hover:bg-slate-100 transition-all"
+      onclick="prevStep(2)"
+    >
+      <span class="material-symbols-outlined text-sm">arrow_back</span>
+      Previous
+    </button>
+
+    <button
+      type="button"
+      class="px-7 py-2.5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg flex items-center gap-2 transition-all group"
+      onclick="nextStep(2)"
+    >
+      Next
+      <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm">
+        arrow_forward
+      </span>
+    </button>
+  </div>
+
+</div>
+
+
+<!-- STEP 3 -->
+<div id="step3" class="step-content">
+<div class="mb-8">
+    <h3 class="text-2xl font-bold text-slate-900 dark:text-white">
+      Contact & Hospital
+    </h3>
+    <p class="text-slate-500 dark:text-slate-400 mt-1">
+      Provide your hospital and contact details.
+    </p>
+  </div>
+ 
+
+<div class="grid md:grid-cols-2 gap-6">
+
+    <!-- Hospital -->
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+        Hospital Name
+      </label>
+      <div class="relative group">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 
+        -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary">
+          local_hospital
+        </span>
+        <input name="hospital" id="hospital" required
+          placeholder="Current Working Hospital"
+          class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800
+          border border-slate-200 dark:border-slate-700 rounded-xl
+          focus:ring-2 focus:ring-primary/20 focus:border-primary
+          outline-none transition-all dark:text-white"/>
+      </div>
+    </div>
+
+    <!-- Phone -->
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+        Phone Number
+      </label>
+      <div class="relative group">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 
+        -translate-y-1/2 text-slate-400 text-xl group-focus-within:text-primary">
+          call
+        </span>
+        <input name="phone" id="phoneNo" required pattern="\d{10}"
+          placeholder="Phone (10 digits)"
+          class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800
+          border border-slate-200 dark:border-slate-700 rounded-xl
+          focus:ring-2 focus:ring-primary/20 focus:border-primary
+          outline-none transition-all dark:text-white"/>
+      </div>
+      <p id="phoneNoError" class="text-red-500 text-xs mt-1 hidden">Please enter a valid 10-digit phone number.</p>
+    </div>
+
+    <!-- Address -->
+    <div class="flex flex-col gap-2 md:col-span-2">
+      <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+        Clinic Address
+      </label>
+      <div class="relative group">
+        <span class="material-symbols-outlined absolute left-3 top-4 
+        text-slate-400 text-xl group-focus-within:text-primary">
+          location_on
+        </span>
+        <textarea name="address" id="address" required
+          placeholder="Full Clinic address"
+          class="w-full pl-11 pr-4 py-3 h-24 bg-slate-50 dark:bg-slate-800
+          border border-slate-200 dark:border-slate-700 rounded-xl
+          focus:ring-2 focus:ring-primary/20 focus:border-primary
+          outline-none transition-all dark:text-white"></textarea>
+      </div>
+    </div>
+
+    <!-- Profile Pic -->
+    <div class="flex flex-col gap-2 md:col-span-2">
+      <label class="text-sm font-semibold text-slate-700 dark:text-slate-200">
+        Profile Photo
+      </label>
+      <input type="file" name="profile_pic" id="profilePic" required
+        class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800
+        border border-slate-200 dark:border-slate-700 rounded-xl
+        focus:ring-2 focus:ring-primary/20 focus:border-primary
+        outline-none transition-all dark:text-white"/>
+    </div>
+
+  </div>
+<!-- BUTTONS -->
+  <div class="flex justify-between mt-10">
+    <button
+      type="button"
+      class="px-6 py-2.5 rounded-xl text-slate-400 font-semibold flex items-center gap-2 hover:bg-slate-100 transition-all"
+      onclick="prevStep(3)"
+    >
+      <span class="material-symbols-outlined text-sm">arrow_back</span>
+      Previous
+    </button>
+
+    <button
+      type="button"
+      class="px-7 py-2.5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg flex items-center gap-2 transition-all group"
+      onclick="nextStep(3)"
+    >
+      Next
+      <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform text-sm">
+        arrow_forward
+      </span>
+    </button>
+  </div>
+</div>
+
+<!-- STEP 4 -->
+<div id="step4" class="step-content">
+  <h3 class="text-2xl font-bold mb-6">Review & Submit</h3>
+
+  <div class="bg-slate-50 rounded-xl p-6 space-y-2 text-sm">
+    <div class="flex items-center gap-4 mt-4">
+  <img id="previewImg" class="w-24 h-24 rounded-xl object-cover border">
+  <div class="text-slate-500 text-sm">Profile Photo</div>
+</div>
+    <p><b>Email Address :</b> <span id="summaryEmail"></span></p>
+    <p><b>Full Name :</b> <span id="summaryName"></span></p>
+    <p><b>Specialization :</b> <span id="summarySpecialization"></span></p>
+    <p><b>Qualification :</b> <span id="summaryQualification"></span></p>
+    <p><b>Experience :</b> <span id="summaryExperience"></span>yr</p>
+    <p><b>Registration ID :</b> <span id="summaryRegistration"></span></p>
+    <p><b>Hospital Name :</b> <span id="summaryHospital"></span></p>
+    <p><b>Phone Number :</b> <span id="summaryPhone"></span></p>
+    <p><b>Clinic Address :</b> <span id="summaryAddress"></span></p>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="flex justify-between mt-10">
+    <button
+      type="button"
+      class="px-6 py-2.5 rounded-xl text-slate-400 font-semibold flex items-center gap-2 hover:bg-slate-100 transition-all"
+      onclick="prevStep(4)"
+    >
+      <span class="material-symbols-outlined text-sm">arrow_back</span>
+      Previous
+    </button>
+
+    <button
+      type="submit"
+      class="px-7 py-2.5 bg-primary hover:bg-primary/90 text-white font-bold rounded-xl shadow-lg flex items-center gap-2 transition-all group">
+     Submit
+    </button>
+  </div>
+</div>
+
+</div>
+
+</form>
+</div>
+</div>
+
+<!-- JS -->
 <script>
-    let currentStep = 1;
-    const form = document.getElementById('multiStepForm');
-    const steps = document.querySelectorAll('.step-content');
-    const progressBar = document.getElementById('progressBar');
+let currentStep = 1;
+const totalSteps = 4;
 
-    function updateProgressBar() {
-        const progress = (currentStep - 1) / (steps.length - 1) * 100;
-        progressBar.style.width = `${progress}%`;
+// Show a specific step
+function showStep(step) {
+  document.querySelectorAll('.step-content').forEach(s => s.classList.remove('active'));
+  document.getElementById(`step${step}`).classList.add('active');
+  currentStep = step;
+  updateProgress();
+}
+
+// Update progress circles
+function updateProgress() {
+  for (let i = 1; i <= totalSteps; i++) {
+    const c = document.getElementById(`circle${i}`);
+    c.className = i <= currentStep
+      ? "w-10 h-10 mx-auto rounded-full bg-primary text-white flex items-center justify-center font-bold"
+      : "w-10 h-10 mx-auto rounded-full bg-slate-200 flex items-center justify-center";
+    c.innerHTML = i < currentStep ? "✓" : i;
+  }
+}
+
+// Validate inputs
+function validateStep(step) {
+  let valid = true;
+
+  document.querySelectorAll(`#step${step} input, #step${step} textarea`).forEach(el => {
+    const errorPara = document.getElementById(el.id + "Error");
+    if (!el.checkValidity()) {
+      el.classList.add('is-invalid');
+      if (errorPara) errorPara.classList.remove('hidden');
+      valid = false;
+    } else {
+      el.classList.remove('is-invalid');
+      if (errorPara) errorPara.classList.add('hidden');
     }
+  });
 
-    function validateStep(step) {
-        let isValid = true;
-        const currentStepForm = document.getElementById(`step${step}`);
-        const inputs = currentStepForm.querySelectorAll('input, textarea');
-        
-        inputs.forEach(input => {
-            if (!input.checkValidity()) {
-                input.classList.add('is-invalid');
-                isValid = false;
-            } else {
-                input.classList.remove('is-invalid');
-            }
-        });
+  // Password validation (Step 1)
+if (step === 1) {
+  const pwInput = document.getElementById("password");
+  const pw = pwInput.value;
+  const pwError = document.getElementById("passwordError");
 
-        // Specific validation logic
-        if (step === 1) {
-            if (document.getElementById('password').value.length < 6) {
-                document.getElementById('password').classList.add('is-invalid');
-                document.querySelector('#password ~ .invalid-feedback').textContent = 'Password must be at least 6 characters.';
-                isValid = false;
-            }
-        }
-        
-        return isValid;
-    }
+  // At least 8 chars, 1 uppercase, 1 number, 1 special character
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 
-    function showStep(step) {
-        steps.forEach(s => s.classList.remove('active'));
-        document.getElementById(`step${step}`).classList.add('active');
-        currentStep = step;
-        updateProgressBar();
-    }
+  if (!passwordRegex.test(pw)) {
+    valid = false;
+    pwInput.classList.add('is-invalid');
+    pwError.classList.remove('hidden');
+  } else {
+    pwInput.classList.remove('is-invalid');
+    pwError.classList.add('hidden');
+  }
+}
 
-    function nextStep(step) {
-        if (validateStep(step)) {
-            if (step === 3) {
-                updateSummary();
-            }
-            showStep(step + 1);
-        }
-    }
 
-    function prevStep(step) {
-        showStep(step - 1);
-    }
+  // Email validation (Step 1)
+  if (step === 1) {
+    const email = document.getElementById("email").value;
+    const emailError = document.getElementById("emailError");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      valid = false;
+      document.getElementById("email").classList.add('is-invalid');
+      emailError.classList.remove('hidden');
+    } else emailError.classList.add('hidden');
+  }
 
-    function updateSummary() {
-        document.getElementById('summaryEmail').textContent = document.getElementById('email').value;
-        document.getElementById('summaryName').textContent = document.getElementById('fullName').value;
-        document.getElementById('summarySpecialization').textContent = document.getElementById('specialization').value;
-        document.getElementById('summaryQualification').textContent = document.getElementById('qualification').value;
-        document.getElementById('summaryExperience').textContent = document.getElementById('experience').value;
-        document.getElementById('summaryRegistration').textContent = document.getElementById('registrationId').value;
-        document.getElementById('summaryHospital').textContent = document.getElementById('hospital').value;
-        document.getElementById('summaryPhone').textContent = document.getElementById('phoneNo').value;
-        document.getElementById('summaryAddress').textContent = document.getElementById('address').value;
-    }
+  // Phone validation (Step 3)
+  if (step === 3) {
+    const phone = document.getElementById("phoneNo").value;
+    const phoneError = document.getElementById("phoneNoError");
+    if (!/^\d{10}$/.test(phone)) {
+      valid = false;
+      document.getElementById("phoneNo").classList.add('is-invalid');
+      if (phoneError) phoneError.classList.remove('hidden');
+    } else if (phoneError) phoneError.classList.add('hidden');
+  }
 
-   form.addEventListener("submit", function (event) {
-    // validate final step before submission
-    if (!validateStep(currentStep)) {
-        event.preventDefault(); // stop submission only if invalid
-        return;
-    }
-    // ✅ Do NOT preventDefault here → let Flask handle it
+  return valid;
+}
+
+// Go to next step
+function nextStep(step) {
+  if (validateStep(step)) {
+    if (step === 3) fillSummary();
+    showStep(step + 1);
+  }
+}
+
+// Go to previous step
+function prevStep(step) {
+  showStep(step - 1);
+}
+
+// Fill review summary
+function fillSummary() {
+  document.getElementById("summaryName").textContent = document.getElementById("fullName").value;
+  document.getElementById("summaryEmail").textContent = document.getElementById("email").value;
+  document.getElementById("summarySpecialization").textContent = document.getElementById("specialization").value;
+  document.getElementById("summaryQualification").textContent = document.getElementById("qualification").value;
+  document.getElementById("summaryExperience").textContent = document.getElementById("experience").value;
+  document.getElementById("summaryRegistration").textContent = document.getElementById("registrationId").value;
+  document.getElementById("summaryHospital").textContent = document.getElementById("hospital").value;
+  document.getElementById("summaryPhone").textContent = document.getElementById("phoneNo").value;
+  document.getElementById("summaryAddress").textContent = document.getElementById("address").value;
+
+  const fileInput = document.getElementById("profilePic");
+  const preview = document.getElementById("previewImg");
+  if (fileInput.files && fileInput.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => preview.src = e.target.result;
+    reader.readAsDataURL(fileInput.files[0]);
+  }
+}
+
+// Password visibility toggle
+document.querySelector("#step1 button[type='button']").addEventListener("click", function() {
+  const pwInput = document.getElementById("password");
+  if (pwInput.type === "password") {
+    pwInput.type = "text";
+    this.innerHTML = `<span class="material-symbols-outlined text-xl">visibility_off</span>`;
+  } else {
+    pwInput.type = "password";
+    this.innerHTML = `<span class="material-symbols-outlined text-xl">visibility</span>`;
+  }
 });
 
+// Optional: preview image immediately after selecting file
+document.getElementById("profilePic").addEventListener("change", function() {
+  const preview = document.getElementById("previewImg");
+  if (this.files && this.files[0]) {
+    const reader = new FileReader();
+    reader.onload = e => preview.src = e.target.result;
+    reader.readAsDataURL(this.files[0]);
+  }
+});
 
-    // Initial progress bar update
-    updateProgressBar();
+// Initialize form
+showStep(1);
 </script>
-  <!--flash hide-->   
- <script>
-  setTimeout(function () {
-    const alerts = document.querySelectorAll(".flash-msg");
-    alerts.forEach(function(alert) {
-      const bsAlert = new bootstrap.Alert(alert);
-      bsAlert.close();
+<script>
+// Function to validate all required inputs on a page or within a container
+function validateInputs(container = document) {
+    let valid = true;
+
+    // Select all required inputs and textareas
+    const inputs = container.querySelectorAll('input[required], textarea[required]');
+
+    inputs.forEach(input => {
+        if (!input.value.trim() || !input.checkValidity()) {
+            // Add red border if empty or invalid
+            input.style.borderColor = 'red';
+            valid = false;
+        } else {
+            // Remove red border if valid
+            input.style.borderColor = '';
+        }
     });
-  }, 1000); 
+
+    return valid; // Returns true if all inputs are filled correctly
+}
+
+// Example usage: validate when a form is submitted
+document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+        if (!validateInputs(form)) {
+            e.preventDefault(); // Stop submission if invalid
+        }
+    });
+});
 </script>
+
 
 </body>
 </html>

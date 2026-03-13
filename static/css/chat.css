@@ -17,13 +17,8 @@
     position: fixed;
     bottom: 0px;
     right: 0px;
-    width: 30%;
-    height: 100vh;
-    background: white;
-    border-radius: 10px;
     display: none;
     flex-direction: column;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
     z-index: 1000;
 }
 

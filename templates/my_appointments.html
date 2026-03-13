@@ -1,142 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
-    <title>Wellness Wave-Early Lifestyle Diseases Prediction & Precaution</title>
-    
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background: #f4f6f9;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-    h2 {
-      font-weight: 600;
-      color: #0d6efd;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    h2 i {
-      color: #0d6efd;
-    }
-    .card {
-  
-      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.05);
-    }
-    table thead {
-      border-radius: 12px 12px 0 0;
-    }
-    table tbody tr:hover {
-      background: #f8f9fa;
-      transition: background 0.2s ease-in-out;
-    }
-    .badge {
-      font-size: 0.85rem;
-      padding: 6px 10px;
-      border-radius: 8px;
-    }
-    .btn-cancel {
-      border-radius: 8px;
-      padding: 4px 12px;
-    }
-    footer {
-      margin-top: 40px;
-      text-align: center;
-      font-size: 0.9rem;
-      color: #6c757d;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}">
+<title>Wellness Wave - My Appointments</title>
 
-    .no-hover:hover,
-.no-hover:focus,
-.no-hover:active {
-    background-color: transparent !important;
-    color: #0d6efd !important;        /* primary text */
-    border-color: #0d6efd !important;
-    box-shadow: none !important;
-    transform: none !important;
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+<script>
+tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        primary: "#0d6efd",
+        success: "#22c55e",
+        danger: "#ef4444"
+      },
+      fontFamily: {
+        display: ["Inter", "sans-serif"]
+      }
+    }
+  }
 }
-  </style>
+</script>
 </head>
-<body>
-  <div class="container py-5">
-    <h2 class="mb-4"><i class="bi bi-calendar-check"></i> My Appointments</h2>
 
-    <div class="d-flex justify-content-between mt-4" style="margin-left:1130px;margin-bottom:10px;">
-      <a href="{{ url_for('user_home') }}" class="btn btn-outline-primary">
-         Back to Dashboard
-      </a>
-    </div>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen text-[#0c131d] dark:text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- TopNavBar -->
+<header class="sticky top-0 z-50 bg-white border-b border-solid border-[#e6ecf4] dark:border-gray-800">
+<div class="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="text-primary">
+</div>
+<h2 class="text-[#0c131d] dark:text-white text-xl font-bold tracking-tight">Wellness Wave</h2>
+</div>
+<a class="flex items-center gap-1 text-sm font-medium text-slate-gray hover:text-primary transition-colors" href="{{ url_for('user_home') }}">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Back to Dashboard
+                </a>
+</header>
 
-    <div class="card p-4">
-      {% if appointments %}
-        <div class="table-responsive">
-          <table class="table table-bordered align-middle">
-            <thead class="table-primary text-center">
-              <tr>
-                <th>Doctor</th>
-                <th>Chat with Doctor</th>
-                <th>Specialization</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody class="text-center">
-              {% for appt in appointments %}
-                <tr>
-                  <td><strong>Dr. {{ appt.doctor.name }}</strong></td>
-                  <td>
-  <a href="{{ url_for('patient_chat', doctor_id=appt.doctor._id) }}"
-class="btn btn-sm btn-outline-primary no-hover" style="border:none;font-weight: 500;">
-      Chat
-  </a>
-</td>
+<main class="max-w-7xl mx-auto p-6">
 
-                  <td>{{ appt.doctor.specialization }}</td>
-                  <td>{{ appt.appointment_date }}</td>
-                  <td>{{ appt.time }}</td>
-                  <td class="appt-status"></td>
+<div class="flex min-w-72 flex-col gap-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-4xl">calendar_month</span>
+<p class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">My Appointments</p>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal">Manage your upcoming and past healthcare consultations</p>
+</div>
+</br>
 
-                  
-                  <!--<td>
-                    {% if appt.status == "pending" %}
-                      <span class="badge bg-warning text-dark">Pending</span>
-                    {% elif appt.status == "confirmed" %}
-                      <span class="badge bg-success">Confirmed</span>
-                    {% elif appt.status == "cancelled" %}
-                      <span class="badge bg-danger">Cancelled</span>
-                    {% else %}
-                      <span class="badge bg-secondary">{{ appt.status }}</span>
-                    {% endif %}
-                  </td>
-                  <td>
-                    {% if appt.status != "cancelled" %}
-                      <button class="btn btn-sm btn-danger btn-cancel cancel-btn" data-id="{{ appt._id }}" title="Cancel Appointment">
-                        Cancel
-                      </button>
-                    {% else %}
-                      <span class="text-muted">N/A</span>
-                    {% endif %}
-                  </td>-->
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-      {% else %}
-        <div class="alert alert-info mb-0">No appointments yet.</div>
-      {% endif %}
-    </div>
-    
+<div class="bg-white rounded-xl shadow border overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full">
+      <thead class="bg-slate-50 border-b">
+        <tr>
+          <th class="px-6 py-4 text-xs uppercase font-bold">Doctor</th>
+          <th class="px-6 py-4 text-xs uppercase font-bold">Chat</th>
+          <th class="px-6 py-4 text-xs uppercase font-bold">Specialization</th>
+          <th class="px-6 py-4 text-xs uppercase font-bold">Date</th>
+          <th class="px-6 py-4 text-xs uppercase font-bold">Time</th>
+          <th class="px-6 py-4 text-xs uppercase font-bold text-right">Status</th>
+        </tr>
+      </thead>
+
+      <tbody class="divide-y">
+        {% for appt in appointments %}
+        <tr class="hover:bg-slate-50">
+
+          <td class="px-6 py-5 flex items-center gap-3">
+            <div class="size-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary">person</span>
+            </div>
+            <span class="font-bold text-primary">{{ appt.doctor.name }}</span>
+          </td>
+
+          <td class="px-6 py-5">
+            <a href="{{ url_for('patient_chat', doctor_id=appt.doctor._id) }}"
+                class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800
+                             text-slate-600 dark:text-slate-400
+                             hover:bg-primary hover:text-white transition">
+                      <span class="material-symbols-outlined text-[20px] translate-y-[2px]">
+                        chat
+                      </span>
+            </a>
+          </td>
+
+          <td class="px-6 py-5 text-slate-600">
+            {{ appt.doctor.specialization }}
+          </td>
+
+          <td class="px-6 py-5 text-slate-600">
+            {{ appt.appointment_date }}
+          </td>
+
+          <td class="px-6 py-5 text-slate-600">
+            {{ appt.time }}
+          </td>
+
+          <td class="px-6 py-5 text-right appt-status"></td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
+</div>
+<!-- Pagination Container -->
+<div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-t">
+  <p id="page-info" class="text-xs text-slate-500 font-medium uppercase tracking-tight"></p>
 
-  <!-- Bootstrap Icons -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <div class="flex items-center justify-center gap-1">
+    <button id="prev" class="flex size-9 items-center justify-center rounded-lg hover:bg-slate-200">
+      <span class="material-symbols-outlined">chevron_left</span>
+    </button>
 
-  <script>
+    <button id="next" class="flex size-9 items-center justify-center rounded-lg hover:bg-slate-200">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </button>
+  </div>
+</div>
+
+
+</main>
+
+<script>
 document.addEventListener("DOMContentLoaded", function () {
 
   const tbody = document.querySelector("tbody");
@@ -144,6 +139,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
+  const rowsPerPage = 4;
+  let currentPage = 1;
 
   // 🔹 Parse YYYY-MM-DD + AM/PM time
   function parseDateTime(dateStr, timeStr) {
@@ -167,18 +165,32 @@ document.addEventListener("DOMContentLoaded", function () {
   // 🔹 Store raw date
   rows.forEach(row => {
     const dateCell = row.children[3];
-    if (!dateCell.dataset.rawDate) {
-      dateCell.dataset.rawDate = dateCell.innerText.trim();
-    }
+    dateCell.dataset.rawDate = dateCell.innerText.trim();
   });
 
-  // 🔹 SORT: Tomorrow → Today → Expired
+  // 🔹 SORT
   rows.sort((a, b) => {
-    const da = getDiffDays(a);
-    const db = getDiffDays(b);
+  const diffA = getDiffDays(a);
+  const diffB = getDiffDays(b);
 
-    return getPriority(da) - getPriority(db);
-  });
+  const prA = getPriority(diffA);
+  const prB = getPriority(diffB);
+
+  // first by status
+  if (prA !== prB) return prA - prB;
+
+  // then by real date (DESC)
+  const dateA = parseDateTime(
+    a.children[3].dataset.rawDate,
+    a.children[4].innerText.trim()
+  );
+  const dateB = parseDateTime(
+    b.children[3].dataset.rawDate,
+    b.children[4].innerText.trim()
+  );
+
+  return dateB - dateA; // newest first
+});
 
   function getDiffDays(row) {
     const dateCell = row.children[3];
@@ -189,49 +201,84 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function getPriority(diff) {
-    if (diff === 1) return 1;     // tomorrow
-    if (diff === 0) return 2;     // today
-    if (diff > 1) return 3;       // future
-    return 4;                     // expired
+    if (diff === 1) return 1;
+    if (diff === 0) return 2;
+    if (diff > 1) return 3;
+    return 4;
   }
 
-  tbody.innerHTML = "";
+  function renderTable() {
+    tbody.innerHTML = "";
 
-  // 🔹 Render rows + status
-  rows.forEach(row => {
-    const dateCell = row.children[3];
-    const timeText = row.children[4].innerText.trim();
-    const statusCell = row.querySelector(".appt-status");
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const paginatedRows = rows.slice(start, end);
 
-    const apptDate = parseDateTime(dateCell.dataset.rawDate, timeText);
-    apptDate.setHours(0,0,0,0);
+    paginatedRows.forEach(row => {
+      const dateCell = row.children[3];
+      const timeText = row.children[4].innerText.trim();
+      const statusCell = row.querySelector(".appt-status");
 
-    const diffDays = Math.round((apptDate - today) / (1000 * 60 * 60 * 24));
+      const apptDate = parseDateTime(dateCell.dataset.rawDate, timeText);
+      apptDate.setHours(0,0,0,0);
 
-    // format date for UI
-    dateCell.innerText = formatDateDDMMYYYY(dateCell.dataset.rawDate);
+      const diffDays = Math.round((apptDate - today) / (1000 * 60 * 60 * 24));
+      dateCell.innerText = formatDateDDMMYYYY(dateCell.dataset.rawDate);
 
-    let badge = "";
+      let badge = "";
 
-    if (diffDays === 1) {
-      badge = `<span class="text-primary" style="font-weight: 500;">1 day remaining</span>`;
-    } 
-    else if (diffDays === 0) {
-      badge = `<span class="text-success" style="font-weight: 500;">Today</span>`;
-    } 
-    else if (diffDays > 1) {
-      badge = `<span class="text-info text-dark" style="font-weight: 500;">In ${diffDays} days</span>`;
-    } 
-    else {
-      badge = `<span class="text-danger" style="font-weight: 500;">Expired</span>`;
+      if (diffDays === 1) {
+        badge = `<span class="text-primary font-medium">1 day remaining</span>`;
+      } 
+      else if (diffDays === 0) {
+        badge = `<span class="text-success font-medium">Today</span>`;
+      } 
+      else if (diffDays > 1) {
+        badge = `<span class="text-slate-500 font-medium">In ${diffDays} days</span>`;
+      } 
+      else {
+        badge = `<span class="text-danger font-medium">Expired</span>`;
+        const chatBtn = row.querySelector(".chat-btn");
+        if (chatBtn) {
+          chatBtn.classList.add("pointer-events-none","opacity-40");
+        }
+      }
+
+      statusCell.innerHTML = badge;
+      tbody.appendChild(row);
+    });
+
+    updatePaginationText();
+  }
+
+  function updatePaginationText() {
+    const total = rows.length;
+    const start = (currentPage - 1) * rowsPerPage + 1;
+    const end = Math.min(currentPage * rowsPerPage, total);
+
+    document.querySelector("#page-info").innerText =
+      `Showing ${start} to ${end} of ${total} appointments`;
+  }
+
+  // Pagination buttons
+  document.querySelector("#prev").onclick = () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderTable();
     }
+  };
 
-    statusCell.innerHTML = badge;
-    tbody.appendChild(row);
-  });
+  document.querySelector("#next").onclick = () => {
+    if (currentPage < Math.ceil(rows.length / rowsPerPage)) {
+      currentPage++;
+      renderTable();
+    }
+  };
 
+  renderTable();
 });
 </script>
+
 
 </body>
 </html>

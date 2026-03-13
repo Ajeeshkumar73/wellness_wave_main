@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat with {{ patient.username }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
+<title>Wellness Wave - Doctor Chat</title>
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 
    <!-- Fonts -->
@@ -19,7 +20,7 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#13ec80",
+                        "primary": "#0d6efd",
                         "background-light": "#f6f8f7",
                         "background-dark": "#102219",
                     },
@@ -62,19 +63,18 @@
 </head>
 <body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display overflow-hidden h-screen w-full flex flex-col">
 <!-- Top Navigation Bar -->
-<header class="flex items-center justify-between shrink-0 whitespace-nowrap border-b border-solid border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark px-6 py-3 z-20">
-<div class="flex items-center gap-4">
-<div class="size-8 flex items-center justify-center ">
+<header class="sticky top-0 z-50 bg-white border-b border-solid border-[#e6ecf4] dark:border-gray-800">
+
+<div class="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="text-primary">
 </div>
-<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">Wellness Wave</h2>
-<div class="hidden sm:flex items-center gap-2 px-3 py-1">
+<h2 class="text-[#0c131d] dark:text-white text-xl font-bold tracking-tight">Wellness Wave</h2>
 </div>
-</div>
-<div class="flex gap-3">
-<a href="{{ url_for('doctor_home') }}"><button class="flex items-center justify-center overflow-hidden rounded-lg size-10 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-[#0d1b14] dark:text-white transition-colors">
-<span class="material-symbols-outlined">close</span>
-</button></a>
-</div>
+<a class="flex items-center gap-1 text-sm font-medium text-slate-gray hover:text-primary transition-colors" href="{{ url_for('doctor_home') }}">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Back to Dashboard
+                </a>
 </header>
 <!-- Main Layout -->
 <div class="flex flex-1 overflow-hidden relative">
@@ -88,7 +88,7 @@
     <div class="flex items-end gap-3 max-w-[85%] self-end flex-row-reverse">
         <div class="flex flex-col gap-1 items-end">
             <span class="text-xs text-slate-500">You</span>
-            <div class="p-3.5 rounded-2xl rounded-br-none bg-primary text-[#0d1b14]">
+            <div class="p-3.5 rounded-2xl rounded-br-none bg-white text-[#0d1b14]">
                 {% if msg.file %}
                     <a href="{{ msg.file }}" target="_blank" class="underline">📎 View File</a>
                 {% else %}
@@ -128,7 +128,7 @@
 <div class="flex-1 relative">
 <input class="w-full bg-gray-50 dark:bg-gray-800 text-text-main dark:text-white placeholder-text-secondary dark:placeholder-gray-500 border-0 focus:ring-2 focus:ring-primary rounded-xl px-5 py-3 pr-12 text-base shadow-sm transition-all" id="message" placeholder="Type message..." type="text"/>
 </div>
-<button onclick="sendMessage()" class="shrink-0 h-12 w-12 rounded-xl bg-primary hover:bg-green-400 text-[#0d1b14] flex items-center justify-center transition-all shadow-md hover:shadow-lg active:scale-95" title="Send message">
+<button onclick="sendMessage()" class="shrink-0 h-12 w-12 rounded-xl bg-primary  text-white flex items-center justify-center transition-all shadow-md hover:shadow-lg active:scale-95" title="Send message">
 <span class="material-symbols-outlined fill-current">send</span>
 </button>
 </div>

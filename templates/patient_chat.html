@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Chat with {{ doctor.name }}</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
+<title>Wellness Wave - Patient Chat</title>
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
@@ -18,14 +19,14 @@
             theme: {
                 extend: {
                     colors: {
-                        "primary": "#13ec80",
+                        "primary": "#0d6efd",
                         "primary-dark": "#0ea65a",
                         "background-light": "#f6f8f7",
                         "background-dark": "#102219",
                         "surface-light": "#ffffff",
                         "surface-dark": "#1a2e25",
                         "text-main": "#0d1b14",
-                        "text-secondary": "#4c9a73",
+                        "text-secondary": "#9f9f9f",
                     },
                     fontFamily: {
                         "display": ["Manrope", "sans-serif"]
@@ -63,18 +64,17 @@
 </head>
 <body class="font-display bg-background-light dark:bg-background-dark text-text-main dark:text-gray-100 flex flex-col h-screen overflow-hidden antialiased">
 <!-- Main Header -->
-<header class="flex items-center justify-between px-6 py-4 bg-surface-light dark:bg-surface-dark border-b border-gray-200 dark:border-gray-800 shadow-sm z-20">
+<header class="sticky top-0 z-50 bg-white border-b border-solid border-[#e6ecf4] dark:border-gray-800">
+<div class="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="size-8 text-primary">
+<div class="text-primary">
 </div>
-<h1 class="text-xl font-bold tracking-tight text-text-main dark:text-white">Wellness Wave</h1>
-<div class="hidden sm:flex items-center gap-1 ml-4 px-2 py-1 bg-green-100 dark:bg-green-900/30 rounded text-xs font-medium text-green-700 dark:text-green-400">
-            </div>
+<h2 class="text-[#0c131d] dark:text-white text-xl font-bold tracking-tight">Wellness Wave</h2>
 </div>
-<a href="{{ url_for('user_home') }}"><button class="group flex items-center gap-2 px-4 py-2 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200">
-<span class="text-sm font-bold text-gray-700 dark:text-gray-300">Close Chat</span>
-<span class="material-symbols-outlined text-gray-700 dark:text-gray-300  transition-transform">close</span>
-</button></a>
+<a class="flex items-center gap-1 text-sm font-medium text-slate-gray hover:text-primary transition-colors" href="{{ url_for('user_home') }}">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span>
+                    Back to Dashboard
+                </a>
 </header>
 <!-- Doctor Profile Sub-header -->
 <div class="bg-surface-light dark:bg-surface-dark/50 border-b border-gray-200 dark:border-gray-800 z-10 px-6 py-3">
@@ -147,7 +147,7 @@
                 </span>
             </div>
 
-            <div class="bg-primary text-text-main px-4 py-3 rounded-2xl rounded-tr-none shadow-sm">
+            <div class="bg-white text-text-main px-4 py-3 rounded-2xl rounded-tr-none shadow-sm">
                 {% if msg.file %}
                     <a href="{{ msg.file }}" target="_blank"
                        class="font-semibold underline">
@@ -183,7 +183,7 @@
 <input class="w-full bg-gray-50 dark:bg-gray-800 text-text-main dark:text-white placeholder-text-secondary dark:placeholder-gray-500 border-0 focus:ring-2 focus:ring-primary rounded-xl px-5 py-3 pr-12 text-base shadow-sm transition-all" id="message" placeholder="Type message..." type="text"/>
 </div>
 <!-- Send Button -->
-<button onclick="sendMessage()" class="hidden sm:flex items-center gap-2 bg-primary hover:bg-primary-dark text-text-main font-bold py-3 px-6 rounded-xl transition-colors shadow-sm shrink-0">
+<button onclick="sendMessage()" class="hidden sm:flex items-center gap-2 bg-primary  text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-sm shrink-0">
 <span>Send</span>
 <span class="material-symbols-outlined text-[20px]">send</span>
 </button>
