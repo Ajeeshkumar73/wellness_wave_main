@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wellness Wave | Patient Dashboard Redesign</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0d69f2",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#101722",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .dark .glass-card {
+            background: rgba(16, 23, 34, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .hero-gradient {
+            background: linear-gradient(135deg, rgba(13, 105, 242, 0.15) 0%, rgba(13, 105, 242, 0.05) 100%);
+        }
+        .cta-gradient {
+            background: linear-gradient(90deg, #ff8c00 0%, #ff6b6b 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#0d131c] dark:text-slate-100 min-h-screen">
+<!-- Sticky Navigation -->
+<header class="sticky top-0 z-50 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-[#e7ecf4] dark:border-slate-800">
+<div class="max-w-[1200px] mx-auto px-6 py-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-primary rounded-lg flex items-center justify-center text-white">
+<span class="material-symbols-outlined">waves</span>
+</div>
+<h1 class="text-lg font-extrabold tracking-tight">Wellness Wave <span class="font-normal text-slate-400">| Family Doctor</span></h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Book Appointments</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">History</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Reviews</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="#">Log Out</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="relative p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 size-2 bg-primary rounded-full border-2 border-white dark:border-background-dark"></span>
+</button>
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-primary/20" data-alt="User profile portrait" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBObIecK2zqMpb77LL5OW1C7d8xHlPD9zWvo-X6Oqxa22uSl56oZAXxjvcOD-Nh5zRyS2iTOw-pcYZCeutRoEWN4pPrQc14zWKf4zCgoPo3ACea8zMUuvxqNLPiTNw9VbJqDj3e8jGXbUSgs4w6gJKbxAysOMWdroxoaSvxLSE7z9n4WJe2oL1deKteWcLIMeNKbxT1WLE7RD6jdkDraWAtofq9q2uUqwRyljoJrnFJt1XUk3Qw_yeUQgUdEL7QBnyOiQwLTpXXjrg')"></div>
+</div>
+</div>
+</header>
+<main class="max-w-[1200px] mx-auto px-6 py-8">
+<!-- Hero Section -->
+<section class="mb-16 overflow-hidden rounded-2xl relative">
+<div class="flex min-h-[420px] flex-col gap-6 bg-cover bg-center bg-no-repeat items-start justify-center px-12 py-16" data-alt="Modern medical facility with soft lighting" style="background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 100%), url('https://lh3.googleusercontent.com/aida-public/AB6AXuDZrBExvv7tzY2zMdL8UeTOwYhSzeN7KjoJ_CLcF3iX0AG3748HtvtNxiYOtLh3W6QnhSdFXp1dXJ6vbwLpKAZ-UQFlBvbHNnuZcQt--0N10HrfV0dfzY1n2yBik8VlCz_sAmLUok-h3wA3V-lmf-vcgm9cRqlin0YkdO25DMkfYEBrF13L8Vk7SM4vXr3SF6Ussdel5bEDbVwvrI3AOaqb8VWONuQS7fYbBt3mkOLO4VVyH5tR5qelwhY89ww9j0Zq8phMB6ekVXs');">
+<div class="max-w-xl flex flex-col gap-4">
+<h1 class="text-[#0d131c] text-5xl font-extrabold leading-tight tracking-tight">
+                        Your Health, Our Priority
+                    </h1>
+<p class="text-slate-600 text-lg">
+                        Advanced analytics and personalized care plans for predicting and managing lifestyle diseases.
+                    </p>
+<button class="cta-gradient text-white w-fit px-8 py-4 rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">
+                        Let's Check
+                    </button>
+</div>
+</div>
+</section>
+<!-- Quick Actions -->
+<section class="mb-16">
+<h2 class="text-2xl font-bold mb-8 px-2">Quick Actions</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Card 1 -->
+<div class="glass-card p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all group border-b-4 border-b-primary">
+<div class="size-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">stethoscope</span>
+</div>
+<h3 class="text-xl font-bold mb-2">Health Check</h3>
+<p class="text-slate-500 mb-6 text-sm">Predict your wellness with our AI-driven risk assessment tools.</p>
+<button class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors">Start Now</button>
+</div>
+<!-- Card 2 -->
+<div class="glass-card p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all group border-b-4 border-b-primary">
+<div class="size-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">calendar_month</span>
+</div>
+<h3 class="text-xl font-bold mb-2">Appointments</h3>
+<p class="text-slate-500 mb-6 text-sm">Schedule and manage your upcoming visits with your primary care doctor.</p>
+<button class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors">View All</button>
+</div>
+<!-- Card 3 -->
+<div class="glass-card p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all group border-b-4 border-b-primary">
+<div class="size-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">monitoring</span>
+</div>
+<h3 class="text-xl font-bold mb-2">Health History</h3>
+<p class="text-slate-500 mb-6 text-sm">Access your comprehensive medical records and diagnostic reports.</p>
+<button class="w-full bg-primary text-white py-3 rounded-lg font-bold hover:bg-primary/90 transition-colors">Open Portal</button>
+</div>
+</div>
+</section>
+<!-- Health Tips -->
+<section class="mb-16">
+<h2 class="text-2xl font-bold mb-8 px-2">Health Tips</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-900 p-4 rounded-2xl items-center border border-slate-100 dark:border-slate-800">
+<div class="w-full md:w-48 h-32 rounded-xl bg-cover bg-center shrink-0" data-alt="Vibrant healthy salad bowl" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAIjISifHnPTCe7Eo6fX9JrekAwPj1b0n-a7c1uSr4ZSZcszaOJxzEuPIuL3vn10T5ut6XKZqU8U4cCxLhImhb6U-QODsq5O_6aBWaZ_wd5OBY7e8SQF9wiVJlQfMNRY4_FuePz54N7pAGZqeF4DbKh8Qefq4OKe1VQjgmTpsLcUIxq5ZHRBNT2U3cHmCd9YWL5SsPoLy46spxhErR4rv0K2EHcHLehnXRrUZ476KyJOSjZXgSOuie07GYaEefhgMvp9hj5tSTH45c')"></div>
+<div class="flex flex-col gap-2">
+<span class="text-primary text-xs font-bold uppercase tracking-wider">Nutrition</span>
+<h4 class="text-lg font-bold">Balanced Diet</h4>
+<p class="text-sm text-slate-500 leading-relaxed">Incorporate more fiber and lean proteins into your daily meals to maintain stable energy levels.</p>
+</div>
+</div>
+<div class="flex flex-col md:flex-row gap-6 bg-white dark:bg-slate-900 p-4 rounded-2xl items-center border border-slate-100 dark:border-slate-800">
+<div class="w-full md:w-48 h-32 rounded-xl bg-cover bg-center shrink-0" data-alt="Person jogging in a park" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-ZEfwV0cUwCLNQuSL1IdVEeVCrK6q1kVzel-nA8MrYsglyHmMY4dhEoxsnkGQbwgb4zIT_e5crFDmgWvhl6A-AVHI7tc_8Dq5jWnBdJsWLJPEJjb95FNSKW8aHCeAoUZqSTnT4RaDgrtxYNyLTO-pAahCRZo6lMhdl7fOhylVZJS6Uz0GhcjjBZKNwHGVSm679qKITbDBCe-OdDZ4vsanCsTqlL_Vyn6jqoxChbUY_Fbz8co0vogVdFs1SjEuwbZtI9pXc185R7w')"></div>
+<div class="flex flex-col gap-2">
+<span class="text-primary text-xs font-bold uppercase tracking-wider">Fitness</span>
+<h4 class="text-lg font-bold">Regular Exercise</h4>
+<p class="text-sm text-slate-500 leading-relaxed">Aim for at least 30 minutes of moderate activity daily to significantly reduce cardiovascular risks.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Review Section -->
+<section class="mb-24 flex justify-center">
+<div class="w-full max-w-2xl bg-white dark:bg-slate-900 p-10 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="text-center mb-8">
+<h2 class="text-2xl font-bold mb-2">Share Your Experience</h2>
+<p class="text-slate-500">How are we helping you on your wellness journey?</p>
+</div>
+<div class="flex flex-col gap-6">
+<textarea class="w-full p-4 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-primary focus:border-primary min-h-[120px] placeholder:text-slate-400" placeholder="Tell us how we did..."></textarea>
+<button class="bg-[#101722] dark:bg-primary text-white font-bold py-4 rounded-xl transition-all hover:scale-[1.02]">Post Review</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Chat Assistant -->
+<div class="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-4">
+<!-- Chat Window (Simulated Open State for UI Design) -->
+<div class="hidden md:flex w-80 h-[450px] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex-col overflow-hidden mb-2">
+<div class="bg-primary p-4 text-white flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined">smart_toy</span>
+<span class="font-bold">Chat Assistant</span>
+</div>
+<button class="opacity-70 hover:opacity-100">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="flex-1 p-4 overflow-y-auto flex flex-col gap-4">
+<div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-tr-xl rounded-b-xl text-sm max-w-[85%] self-start">
+                    Hello! I'm your Wellness Wave assistant. How can I help you today?
+                </div>
+<div class="bg-primary/10 text-primary p-3 rounded-tl-xl rounded-b-xl text-sm max-w-[85%] self-end">
+                    I'd like to check my latest blood report.
+                </div>
+<div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-tr-xl rounded-b-xl text-sm max-w-[85%] self-start">
+                    Of course! Please head to the "Health History" section or would you like me to summarize the key findings here?
+                </div>
+</div>
+<div class="p-4 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 rounded-lg px-3 py-2">
+<input class="bg-transparent border-none focus:ring-0 text-sm flex-1" placeholder="Type a message..." type="text"/>
+<button class="text-primary">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Floating Toggle -->
+<button class="size-16 rounded-full bg-primary text-white shadow-xl flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl">chat</span>
+</button>
+</div>
+<!-- Footer -->
+<footer class="bg-background-dark text-slate-400 py-12 px-6">
+<div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-2 text-white font-bold">
+<span class="material-symbols-outlined text-primary">waves</span>
+                    Wellness Wave
+                </div>
+<p class="text-xs">© 2024 Wellness Wave Healthcare. All rights reserved.</p>
+</div>
+<div class="flex gap-8 text-sm">
+<a class="hover:text-white transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-white transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-white transition-colors" href="#">Support: support@wellnesswave.com</a>
+</div>
+</div>
+</footer>
+</body></html>
