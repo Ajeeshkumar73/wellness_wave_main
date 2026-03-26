@@ -320,15 +320,15 @@ def predict():
 
     # 🔹 Overall health score (higher = better)
     avg_risk = float(np.mean(risk_values))
-    health_score = round(100 - avg_risk, 2)
+    health_score = round(avg_risk, 2)
 
     # 🔹 Health status classification
     if health_score >= 75:
-        health_status = "Good Standing"
+        health_status = "High Risk"
     elif health_score >= 50:
         health_status = "Moderate Risk"
     else:
-        health_status = "High Risk"
+        health_status = "Good Standing"
 
     # 🔹 Add to results
     disease_results["overall_health"] = {

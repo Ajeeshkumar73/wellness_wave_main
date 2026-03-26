@@ -58,7 +58,7 @@
 </p>
 
 <div class="hero">
-  <h1>Your <em>Health Risk</em> Assessment</h1>
+  <h1>Your <em>Health</em> Assessment</h1>
   <p>Complete the form below for a risk analysis across Lifestyle conditions.</p>
 </div>
 
@@ -188,7 +188,7 @@
 
 <!-- ═══════════════ RESULTS ═══════════════ -->
 <div id="results" style="display:none;">
-  <h2 class="results-title">Your <span>Results</span></h2>
+  <h2 class="results-title">Your Health <span>Results</span></h2>
 
    <div class="health-score-card">
     <div class="hs-label">Overall Health Score</div>
@@ -356,7 +356,7 @@ function render(data) {
 
   /* ── Health score ── */
   const oh = data.overall_health;
-  const sc = oh.health_score>=75?'var(--accent)':oh.health_score>=50?'var(--warn)':'var(--danger)';
+  const sc = oh.health_score>=75?'var(--danger)':oh.health_score>=50?'var(--warn)':'var(--accent)';
   document.getElementById('hsScore').textContent  = oh.health_score+'%';
   document.getElementById('hsScore').style.color  = sc;
   document.getElementById('hsStatus').textContent = oh.status;

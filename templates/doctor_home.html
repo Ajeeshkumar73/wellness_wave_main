@@ -46,7 +46,6 @@
           cursor: pointer;
           padding: 8px;
           border-radius: 8px;
-          background: #f1f5f9;
           transition: background 0.2s ease;
         }
 
@@ -940,10 +939,11 @@ loadDoctorNotifications();
     const options = {
       weekday: "long",
       month: "short",
-      day: "numeric"
+      day: "numeric",
+      timeZone: "Asia/Kolkata" 
     };
 
-    const formattedDate = today.toLocaleDateString("en-US", options);
+    const formattedDate = today.toLocaleDateString("en-IN", options);
 
     document.getElementById("todayDate").textContent =
       `Today: ${formattedDate}`;
