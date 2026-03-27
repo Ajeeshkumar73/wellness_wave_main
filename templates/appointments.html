@@ -356,7 +356,7 @@
       grid-template-columns: repeat(7, 1fr);
       gap: 5px;
       text-align: center;
-      font-size: 14px;
+      font-size: 15px;
       margin-bottom: 20px;
     }
     .day-label {
@@ -364,17 +364,29 @@
       color: #777;
     }
     .date {
-      background-color: #f0f2f5;
+      background-color: transparent;
       padding: 8px;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
     }
-    .date:hover {
-      background-color: #d6e9f8;
+    .available-date {
+      background-color: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+      font-weight: 600;
+    }
+    .available-date:hover {
+      background-color: #dcfce7;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
     .date.active {
-      background-color: #0d6efd;
-      color: #fff;
+      background-color: #0d6efd !important;
+      color: #fff !important;
+      border-color: #0d6efd !important;
+      box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
     }
     /* Time slots */
     .time-slots {
@@ -430,12 +442,14 @@
     }
 
     .disabled-date {
-  background-color: #e0e0e0;
-  color: #999;
-  cursor: not-allowed;
-  opacity: 0.6;
-  pointer-events: none; /* prevent click */
-}
+      background-color: #f8fafc !important;
+      color: #94a3b8 !important;
+      cursor: not-allowed !important;
+      opacity: 0.7 !important;
+      pointer-events: none !important;
+      border: 1px dashed #e2e8f0 !important;
+      text-decoration: line-through;
+    }
 #userPhone{
   font-size:18px;
       padding-left: 26px;
@@ -568,7 +582,7 @@
            class="btn book-appointment"
            data-bs-toggle="modal" 
            data-bs-target="#appointmentModal"
-           data-id="{{ doctor._id }}"
+           data-id="{{ doctor._id|string }}"
            data-name="{{ doctor.name }}"
            data-qualification="{{ doctor.qualification }}"
            data-specialization="{{ doctor.specialization }}"
@@ -741,6 +755,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let doctorId = null;
   let selectedDate = null;
   let selectedSlot = null;
+  let workingDays = []; // store doctor's available days
+  let unavailableDates = []; // store doctor's holiday/specific off dates
 
   const appointmentModal = document.getElementById("appointmentModal");
   const slotsContainer = document.getElementById("slots");
@@ -786,19 +802,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
     selectedDate = null;
     selectedSlot = null;
+    workingDays = []; // Reset for each doctor
+    unavailableDates = []; // Reset for each doctor
 
     document.querySelectorAll(".date").forEach(el => el.classList.remove("active"));
     document.querySelectorAll(".slot").forEach(el => el.classList.remove("active"));
 
-    // Fetch booked slots from backend (initial load)
+    // Fetch booked slots and working days from backend (initial load)
     try {
       const res = await fetch(`/get_booked_slots?doctor_id=${doctorId}`);
       const data = await res.json();
+      console.log("Fetched doctor availability:", data);
+      if (data.workingDays) {
+          workingDays = data.workingDays;
+      }
+      if (data.unavailableDates) {
+          unavailableDates = data.unavailableDates;
+      }
+      if (data.workingDays || data.unavailableDates) {
+          console.log("Applying availability to calendar. Working days:", workingDays, "Holidays:", unavailableDates);
+          renderCalendar(currentMonth, currentYear); // Re-render once data has arrived
+      }
       if (data.bookedSlots) {
         updateBookedSlots(data.bookedSlots);
       }
     } catch (err) {
-      console.error("Failed to fetch booked slots:", err);
+      console.error("Failed to fetch doctor schedule:", err);
     }
   });
 
@@ -828,6 +857,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const firstDay = new Date(year, month).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     for (let i = 0; i < firstDay; i++) {
       calendar.appendChild(document.createElement("div"));
@@ -838,15 +868,24 @@ document.addEventListener("DOMContentLoaded", () => {
       date.className = "date";
       date.textContent = d;
 
-      const fullDate = new Date(year, month, d);
+      const fullDate = new Date(year, month, d, 0, 0, 0, 0);
+      const dayName = dayNames[fullDate.getDay()];
+      
+      const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      
+      const isRegularDay = workingDays.includes(dayName) || workingDays.length === 0;
+      const isHoliday = unavailableDates.includes(dateStr);
 
-      if (fullDate < today) {
+      if (fullDate < today || !isRegularDay || isHoliday) {
         date.classList.add("disabled-date");
+        date.style.cursor = "not-allowed";
+        date.style.pointerEvents = "none";
       } else {
+        date.classList.add("available-date");
         date.addEventListener("click", async () => {
           document.querySelectorAll(".date").forEach(el => el.classList.remove("active"));
           date.classList.add("active");
-          selectedDate = `${year}-${month + 1}-${d}`;
+          selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 
           try {
             const res = await fetch(`/get_booked_slots?doctor_id=${doctorId}&date=${selectedDate}`);

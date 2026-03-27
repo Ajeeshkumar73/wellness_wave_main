@@ -48,63 +48,51 @@
       }
     </script>
   <style>
- .notify {
-  position: relative;
-  cursor: pointer;
-}
+    /* AI Doctor Robot Styles */
+    .mentor-container { position: fixed; bottom: 30px; right: 80px; z-index: 1000; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
+    .mentor-robot { width: 110px; height: 110px; cursor: pointer; pointer-events: auto; position: relative; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); }
+    .mentor-robot:hover { transform: scale(1.15) translateY(-10px) rotate(5deg); }
+    .mentor-bubble { position: absolute; bottom: 120px; right: 0; background: white; border-radius: 20px; padding: 12px 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 220px; opacity: 0; transform: translateY(10px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); pointer-events: none; border: 1px solid rgba(0,0,0,0.05); }
+    .mentor-bubble.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .mentor-bubble::after { content: ''; position: absolute; bottom: -8px; right: 40px; border-left: 8px solid transparent; border-right: 8px solid transparent; border-top: 8px solid white; }
+    
+    /* Keyframes */
+    @keyframes floating { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-12px) rotate(-2deg); } }
+    .animate-float { animation: floating 4s ease-in-out infinite; }
+    
+    @keyframes waving { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(25deg); } }
+    .robot-hand { transform-origin: 75px 50px; animation: waving 2s ease-in-out infinite; }
+    
+    @keyframes blinking { 0%, 90%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+    .robot-eye-left { transform-origin: 43px 27px; animation: blinking 4s infinite; }
+    
+    @keyframes winking { 0%, 80%, 100% { opacity: 1; } 85%, 95% { opacity: 0; } }
+    .robot-eye-right { animation: winking 5s infinite; }
 
-.notify-count {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background: red;
-  color: white;
-  font-size: 11px;
-  padding: 2px 6px;
-  border-radius: 50%;
-  display: none;
-  z-index: 1001;
-}
+    @keyframes hii-pop {
+        0%, 45%, 100% { opacity: 0; transform: scale(0.5) translate(0, 0); }
+        50%, 75% { opacity: 1; transform: scale(1) translate(10px, -20px); }
+    }
+    .hii-cloud-svg { animation: hii-pop 4s ease-in-out infinite; transform-origin: 85px 35px; }
 
-.dropdown {
-  position: absolute;
-  right: 0;
-  top: 32px;
-  width: 240px;
-  background: white;
-  box-shadow: 0 8px 20px rgba(0,0,0,.2);
-  border-radius: 8px;
-  display: none;
-  z-index: 2000;   /* 🔥 THIS FIXES HERO OVERLAP */
-}
+    #mentorChat { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 800px; height: 85vh; max-height: 900px; max-width: 95vw; background: white; border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.25); display: none; flex-direction: column; z-index: 1001; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); }
+    .dark #mentorChat { background: #1e293b; border-color: rgba(255,255,255,0.1); }
+    #mentorChat.open { display: flex; animation: mentorZoomIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+    @keyframes mentorZoomIn {
+        0% { opacity: 0; transform: translate(-50%, -45%) scale(0.95); }
+        100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
 
-.dropdown a {
-  display: block;
-  padding: 10px 12px;
-  text-decoration: none;
-  color: #333;
-  font-size: 14px;
-}
-
-.dropdown a:hover {
-  background: #f5f5f5;
-}
-  .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        body {
-            font-family: 'Manrope', sans-serif;
-        }
-
-  html{
-    scroll-behavior:smooth;
-  }
-.hero-gradient {
-            background: linear-gradient(135deg, rgba(13, 105, 242, 0.15) 0%, rgba(13, 105, 242, 0.05) 100%);
-        }
-        .cta-gradient {
-            background: linear-gradient(90deg, #ff8c00 0%, #ff6b6b 100%);
-        }
+    .notify { position: relative; cursor: pointer; }
+    .notify-count { position: absolute; top: -6px; right: -6px; background: red; color: white; font-size: 11px; padding: 2px 6px; border-radius: 50%; display: none; z-index: 1001; }
+    .dropdown { position: absolute; right: 0; top: 32px; width: 240px; background: white; box-shadow: 0 8px 20px rgba(0,0,0,.2); border-radius: 8px; display: none; z-index: 2000; }
+    .dropdown a { display: block; padding: 10px 12px; text-decoration: none; color: #333; font-size: 14px; }
+    .dropdown a:hover { background: #f5f5f5; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { font-family: 'Manrope', sans-serif; }
+    html{ scroll-behavior:smooth; }
+    .hero-gradient { background: linear-gradient(135deg, rgba(13, 105, 242, 0.15) 0%, rgba(13, 105, 242, 0.05) 100%); }
+    .cta-gradient { background: linear-gradient(90deg, #ff8c00 0%, #ff6b6b 100%); }
   </style>
 </head>
 <body class="bg-background-light dark:bg-background-dark font-display text-[#0d131c] dark:text-slate-100 min-h-screen">
@@ -285,56 +273,98 @@
 </div>
 </section>
 </main>
-<!-- Chat Assistant -->
-<div id="chatPanel" class="chat-panel" class="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-4">
-
-  <!-- Chat Window -->
-  <div class="w-[25rem] h-[500px] bg-white dark:bg-slate-900 rounded-2xl shadow-2xl 
-              border border-slate-200 dark:border-slate-800 flex flex-col overflow-hidden" style="margin-right:20px; margin-bottom:130px;">
-
-    <!-- Header -->
-    <div class="bg-primary p-4 text-white flex items-center justify-between">
-      <span class="font-bold">Chat Assistant</span>
-      <button onclick="closeChat()" class="opacity-70 hover:opacity-100">
-        <span class="material-symbols-outlined">close</span>
-      </button>
+<!-- AI Doctor Component -->
+<div id="mentorWrapper" class="mentor-container">
+    <div id="mentorBubble" class="mentor-bubble">
+        <p class="text-sm font-bold text-slate-800">Hi! I'm your AI Chat Bot.</p>
+        <p class="text-xs text-slate-500 mt-1">Need help with your report? Just ask!</p>
     </div>
+    
+    <div class="mentor-robot animate-float" onclick="toggleMentorChat()">
+        <svg viewBox="0 0 100 100" class="w-full h-full" style="overflow: visible;">
+            <!-- Main Body -->
+            <rect x="25" y="40" width="50" height="45" rx="15" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+            
+            <!-- Red Cross (Plus Icon) -->
+            <rect x="54" y="62" width="10" height="10" rx="3" fill="#ef4444"/>
+            <path d="M59 64 v6 M56 67 h6" stroke="white" stroke-width="2" stroke-linecap="round"/>
 
-    <!-- Messages -->
-    <div id="chatBody" class="flex-1 p-4 overflow-y-auto flex flex-col gap-4">
+            <!-- Realistic Stethoscope -->
+            <path d="M35 45 Q35 60 50 60 Q65 60 65 45" stroke="#334155" stroke-width="3" fill="none"/> <!-- Rubber Tube -->
+            <path d="M35 45 Q35 58 50 58 Q65 58 65 45" stroke="#94a3b8" stroke-width="1.5" fill="none"/> <!-- Silver Highlight -->
+            <circle cx="50" cy="60" r="4.5" fill="#cbd5e1" stroke="#334155" stroke-width="1.5"/> <!-- Silver Chest Piece -->
+            <circle cx="50" cy="60" r="2" fill="#94a3b8"/> <!-- Inner Detail -->
+            <path d="M35 45 v-5 M65 45 v-5" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round"/> <!-- Earpiece hooks -->
 
-      <!-- Bot message -->
-      <div class="bg-slate-100 dark:bg-slate-800 p-3 rounded-tr-xl rounded-b-xl 
-                  text-sm max-w-[85%] self-start">
-        Hi 👋 How can I help you?
-      </div>
+            <!-- Head -->
+            <rect x="30" y="15" width="40" height="30" rx="12" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+            
+            <!-- Face screen -->
+            <rect x="35" y="20" width="30" height="20" rx="6" fill="#1e293b"/>
+            
+            <!-- Eyes -->
+            <circle cx="43" cy="27" r="3" fill="#38bdf8" class="robot-eye-left"/> <!-- Left eye blinks -->
+            <g class="robot-eye-right">
+                <path d="M54 27 L60 27" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/> <!-- Winking right eye -->
+            </g>
+            
+            <!-- Arms -->
+            <path d="M25 50 Q15 50 15 65" stroke="#334155" stroke-width="3" fill="none"/>
+            <g class="robot-hand">
+                <path d="M75 50 Q85 50 85 35" stroke="#334155" stroke-width="3" fill="none"/>
+                <rect x="80" y="28" width="10" height="10" rx="3" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+            </g>
 
+            <!-- Hii Cloud (SVG) -->
+            <g class="hii-cloud-svg">
+                <rect x="70" y="5" width="90" height="35" rx="17" fill="#38bdf8" class="shadow-sm"/>
+                <path d="M90 40 L95 50 L105 40" fill="#38bdf8" />
+                <text id="mentorCloudText" x="115" y="27" text-anchor="middle" fill="white" font-size="10" font-weight="black" font-family="sans-serif">Ask any doubt</text>
+            </g>
+            
+            <!-- Bottom shadow -->
+            <ellipse cx="50" cy="92" rx="15" ry="3" fill="rgba(0,0,0,0.1)"/>
+        </svg>
     </div>
-
-    <!-- Input -->
-    <div class="p-4 border-t border-slate-100 dark:border-slate-800">
-      <div class="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 
-                  rounded-lg px-3 py-2">
-        <input id="chatInput"
-               class="bg-transparent border-none focus:ring-0 text-sm flex-1"
-               placeholder="Type a message..." type="text"/>
-        <button onclick="sendMessage()" class="text-primary">
-          <span class="material-symbols-outlined">send</span>
-        </button>
-      </div>
-    </div>
-
-  </div>
 </div>
 
+<!-- AI Doctor Chat Window UI -->
+<div id="mentorChat" class="glass overflow-hidden shadow-2xl">
+    <div class="bg-primary p-4 text-white flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                <span class="material-symbols-outlined !text-lg">smart_toy</span>
+            </div>
+            <div>
+                <p class="font-black text-sm leading-none">AI Chat Bot</p>
+                <p class="text-[10px] opacity-80 mt-1">Specialized Lifestyle Assistant</p>
+            </div>
+        </div>
+        <button onclick="toggleMentorChat()" class="hover:bg-white/20 p-1 rounded-full transition">
+            <span class="material-symbols-outlined !text-lg text-white">close</span>
+        </button>
+    </div>
+    
+    <div id="mentorMessages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-slate-900">
+        <div class="flex justify-start mb-4">
+            <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-2xl rounded-tl-none px-4 py-2 text-sm shadow-sm border border-slate-100 dark:border-slate-700">
+                Hi! I'm your AI Chat Bot. I've analyzed your health records. Ask me any doubt about your reports, diet, or lifestyle!
+            </div>
+        </div>
+    </div>
 
-<!-- Chat Button -->
-<button id="chatBtn" onclick="openChat()"
-  class="chat-btn w-14 h-14 rounded-full bg-primary text-white 
-         flex items-center justify-center shadow-lg">
-  
-  <span class="material-symbols-outlined text-3xl">chat</span>
-</button>
+    <div id="mentorTyping" class="hidden px-4 py-2 text-[10px] text-slate-400 italic">AI Chat Bot is typing...</div>
+    
+    <div class="p-3 border-t dark:border-slate-800 flex gap-2 bg-white dark:bg-slate-900">
+        <input type="text" id="mentorInput" 
+               onkeypress="if(event.key === 'Enter') sendMentorMsg()"
+               placeholder="Ask about your health..." 
+               class="flex-1 bg-slate-100 dark:bg-slate-800 border-none rounded-xl px-4 py-2 text-sm focus:ring-2 focus:ring-primary dark:text-white outline-none">
+        <button onclick="sendMentorMsg()" class="bg-primary text-white p-2 rounded-xl hover:opacity-90 transition shadow-md shadow-primary/20 flex items-center justify-center">
+            <span class="material-symbols-outlined !text-lg text-white">send</span>
+        </button>
+    </div>
+</div>
 
 
 
@@ -431,87 +461,94 @@
   });
 </script>
 
-<!--chat bot-->
+<!-- AI Doctor Script -->
 <script>
-function openChat() {
-    document.getElementById("chatPanel").style.display = "flex";
-    document.getElementById("chatBtn").style.display = "none";
-}
+    // Cycle doctor cloud text
+    const cloudMsgs = ["Ask any doubt", "Haii!", "Ask any doubt", "Haii!"];
+    let cloudIdx = 0;
+    setInterval(() => {
+        const textElem = document.getElementById('mentorCloudText');
+        if (textElem) {
+            cloudIdx = (cloudIdx + 1) % cloudMsgs.length;
+            textElem.textContent = cloudMsgs[cloudIdx];
+        }
+    }, 4000);
 
-function closeChat() {
-    document.getElementById("chatPanel").style.display = "none";
-    document.getElementById("chatBtn").style.display = "block";
-}
-
-function cleanReply(text) {
-    // Remove <think>...</think>
-    text = text.replace(/<think>[\s\S]*?<\/think>/gi, "");
-
-    // Remove markdown symbols (#, *, _, `)
-    text = text.replace(/[#*_`]/g, "");
-
-    // Remove bullet symbols at line start
-    text = text.replace(/^\s*[-•]+\s*/gm, "");
-
-    // Remove extra blank lines
-    text = text.replace(/\n{3,}/g, "\n\n");
-
-    return text.trim();
-}
-
-function sendMessage() {
-    const input = document.getElementById("chatInput");
-    const chatBody = document.getElementById("chatBody");
-
-    const message = input.value.trim();
-    if (message === "") return;
-
-    // User message
-    const userMsg = document.createElement("div");
-    userMsg.className = "user-msg";
-    userMsg.innerText = message;
-    chatBody.appendChild(userMsg);
-
-    input.value = "";
-
-    // Typing indicator
-    const typingMsg = document.createElement("div");
-    typingMsg.className = "bot-msg";
-    typingMsg.innerText = "Typing...";
-    chatBody.appendChild(typingMsg);
-
-    chatBody.scrollTop = chatBody.scrollHeight;
-
-    // Send to backend
-    fetch("/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: message })
-    })
-    .then(res => res.json())
-    .then(data => {
-        typingMsg.remove();
-
-        const reply = cleanReply(data.reply || "");
-
-        const botMsg = document.createElement("div");
-        botMsg.className = "bot-msg";
-        botMsg.innerText = reply;
-        chatBody.appendChild(botMsg);
-
-        chatBody.scrollTop = chatBody.scrollHeight;
-    })
-    .catch(() => {
-        typingMsg.innerText = "⚠️ Server error. Try again.";
-    });
-}
-
-// Send on Enter
-document.getElementById("chatInput").addEventListener("keypress", function(e) {
-    if (e.key === "Enter") {
-        sendMessage();
+    function toggleMentorChat() {
+        const chat = document.getElementById('mentorChat');
+        chat.classList.toggle('open');
+        if (chat.classList.contains('open')) {
+            const bubble = document.getElementById('mentorBubble');
+            if (bubble) bubble.classList.remove('show');
+            document.getElementById("mentorInput").focus();
+        }
     }
-});
+
+    // Show initial greeting bubble after 3 seconds
+    setTimeout(() => {
+        const chat = document.getElementById('mentorChat');
+        if (chat && !chat.classList.contains('open')) {
+            const bubble = document.getElementById('mentorBubble');
+            if (bubble) {
+                bubble.classList.add('show');
+                setTimeout(() => bubble.classList.remove('show'), 6000);
+            }
+        }
+    }, 3000);
+
+    function cleanReply(text) {
+        text = text.replace(/<think>[\s\S]*?<\/think>/gi, "");
+        text = text.replace(/[#*_`]/g, "");
+        text = text.replace(/^\s*[-•]+\s*/gm, "");
+        text = text.replace(/\n{3,}/g, "\n\n");
+        return text.trim();
+    }
+
+    async function sendMentorMsg() {
+        const input = document.getElementById("mentorInput");
+        const message = input.value.trim();
+        if (!message) return;
+
+        appendMsg('user', message);
+        input.value = '';
+        
+        const typing = document.getElementById('mentorTyping');
+        typing.classList.remove('hidden');
+
+        try {
+            const res = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await res.json();
+            typing.classList.add('hidden');
+            
+            const reply = cleanReply(data.reply || "");
+            appendMsg('bot', reply);
+        } catch (e) {
+            typing.classList.add('hidden');
+            appendMsg('bot', "⚠️ Server error. Try again.");
+        }
+    }
+
+    function appendMsg(role, text) {
+        const box = document.getElementById('mentorMessages');
+        const div = document.createElement('div');
+        div.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'} mb-4`;
+        
+        const contentClass = role === 'user' 
+            ? 'bg-primary text-white rounded-tr-none' 
+            : 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-tl-none';
+
+        div.innerHTML = `
+            <div class="${contentClass} px-4 py-2 rounded-2xl text-sm max-w-[85%] shadow-sm border border-slate-100 dark:border-slate-700">
+                ${text.replace(/\n/g, '<br>')}
+            </div>
+        `;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
 </script>
 
 <!--notification-->

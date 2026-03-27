@@ -66,10 +66,26 @@
 <a class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors" href="#about">About</a>
 </nav>
 <div class="flex gap-3">
-  <form action="{{ url_for('user_loginpage') }}">
+  <div class="relative group" style="margin-top: 10px;">
+    <button class="text-[#0c131d] dark:text-gray-300 text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+      Sign In
+      <span class="material-symbols-outlined text-sm leading-none">expand_more</span>
+    </button>
+    <div class="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-[100] transform origin-top-right group-hover:translate-y-0 translate-y-2">
+      <div class="py-2">
+        <a href="{{ url_for('user_loginpage') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-primary/5 hover:text-primary dark:hover:bg-gray-700 transition-colors">
+          Patient Login
+        </a>
+        <a href="{{ url_for('doctor_loginpage') }}" class="block px-4 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-primary/5 hover:text-primary dark:hover:bg-gray-700 transition-colors">
+          Doctor Login
+        </a>
+      </div>
+    </div>
+  </div>
+  <form action="{{ url_for('user_reg') }}">
 <button class="bg-primary text-white text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all">Join as Patient</button>
   </form>
-  <form action="{{ url_for('doctor_log') }}">
+  <form action="{{ url_for('doctor_reg') }}">
 <button class="border border-primary text-primary text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-primary/10 transition-all">Join as Doctor</button>
   </form>
 </div>

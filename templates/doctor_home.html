@@ -130,7 +130,7 @@
 <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Wellness Wave</h1>
 </div>
 <nav class="hidden md:flex items-center gap-8">
-<a class="text-primary font-bold text-sm" href="#appt">Appointments</a>
+<a href="{{ url_for('manage_appointments') }}" class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors">Manage Appointments</a>
 <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="{{ url_for('doctor_blog_page', doctor_id=(doctor._id)) }}">Blog</a>
 <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="{{ url_for('logout') }}">Logout</a>
 </nav>
@@ -144,7 +144,7 @@
     </div>
   </li>
 </ul>
-  <div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary bg-slate-100">
+  <div onclick="openProfile()" class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary bg-slate-100 cursor-pointer">
           {% if doctor.profile_pic %}
             <img src="{{ url_for('static', filename=doctor.profile_pic) }}"
                  class="w-full h-full object-cover">
@@ -221,10 +221,14 @@
       class="px-4 py-1.5 bg-white dark:bg-slate-800 text-primary rounded-full text-sm font-bold shadow-sm mb-4">
 </span>
 <div class="flex gap-2">
-<button onclick="openProfile()" class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+<button type="button" onclick="openProfile()" class="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
 <span class="material-symbols-outlined text-lg">edit</span>
                                 Edit Profile
                             </button>
+<a href="{{ url_for('manage_appointments') }}" class="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+                                Manage Appointments
+                            </a>
 </div>
 </div>
 </div>
@@ -390,20 +394,11 @@
                     <button onclick="openNoteModal('{{ appt.user._id }}')"
                       class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800
                              text-slate-600 dark:text-slate-400
-                             hover:bg-primary hover:text-white transition">
+                             hover:bg-primary hover:text-white transition" style="font-size: small;">
                       <span class="material-symbols-outlined text-[20px]">
                         sticky_note_2
-                      </span>
+                      </span> Notes
                     </button>
-
-                    <a href="{{ url_for('doctor_chat', user_id=appt.user._id) }}"
-                      class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800
-                             text-slate-600 dark:text-slate-400
-                             hover:bg-primary hover:text-white transition">
-                      <span class="material-symbols-outlined text-[20px]">
-                        chat
-                      </span>
-                    </a>
 
                     <a href="{{ url_for('summary', user_id=appt.user._id) }}"
                       class="px-3 py-1.5 rounded-lg bg-primary/10 text-primary
@@ -627,6 +622,8 @@
   </div>
 </div>
 
+<!-- Move Sidebars and Scripts to the bottom of the body for better rendering -->
+
 <!--profile update-->
 <script>
 function openProfile() {
@@ -638,6 +635,35 @@ function closeProfile() {
   document.getElementById("profileSidebar").classList.add("translate-x-full");
   document.getElementById("profileOverlay").classList.add("hidden");
 }
+
+function openManageAppt() {
+  console.log("Global openManageAppt called");
+  const sidebar = document.getElementById("manageApptSidebar");
+  const overlay = document.getElementById("manageApptOverlay");
+  if(sidebar && overlay) {
+    sidebar.style.transform = "translateX(0)";
+    overlay.style.display = "block";
+  }
+}
+
+function closeManageAppt() {
+  const sidebar = document.getElementById("manageApptSidebar");
+  const overlay = document.getElementById("manageApptOverlay");
+  if(sidebar && overlay) {
+    sidebar.style.transform = "translateX(100%)";
+    overlay.style.display = "none";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const btnNav = document.getElementById("manageApptBtnNav");
+    const btnHero = document.getElementById("manageApptBtnHero");
+    if(btnNav) btnNav.addEventListener("click", openManageAppt);
+    if(btnHero) btnHero.addEventListener("click", openManageAppt);
+});
+
+window.openManageAppt = openManageAppt;
+window.closeManageAppt = closeManageAppt;
 </script>
 
 
@@ -949,6 +975,51 @@ loadDoctorNotifications();
       `Today: ${formattedDate}`;
   });
 </script>
+
+<!-- Manage Appointments Sidebar -->
+<div id="manageApptOverlay"
+     style="display:none; transition: opacity 0.3s ease-in-out;"
+     class="fixed inset-0 z-[80] bg-black/40 backdrop-blur-sm"
+     onclick="closeManageAppt()"></div>
+
+<div id="manageApptSidebar"
+     style="transform: translateX(100%); transition: transform 0.3s ease-in-out;"
+     class="fixed inset-y-0 right-0 z-[90] w-full max-w-md
+            bg-white dark:bg-slate-900 shadow-2xl
+            border-l border-slate-200 dark:border-slate-800">
+
+  <div class="h-full flex flex-col">
+    <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+      <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+        Manage Consultation Days
+      </h3>
+      <button onclick="closeManageAppt()" class="text-slate-400 hover:text-slate-600">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <form action="{{ url_for('doctor_home') }}" method="POST" class="flex-1 overflow-y-auto p-6 space-y-6">
+        <p class="text-sm text-slate-500 mb-4">Select the days you are available for patient consultations.</p>
+        
+        <div class="space-y-3">
+            {% set days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"] %}
+            {% for day in days %}
+            <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer">
+                <input type="checkbox" name="working_days" value="{{ day }}" 
+                       {% if doctor.working_days and day in doctor.working_days %}checked{% endif %}
+                       class="w-5 h-5 rounded border-slate-300 text-primary focus:ring-primary">
+                <span class="text-sm font-medium text-slate-700 dark:text-slate-200">{{ day }}</span>
+            </label>
+            {% endfor %}
+        </div>
+
+        <div class="pt-6 flex gap-3">
+            <button type="button" onclick="closeManageAppt()" class="flex-1 py-3 rounded-lg text-sm font-bold bg-slate-100 dark:bg-slate-800 text-slate-600">Cancel</button>
+            <button type="submit" class="flex-1 py-3 rounded-lg text-sm font-bold bg-primary text-white shadow-lg shadow-primary/20">Save Schedule</button>
+        </div>
+    </form>
+  </div>
+</div>
 
 </body>
 </html>

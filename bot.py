@@ -1,5 +1,6 @@
 import os
 import re
+import difflib
 from groq import Groq
 from dotenv import load_dotenv
 
@@ -10,79 +11,90 @@ client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 # Strong, focused system prompt
 SYSTEM_PROMPT = (
-     "You are a healthcare chatbot. "
-    "DO NOT show your thinking or reasoning. "
-    "DO NOT use <think> or explanations of your thought process. "
-    "Answer directly. "
-    "Keep the reply SHORT and COMPLETE. "
-    "Use bullet points ONLY if the question asks for tips or benefits. "
-    "Limit the answer to 4–5 lines maximum. "
-    "Do NOT diagnose diseases. "
-    "Suggest consulting a doctor briefly if relevant."
+    "You are a specialized Health & Lifestyle AI for Wellness Wave. "
+    "ONLY answer questions related to health, fitness, lifestyle diseases (Diabetes, BP, Heart, Obesity), and diet. "
+    "If a question is NOT related to health (e.g., cooking recipes like tea, history, politics), "
+    "politely reply: 'I am a health bot designed specifically for lifestyle disease and wellness support. Please ask health-related questions.' "
+    "Maintain conversation context and answer follow-up questions naturally if they relate to the health discussion. "
+    "DO NOT show your thinking or reasoning (<think> tags). "
+    "Answer directly in 4-5 lines max. "
+    "Always prioritize facts from the provided USER'S RECENT HEALTH DATA."
 )
 
-# Health scope keywords
+# Health scope keywords to identify valid queries early
 HEALTH_KEYWORDS = [
-    "diabetes", "blood sugar", "sugar level", "glucose",
-    "bp", "blood pressure", "hypertension",
-    "heart", "cholesterol",
-    "obesity", "weight", "weight loss",
-    "exercise", "walking", "workout", "yoga",
-    "diet", "food", "nutrition",
-    "sleep", "stress", "lifestyle", "thyroid"
+    "diabetes", "sugar", "insulin", "glucose", "bp", "blood pressure", "heart", "cholesterol",
+    "obesity", "weight", "bmi", "fat", "metabolism", "exercise", "walking", "fitness", "yoga",
+    "diet", "food", "nutrition", "carbs", "protein", "vitamins", "sleep", "stress", "lifestyle",
+    "thyroid", "health", "wellness", "anxiety", "risk", "precaution", "doctor", "medicine", "pill",
+    "pain", "joint", "muscle", "headache", "immune", "alcohol", "drugs", "smoking", "symptom", "ill"
 ]
 
 def is_health_related(text: str) -> bool:
     text = text.lower()
-
-    # direct keyword match
+    
+    # Check if any keyword matches
     for word in HEALTH_KEYWORDS:
         if word in text:
             return True
-
-    # fallback: common health intent words
-    health_intent_words = ["reduce", "control", "prevent", "manage", "improve"]
-    if any(w in text for w in health_intent_words):
+    
+    # Basic fuzzy matching for typos
+    words = re.findall(r'\b\w+\b', text)
+    for w in words:
+        if len(w) > 4:
+            matches = difflib.get_close_matches(w, HEALTH_KEYWORDS, n=1, cutoff=0.7)
+            if matches:
+                return True
+                
+    # Context-aware follow-up check: If the word is very short might be a follow-up
+    # like "why?", "is it?", "how?"
+    follow_ups = ["why", "how", "is it", "what", "tell", "explain", "good", "bad", "no", "yes"]
+    if any(text.strip().startswith(f) for f in follow_ups) and len(text.split()) < 4:
         return True
 
     return False
 
-
 def clean_response(text: str) -> str:
-    # Remove <think> blocks
     text = re.sub(r"<think>[\s\S]*?</think>", "", text)
-
-    # Remove markdown symbols
     text = re.sub(r"[#*_`]", "", text)
-
-    # Clean extra new lines
     text = re.sub(r"\n{3,}", "\n\n", text)
-
     return text.strip()
 
 def get_max_tokens(user_input: str) -> int:
-    # Keep answers short by design
     if len(user_input) < 80:
         return 150
-   
+    return 300
 
-def lifestyle_disease_chat(user_input: str) -> str:
-    # 🚫 Block non-health questions
-    if not is_health_related(user_input):
-        return (
-            "I can help only with lifestyle disease related doubts 😊 "
-            "Please ask about diet, exercise, diabetes, BP, weight, stress, or heart health."
+def lifestyle_disease_chat(user_input, context="", history=None):
+    # 🚫 Strict health-bot guardrail
+    if not is_health_related(user_input) and not (history and len(history) > 0):
+        return "I am a health bot designed specifically for lifestyle disease and wellness support. Please ask health-related questions."
+
+    # Construct message list
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+
+    if context:
+        messages.append({
+            "role": "system", 
+            "content": f"USER'S RECENT HEALTH DATA:\n{context}\n\nPrimary source for user query interpretation."
+        })
+
+    if history:
+        for msg in history[-10:]: 
+            messages.append(msg)
+
+    messages.append({"role": "user", "content": user_input})
+
+    try:
+        response = client.chat.completions.create(
+            model="qwen/qwen3-32b",
+            messages=messages,
+            temperature=0.4,
+            max_tokens=get_max_tokens(user_input)
         )
 
-    response = client.chat.completions.create(
-        model="qwen/qwen3-32b",
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": user_input}
-        ],
-        temperature=0.4,
-        max_tokens=get_max_tokens(user_input)
-    )
-
-    reply = response.choices[0].message.content
-    return clean_response(reply)
+        reply = response.choices[0].message.content
+        return clean_response(reply)
+    except Exception as e:
+        print(f"Chat error: {e}")
+        return "I'm having trouble connecting right now. Please try again soon."

@@ -188,11 +188,11 @@ def bp_status(sys, dia):
 
 # blood suger status
 def sugar_status(val):
-    if val < 100:
+    if val < 110:
         return "Normal"
-    elif val < 126:
+    elif val > 110:
         return "Intermediate"
-    else:
+    elif val >126 :
         return "High"
     
 #cholesterol status
@@ -323,9 +323,9 @@ def predict():
     health_score = round(avg_risk, 2)
 
     # 🔹 Health status classification
-    if health_score >= 75:
+    if health_score >= 70:
         health_status = "High Risk"
-    elif health_score >= 50:
+    elif health_score >= 40:
         health_status = "Moderate Risk"
     else:
         health_status = "Good Standing"
@@ -839,6 +839,13 @@ def user_login():
     email = request.form.get("email", "").strip()
     password = request.form.get("password", "")
 
+    # Admin login logic
+    if email == "wellnesswave353@gmail.com" and password == "Admin@ww":
+        session["email"] = email
+        session["user_type"] = "admin"
+        flash("Admin login successful!", "success")
+        return redirect(url_for("admin_page"))
+
     user = users_col.find_one({"email": email})
 
     if user and check_password_hash(user.get("password", ""), password):
@@ -1144,6 +1151,34 @@ def doctor_home():
         
     )
 
+@app.route("/manage_appointments")
+def manage_appointments():
+    if "doctor_id" not in session:
+        return redirect(url_for("doctor_login"))
+    
+    doctor = doctors_col.find_one({"_id": ObjectId(session["doctor_id"])})
+    return render_template("manage_appointments.html", doctor=doctor)
+
+@app.route("/save_doctor_schedule", methods=["POST"])
+def save_doctor_schedule():
+    if "doctor_id" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+    
+    doctor_id = session["doctor_id"]
+    working_days = request.form.getlist("working_days")
+    unavailable_dates_raw = request.form.get("unavailable_dates", "")
+    unavailable_dates = [d.strip() for d in unavailable_dates_raw.split(",") if d.strip()]
+
+    doctors_col.update_one(
+        {"_id": ObjectId(doctor_id)},
+        {"$set": {
+            "working_days": working_days,
+            "unavailable_dates": unavailable_dates
+        }}
+    )
+    flash("Schedule updated successfully!", "success")
+    return redirect(url_for("manage_appointments"))
+
 @app.route("/add_review", methods=["POST"])
 def add_review():
     if "user_id" not in session:
@@ -1287,6 +1322,34 @@ def book_appointment():
         "success": True,
         "message": "Appointment booked successfully!",
         "appointment_id": str(result.inserted_id)
+    })
+
+@app.route("/get_booked_slots")
+def get_booked_slots():
+    doctor_id = request.args.get("doctor_id")
+    date = request.args.get("date")  # Format: YYYY-MM-DD or YYYY-M-D
+
+    if not doctor_id:
+        return jsonify({"error": "Missing doctor_id"}), 400
+
+    working_days = []
+    unavailable_dates = []
+    doctor = doctors_col.find_one({"_id": ObjectId(doctor_id)})
+    if doctor:
+        working_days = doctor.get("working_days", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+        unavailable_dates = doctor.get("unavailable_dates", [])
+
+    query = {"doctor_id": ObjectId(doctor_id)}
+    if date:
+        query["appointment_date"] = date
+
+    booked = list(appointments_col.find(query))
+    booked_slots = [b["time"] for b in booked]
+
+    return jsonify({
+        "bookedSlots": booked_slots,
+        "workingDays": working_days,
+        "unavailableDates": unavailable_dates
     })
 
 
@@ -1449,7 +1512,54 @@ def delete_blog(blog_id):
 @app.route("/chat", methods=["POST"])
 def chat():
     user_input = request.json.get("message")
-    reply = lifestyle_disease_chat(user_input)
+    
+    context = ""
+    if "user_id" in session:
+        # Fetch the latest prediction result and precautions for this user
+        latest_analysis = analysis_collection.find_one(
+            {"user_id": session["user_id"]},
+            sort=[("datetime", -1)]
+        )
+        
+        if latest_analysis:
+            # Format the data into a readable string for the bot context
+            diseases = latest_analysis.get("diseases", {})
+            precautions = latest_analysis.get("precautions", {})
+            metrics = latest_analysis.get("metrics", {})
+
+            # Simplified context for the bot
+            risk_summary = ", ".join([f"{k.replace('_', ' ')}: {v.get('risk_percentage', 0)}%" for k, v in diseases.items() if k != "overall_health"])
+            overall = diseases.get("overall_health", {})
+            
+            context = f"Latest Risks: {risk_summary}. Overall Status: {overall.get('status', 'N/A')} ({overall.get('health_score', 0)}%). "
+            context += f"Metrics: BMI {metrics.get('BMI', {}).get('value', 'N/A')}, BP {metrics.get('BloodPressure', {}).get('value', 'N/A')}. "
+            
+            if precautions:
+                # If precautions is a dict/json
+                if isinstance(precautions, dict):
+                    diet = precautions.get("diet", "N/A")
+                    ex = precautions.get("exercise", "N/A")
+                    context += f"Recommended Diet: {diet}. Recommended Exercise: {ex}."
+                elif isinstance(precautions, list):
+                    context += f"Precautions: {', '.join(precautions)}."
+
+    # Initialize chat history in session if not present
+    if "chat_history" not in session:
+        session["chat_history"] = []
+
+    # Get the history
+    history = session["chat_history"]
+
+    reply = lifestyle_disease_chat(user_input, context=context, history=history)
+
+    # Update history (user input and bot reply)
+    history.append({"role": "user", "content": user_input})
+    history.append({"role": "assistant", "content": reply})
+
+    # Keep only the last 10 messages (5 user/bot pairs) for token management
+    session["chat_history"] = history[-10:]
+    session.modified = True
+
     return jsonify({"reply": reply})
 
 # =========================
