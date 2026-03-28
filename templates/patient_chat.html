@@ -105,13 +105,13 @@
 </div>
 <!-- Chat Area -->
 <main id="chatScroll"
- class="flex-1 overflow-y-auto custom-scrollbar bg-background-light dark:bg-background-dark p-4 md:p-6 scroll-smooth">
+ class="flex-1 overflow-y-auto custom-scrollbar bg-background-light dark:bg-background-dark p-4 md:p-6">
 
 <div id="chatBody" class="max-w-4xl mx-auto flex flex-col gap-6">
 
 {% for msg in messages %}
 
-    {% if msg.sender == "doctor" %}
+    {% if msg.sender_role == "doctor" %}
     <!-- Doctor Message -->
     <div class="flex items-end gap-3 group">
         <div class="flex flex-col gap-1 max-w-[85%] md:max-w-[70%]">
@@ -188,8 +188,9 @@
 <span class="material-symbols-outlined text-[20px]">send</span>
 </button>
 </div>
+
 <p class="text-center text-xs text-gray-400 dark:text-gray-500 mt-3">
-                Do not share sensitive financial information. <a class="underline hover:text-primary" href="#">Privacy Policy</a>
+                Do not share sensitive financial information. <a class="underline hover:text-primary cursor-pointer" onclick="openModal('privacyModal')">Privacy Policy</a>
 </p>
 </div>
 </footer>
@@ -202,19 +203,23 @@ socket.emit("join", { room });
 
 const chatScroll = document.getElementById("chatScroll");
 
-function scrollBottom() {
-    chatScroll.scrollTop = chatScroll.scrollHeight;
+function scrollBottom(smooth = false) {
+    if (smooth) {
+        chatScroll.scrollTo({ top: chatScroll.scrollHeight, behavior: 'smooth' });
+    } else {
+        chatScroll.scrollTop = chatScroll.scrollHeight;
+    }
 }
 
 socket.on("receive_message", data => {
 
     let html = "";
 
-    if (data.sender === "doctor") {
+    if (data.sender_role === "doctor") {
         html = `
         <div class="flex items-end gap-3">
             <div class="flex flex-col gap-1 max-w-[70%]">
-                <span class="text-xs font-bold text-gray-700">${data.sender_name || "Doctor"}</span>
+                <span class="text-xs font-bold text-gray-700">${data.sender || "Doctor"}</span>
                 <div class="bg-white px-4 py-3 rounded-2xl rounded-tl-none shadow-sm">
                     ${data.file 
                         ? `<a href="${data.file}" target="_blank" class="underline text-primary">📎 View File</a>` 
@@ -237,7 +242,7 @@ socket.on("receive_message", data => {
     }
 
     chatBody.insertAdjacentHTML("beforeend", html);
-    scrollBottom();
+    scrollBottom(true);
 });
 
 
@@ -269,7 +274,8 @@ function uploadFile() {
         .then(data => {
             socket.emit("send_message", {
                 room: room,
-                sender: "patient",
+                sender: "{{ patient.username }}",
+                sender_role: "user",
                 sender_id: "{{ user_id }}",
                 receiver_id: "{{ doctor_id }}",
                 file: data.file_url
@@ -283,6 +289,44 @@ window.onload = () => {
 
 
 </script>
+
+<script>
+    function openModal(id) {
+        document.getElementById(id).classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+</script>
+
+<!-- Privacy Policy Modal -->
+<div id="privacyModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <h3 class="text-xl font-bold dark:text-white">Privacy Policy</h3>
+            <button onclick="closeModal('privacyModal')" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                <span class="material-symbols-outlined text-gray-500">close</span>
+            </button>
+        </div>
+        <div class="p-8 overflow-y-auto max-h-[70vh] text-sm leading-relaxed text-gray-600 dark:text-gray-400 space-y-4 text-left">
+            <p class="font-bold text-gray-900 dark:text-white">Last Updated: March 2026</p>
+            <p>At Wellness Wave, we prioritize your data privacy. This policy outlines how we handle your information.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">1. Data Collection</h4>
+            <p>We collect health-related metrics (BMI, BP, Blood Sugar, etc.) provided by you to perform disease risk analysis. Personal identifiers like email and name are used for account management.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">2. Use of Information</h4>
+            <p>Your data is used solely to generate health risk reports and connect you with qualified medical professionals. We do not sell your personal health information to third-party advertisers.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">3. Data Security</h4>
+            <p>We implement industry-standard encryption to protect your sensitive health data. Access to medical records is restricted to you and the doctors you explicitly consult with through our platform.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">4. Cookies</h4>
+            <p>We use essential cookies to maintain your login session and preferences.</p>
+        </div>
+        <div class="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+            <button onclick="closeModal('privacyModal')" class="bg-primary text-white font-bold px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-all">I Understand</button>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

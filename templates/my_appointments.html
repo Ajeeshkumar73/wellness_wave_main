@@ -29,256 +29,374 @@ tailwind.config = {
 </script>
 </head>
 
-<body class="bg-background-light dark:bg-background-dark font-display min-h-screen text-[#0c131d] dark:text-white">
+<body class="bg-slate-50 dark:bg-slate-950 font-display min-h-screen text-[#0c131d] dark:text-white transition-colors">
 <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
 <div class="layout-container flex h-full grow flex-col">
 <!-- TopNavBar -->
-<header class="sticky top-0 z-50 bg-white border-b border-solid border-[#e6ecf4] dark:border-gray-800">
+<header class="sticky top-0 z-50 bg-white border-b border-solid border-[#e6ecf4] dark:bg-slate-900 dark:border-slate-800">
 <div class="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="text-primary">
+<h2 class="text-xl font-bold tracking-tight text-primary">Wellness Wave</h2>
 </div>
-<h2 class="text-[#0c131d] dark:text-white text-xl font-bold tracking-tight">Wellness Wave</h2>
-</div>
-<a class="flex items-center gap-1 text-sm font-medium text-slate-gray hover:text-primary transition-colors" href="{{ url_for('user_home') }}">
+<a class="flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-primary transition-colors" href="{{ url_for('user_home') }}">
 <span class="material-symbols-outlined text-[18px]">arrow_back</span>
                     Back to Dashboard
                 </a>
+</div>
 </header>
 
-<main class="max-w-7xl mx-auto p-6">
-
-<div class="flex min-w-72 flex-col gap-2">
-<div class="flex items-center gap-3">
-<span class="material-symbols-outlined text-primary text-4xl">calendar_month</span>
-<p class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-[-0.033em]">My Appointments</p>
-</div>
-<p class="text-slate-500 dark:text-slate-400 text-base font-normal leading-normal">Manage your upcoming and past healthcare consultations</p>
-</div>
-</br>
-
-<div class="bg-white rounded-xl shadow border overflow-hidden">
-  <div class="overflow-x-auto">
-    <table class="w-full">
-      <thead class="bg-slate-50 border-b">
-        <tr>
-          <th class="px-6 py-4 text-xs uppercase font-bold">Doctor</th>
-          <th class="px-6 py-4 text-xs uppercase font-bold">Chat</th>
-          <th class="px-6 py-4 text-xs uppercase font-bold">Specialization</th>
-          <th class="px-6 py-4 text-xs uppercase font-bold">Date</th>
-          <th class="px-6 py-4 text-xs uppercase font-bold">Time</th>
-          <th class="px-6 py-4 text-xs uppercase font-bold text-right">Status</th>
-        </tr>
-      </thead>
-
-      <tbody class="divide-y">
-        {% for appt in appointments %}
-        <tr class="hover:bg-slate-50">
-
-          <td class="px-6 py-5 flex items-center gap-3">
-            <div class="size-10 rounded-full bg-primary/10 flex items-center justify-center">
-              <span class="material-symbols-outlined text-primary">person</span>
+<main class="max-w-7xl mx-auto p-6 md:p-10">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div class="flex flex-col gap-2">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-4xl">event_upcoming</span>
+                <h1 class="text-slate-900 dark:text-white text-4xl font-black leading-tight tracking-tight">Appointments</h1>
             </div>
-            <span class="font-bold text-primary">{{ appt.doctor.name }}</span>
-          </td>
+            <p class="text-slate-500 dark:text-slate-400 text-lg">Manage your health consultations</p>
+        </div>
+    </div>
 
-          <td class="px-6 py-5">
-            <a href="{{ url_for('patient_chat', doctor_id=appt.doctor._id) }}"
-                class="p-2 rounded-lg bg-slate-100 dark:bg-slate-800
-                             text-slate-600 dark:text-slate-400
-                             hover:bg-primary hover:text-white transition">
-                      <span class="material-symbols-outlined text-[20px] translate-y-[2px]">
-                        chat
-                      </span>
-            </a>
-          </td>
+    <!-- Grouped Sections -->
+    <div id="appointment-sections" class="space-y-12">
+        <!-- Sections will be injected by JS -->
+    </div>
 
-          <td class="px-6 py-5 text-slate-600">
-            {{ appt.doctor.specialization }}
-          </td>
-
-          <td class="px-6 py-5 text-slate-600">
-            {{ appt.appointment_date }}
-          </td>
-
-          <td class="px-6 py-5 text-slate-600">
-            {{ appt.time }}
-          </td>
-
-          <td class="px-6 py-5 text-right appt-status"></td>
-
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</div>
-<!-- Pagination Container -->
-<div class="flex items-center justify-between px-6 py-4 bg-slate-50 border-t">
-  <p id="page-info" class="text-xs text-slate-500 font-medium uppercase tracking-tight"></p>
-
-  <div class="flex items-center justify-center gap-1">
-    <button id="prev" class="flex size-9 items-center justify-center rounded-lg hover:bg-slate-200">
-      <span class="material-symbols-outlined">chevron_left</span>
-    </button>
-
-    <button id="next" class="flex size-9 items-center justify-center rounded-lg hover:bg-slate-200">
-      <span class="material-symbols-outlined">chevron_right</span>
-    </button>
-  </div>
-</div>
-
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 text-center">
+        <div class="size-24 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center mb-6">
+            <span class="material-symbols-outlined text-5xl text-slate-400">calendar_today</span>
+        </div>
+        <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">No Appointments Yet</h3>
+        <p class="text-slate-500 max-w-sm mx-auto">Schedule your first consultation with our medical experts and get personalized healthcare diagnostics.</p>
+        <a href="{{ url_for('appointments') }}" class="mt-8 px-8 py-3 bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:scale-105 transition-all">
+            Book Appointment
+        </a>
+    </div>
 
 </main>
 
+<!-- Reschedule Modal -->
+<div id="rescheduleModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+        <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+            <h3 class="text-xl font-bold dark:text-white">Reschedule Appointment</h3>
+            <button onclick="closeReschedule()" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+                <span class="material-symbols-outlined text-gray-500">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-6">
+            <div class="flex items-center gap-4 p-4 bg-primary/5 rounded-xl border border-primary/10">
+                <div class="size-12 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined">person</span>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 uppercase font-bold tracking-wider">Consulting with</p>
+                    <p id="modal-doctor-name" class="font-bold text-slate-900 dark:text-white"></p>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Select New Date</label>
+                <input type="date" id="newDate" class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none transition-all dark:text-white" onchange="fetchTimeSlots()">
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 mb-2">Select Available Time</label>
+                <div id="time-slots" class="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                    <!-- Slots will be loaded here -->
+                </div>
+            </div>
+        </div>
+        <div class="p-6 bg-slate-50 dark:bg-slate-800/50 flex gap-3">
+            <button onclick="closeReschedule()" class="flex-1 py-3 text-sm font-bold text-slate-600 bg-white border border-slate-200 rounded-xl hover:bg-slate-100 transition-colors">Cancel</button>
+            <button id="confirmRescheduleBtn" class="flex-1 py-3 text-sm font-bold text-white bg-primary rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all disabled:opacity-50 disabled:pointer-events-none">Confirm Change</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 20px; }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+</style>
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+    const apptData = {{ appointments | tojson }};
+    const todayStr = new Date().toLocaleDateString('en-CA'); 
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowStr = tomorrow.toLocaleDateString('en-CA');
 
-  const tbody = document.querySelector("tbody");
-  let rows = Array.from(tbody.querySelectorAll("tr"));
+    let currentApptId = null;
+    let currentDoctorId = null;
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+    function parseTime(timeStr) {
+        let [time, modifier] = timeStr.split(" ");
+        let [hours, minutes] = time.split(":").map(Number);
+        if (modifier === "PM" && hours !== 12) hours += 12;
+        if (modifier === "AM" && hours === 12) hours = 0;
+        return { hours, minutes };
+    }
 
-  const rowsPerPage = 4;
-  let currentPage = 1;
+    function checkExpired(date, time) {
+        const now = new Date();
+        const apptDate = new Date(date);
+        const { hours, minutes } = parseTime(time);
+        apptDate.setHours(hours, minutes, 0, 0);
+        return apptDate < now;
+    }
 
-  // 🔹 Parse YYYY-MM-DD + AM/PM time
-  function parseDateTime(dateStr, timeStr) {
-    const [time, modifier] = timeStr.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-
-    if (modifier === "PM" && hours !== 12) hours += 12;
-    if (modifier === "AM" && hours === 12) hours = 0;
-
-    const date = new Date(dateStr);
-    date.setHours(hours, minutes, 0, 0);
-    return date;
-  }
-
-  // 🔹 Format date → DD-MM-YYYY
-  function formatDateDDMMYYYY(dateStr) {
-    const [y, m, d] = dateStr.split("-");
-    return `${d}-${m}-${y}`;
-  }
-
-  // 🔹 Store raw date
-  rows.forEach(row => {
-    const dateCell = row.children[3];
-    dateCell.dataset.rawDate = dateCell.innerText.trim();
-  });
-
-  // 🔹 SORT
-  rows.sort((a, b) => {
-  const diffA = getDiffDays(a);
-  const diffB = getDiffDays(b);
-
-  const prA = getPriority(diffA);
-  const prB = getPriority(diffB);
-
-  // first by status
-  if (prA !== prB) return prA - prB;
-
-  // then by real date (DESC)
-  const dateA = parseDateTime(
-    a.children[3].dataset.rawDate,
-    a.children[4].innerText.trim()
-  );
-  const dateB = parseDateTime(
-    b.children[3].dataset.rawDate,
-    b.children[4].innerText.trim()
-  );
-
-  return dateB - dateA; // newest first
-});
-
-  function getDiffDays(row) {
-    const dateCell = row.children[3];
-    const timeText = row.children[4].innerText.trim();
-    const apptDate = parseDateTime(dateCell.dataset.rawDate, timeText);
-    apptDate.setHours(0,0,0,0);
-    return Math.round((apptDate - today) / (1000 * 60 * 60 * 24));
-  }
-
-  function getPriority(diff) {
-    if (diff === 1) return 1;
-    if (diff === 0) return 2;
-    if (diff > 1) return 3;
-    return 4;
-  }
-
-  function renderTable() {
-    tbody.innerHTML = "";
-
-    const start = (currentPage - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const paginatedRows = rows.slice(start, end);
-
-    paginatedRows.forEach(row => {
-      const dateCell = row.children[3];
-      const timeText = row.children[4].innerText.trim();
-      const statusCell = row.querySelector(".appt-status");
-
-      const apptDate = parseDateTime(dateCell.dataset.rawDate, timeText);
-      apptDate.setHours(0,0,0,0);
-
-      const diffDays = Math.round((apptDate - today) / (1000 * 60 * 60 * 24));
-      dateCell.innerText = formatDateDDMMYYYY(dateCell.dataset.rawDate);
-
-      let badge = "";
-
-      if (diffDays === 1) {
-        badge = `<span class="text-primary font-medium">1 day remaining</span>`;
-      } 
-      else if (diffDays === 0) {
-        badge = `<span class="text-success font-medium">Today</span>`;
-      } 
-      else if (diffDays > 1) {
-        badge = `<span class="text-slate-500 font-medium">In ${diffDays} days</span>`;
-      } 
-      else {
-        badge = `<span class="text-danger font-medium">Expired</span>`;
-        const chatBtn = row.querySelector(".chat-btn");
-        if (chatBtn) {
-          chatBtn.classList.add("pointer-events-none","opacity-40");
+    function renderAppointments() {
+        const sectionsContainer = document.getElementById('appointment-sections');
+        const emptyState = document.getElementById('empty-state');
+        
+        if (!apptData || apptData.length === 0) {
+            emptyState.classList.remove('hidden');
+            return;
         }
-      }
 
-      statusCell.innerHTML = badge;
-      tbody.appendChild(row);
-    });
+        const groups = {
+            'Today': [],
+            'Tomorrow': [],
+            'Upcoming': [],
+            'Expired': []
+        };
 
-    updatePaginationText();
-  }
+        apptData.forEach(appt => {
+            const isExpired = checkExpired(appt.appointment_date, appt.time) || appt.status === 'cancelled';
+            
+            if (isExpired) {
+                groups['Expired'].push(appt);
+            } else if (appt.appointment_date === todayStr) {
+                groups['Today'].push(appt);
+            } else if (appt.appointment_date === tomorrowStr) {
+                groups['Tomorrow'].push(appt);
+            } else {
+                groups['Upcoming'].push(appt);
+            }
+        });
 
-  function updatePaginationText() {
-    const total = rows.length;
-    const start = (currentPage - 1) * rowsPerPage + 1;
-    const end = Math.min(currentPage * rowsPerPage, total);
+        sectionsContainer.innerHTML = '';
+        
+        Object.keys(groups).forEach(label => {
+            if (groups[label].length > 0) {
+                const section = createSection(label, groups[label]);
+                sectionsContainer.appendChild(section);
+            }
+        });
 
-    document.querySelector("#page-info").innerText =
-      `Showing ${start} to ${end} of ${total} appointments`;
-  }
-
-  // Pagination buttons
-  document.querySelector("#prev").onclick = () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderTable();
+        if (sectionsContainer.children.length === 0) {
+            emptyState.classList.remove('hidden');
+        }
     }
-  };
 
-  document.querySelector("#next").onclick = () => {
-    if (currentPage < Math.ceil(rows.length / rowsPerPage)) {
-      currentPage++;
-      renderTable();
+    function createSection(label, list) {
+        const div = document.createElement('div');
+        const colorClass = label === 'Expired' ? 'text-slate-400' : 
+                          label === 'Today' ? 'text-primary' : 
+                          label === 'Tomorrow' ? 'text-success' : 'text-slate-900 dark:text-white';
+        
+        div.innerHTML = `
+            <div class="flex items-center gap-4 mb-8">
+                <h3 class="text-2xl font-bold ${colorClass}">${label}</h3>
+                <div class="flex-1 h-px bg-slate-200 dark:bg-slate-800"></div>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">${list.length} Appointments</span>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                ${list.map(appt => createCard(appt)).join('')}
+            </div>
+        `;
+        return div;
     }
-  };
 
-  renderTable();
-});
+    function createCard(appt) {
+        const isExpired = checkExpired(appt.appointment_date, appt.time) || appt.status === 'cancelled';
+        const [y, m, d] = appt.appointment_date.split('-');
+        const dateDisplay = `${d}/${m}/${y}`;
+        
+        return `
+            <div class="group bg-white dark:bg-slate-900 rounded-3xl border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-2xl hover:border-primary/20 transition-all duration-500 p-8 flex flex-col sm:flex-row gap-8">
+                <div class="flex-1 space-y-6">
+                    <div class="flex items-center gap-4">
+                        <div class="size-14 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-white transition-all duration-500">
+                            <span class="material-symbols-outlined text-3xl">person</span>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900 dark:text-white">Dr. ${appt.doctor.name}</h4>
+                            <p class="text-sm text-primary font-medium">${appt.doctor.specialization}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-wrap gap-6 pt-2">
+                        <div class="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                            <div class="size-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                            </div>
+                            <span class="text-sm font-bold uppercase tracking-tight">${dateDisplay}</span>
+                        </div>
+                        <div class="flex items-center gap-3 text-slate-600 dark:text-slate-400">
+                            <div class="size-8 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center">
+                                <span class="material-symbols-outlined text-[18px]">schedule</span>
+                            </div>
+                            <span class="text-sm font-bold uppercase tracking-tight">${appt.time}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex sm:flex-col items-center justify-center border-t sm:border-t-0 sm:border-l border-slate-100 dark:border-slate-800 pt-6 sm:pt-0 sm:pl-8 gap-4 min-w-[160px]">
+                    ${!isExpired ? `
+                        <button onclick="cancelAppointment('${appt._id}')" 
+                           class="w-full text-center py-3 px-6 rounded-xl bg-danger text-white text-xs font-black uppercase tracking-widest hover:bg-red-700 shadow-lg shadow-danger/20 transition-all flex items-center justify-center gap-2">
+                            <span class="material-symbols-outlined text-[18px]">cancel</span>
+                            Cancel
+                        </button>
+                        <button onclick="openReschedule('${appt._id}', '${appt.doctor.name}', '${appt.doctor._id}')"
+                                class="w-full text-center py-3 px-6 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-xs font-black uppercase tracking-widest hover:bg-primary/5 hover:text-primary transition-all flex items-center justify-center gap-2 border border-slate-100 dark:border-slate-800">
+                            <span class="material-symbols-outlined text-[18px]">event_repeat</span>
+                            Reschedule
+                        </button>
+                    ` : `
+                        <div class="w-full py-4 flex flex-col items-center justify-center gap-2 opacity-50 bg-slate-50 dark:bg-slate-800/50 rounded-2xl">
+                            <span class="material-symbols-outlined text-slate-400 text-3xl">event_busy</span>
+                            <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">${appt.status === 'cancelled' ? 'Cancelled' : 'Expired'}</span>
+                        </div>
+                    `}
+                </div>
+            </div>
+        `;
+    }
+
+    // Modal Functions
+    async function cancelAppointment(id) {
+        if (!confirm('Are you sure you want to cancel this appointment? This action cannot be undone.')) return;
+
+        try {
+            const res = await fetch(`/cancel_appointment/${id}`, { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.error || 'Cancellation failed');
+            }
+        } catch (e) {
+            alert('A system error occurred');
+        }
+    }
+
+    function openReschedule(id, name, doctorId) {
+        currentApptId = id;
+        currentDoctorId = doctorId;
+        document.getElementById('modal-doctor-name').innerText = name;
+        document.getElementById('rescheduleModal').classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+        
+        document.getElementById('newDate').value = '';
+        document.getElementById('time-slots').innerHTML = '<div class="col-span-full py-4 text-center text-slate-400 text-xs">Select a date first</div>';
+        document.getElementById('confirmRescheduleBtn').disabled = true;
+    }
+
+    function closeReschedule() {
+        document.getElementById('rescheduleModal').classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+
+    async function fetchTimeSlots() {
+        const date = document.getElementById('newDate').value;
+        const slotsDiv = document.getElementById('time-slots');
+        const confirmBtn = document.getElementById('confirmRescheduleBtn');
+        
+        if (!date) return;
+        
+        // Prevent past dates
+        if (date < todayStr) {
+            slotsDiv.innerHTML = '<div class="col-span-full py-4 text-center text-red-500 text-xs text-bold">Please select a future date</div>';
+            return;
+        }
+
+        slotsDiv.innerHTML = '<div class="col-span-full py-4 text-center text-slate-400 text-xs animate-pulse font-bold">Checking slots...</div>';
+        confirmBtn.disabled = true;
+
+        try {
+            const res = await fetch(`/get_booked_slots?doctor_id=${currentDoctorId}&date=${date}`);
+            const data = await res.json();
+            
+            const allTimes = [
+                "05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM",
+                "07:00 PM", "07:30 PM", "08:00 PM", "08:30 PM", "09:00 PM"
+            ];
+            
+            const booked = data.bookedSlots || [];
+            slotsDiv.innerHTML = '';
+
+            const availableTimes = allTimes.filter(t => !booked.includes(t));
+
+            if (availableTimes.length === 0) {
+                slotsDiv.innerHTML = '<div class="col-span-full py-4 text-center text-red-500 text-xs font-bold">Doctor is fully booked for this day</div>';
+                return;
+            }
+
+            availableTimes.forEach(t => {
+                const btn = document.createElement('button');
+                btn.innerText = t;
+                btn.className = "p-3 text-xs font-black rounded-xl border border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:border-primary transition-all";
+                btn.onclick = () => {
+                    document.querySelectorAll('#time-slots button').forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white', 'border-primary');
+                        b.classList.add('bg-slate-50', 'dark:bg-slate-800/50');
+                    });
+                    btn.classList.remove('bg-slate-50', 'dark:bg-slate-800/50');
+                    btn.classList.add('bg-primary', 'text-white', 'border-primary');
+                    confirmBtn.disabled = false;
+                    confirmBtn.dataset.selectedTime = t;
+                };
+                slotsDiv.appendChild(btn);
+            });
+        } catch (e) {
+            slotsDiv.innerHTML = '<div class="col-span-full py-4 text-center text-red-500 text-xs font-bold">Failed to load schedule</div>';
+        }
+    }
+
+    document.getElementById('confirmRescheduleBtn').onclick = async function() {
+        const date = document.getElementById('newDate').value;
+        const time = this.dataset.selectedTime;
+        
+        if (!date || !time) return;
+
+        const originalText = this.innerHTML;
+        this.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span>';
+        this.disabled = true;
+
+        try {
+            const res = await fetch('/reschedule_appointment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    appt_id: currentApptId,
+                    date: date,
+                    time: time
+                })
+            });
+            
+            const data = await res.json();
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.error || 'Rescheduling failed');
+                this.innerHTML = originalText;
+                this.disabled = false;
+            }
+        } catch (e) {
+            alert('A system error occurred');
+            this.innerHTML = originalText;
+            this.disabled = false;
+        }
+    };
+
+    // Initial Render
+    renderAppointments();
 </script>
-
-
+</div>
+</div>
 </body>
 </html>

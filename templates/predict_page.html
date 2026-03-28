@@ -549,12 +549,10 @@ function render(data) {
     doctorSection.style.display = 'none';
   }
 
-  /* ── PRECAUTIONS (Low + Intermediate only) ── */
+  /* ── PRECAUTIONS (Show only if there are moderate/low risks) ── */
   const precCard = document.getElementById('precautionsCard');
 
-  // Only show precautions if NO elevated diseases exist
-  // (if any disease is borderline/high, show doctors instead)
-  if (elevatedDiseases.length === 0 && data.precautions) {
+  if (data.precautions && moderateDiseases.length > 0) {
     const prec = data.precautions;
 
     // Support both old array format and new {diet, exercise, habits} object

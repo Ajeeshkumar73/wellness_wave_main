@@ -442,13 +442,13 @@
     }
 
     .disabled-date {
-      background-color: #f8fafc !important;
-      color: #94a3b8 !important;
+      background-color: #fef2f2 !important;
+      color: #ef4444 !important;
       cursor: not-allowed !important;
-      opacity: 0.7 !important;
+      opacity: 0.8 !important;
       pointer-events: none !important;
-      border: 1px dashed #e2e8f0 !important;
-      text-decoration: line-through;
+      border: 1px solid #fee2e2 !important;
+      text-decoration: none;
     }
 #userPhone{
   font-size:18px;
@@ -630,45 +630,44 @@
                 <div>
                   <h5 class="text-2xl font-bold text-primary mb-1" id="popupDoctorName"></h5>
                   <h6 id="popupDoctorQualification" class="text-gray-600 dark:text-gray-400 font-medium"></h6>
-                  </br>
+                  <br>
 
-
-                                                      <div class="flex gap-4">
-<div>
-<h5 class="text-sm font-bold">Specialization</h5>
-<p class="text-xs text-gray-500" id="popupDoctorSpecialization"></p>
-</div>
-</div>
-                                    <div class="flex gap-4">
-<div>
-<h5 class="text-sm font-bold">Experience</h5>
-<p class="text-xs text-gray-500" id="popupDoctorExperience"></p>
-</div>
-</div>
-</br>
                   <div class="flex gap-4">
-<span class="material-symbols-outlined text-primary">apartment</span>
-<div>
-<h5 class="text-sm font-bold">Working Hospital</h5>
-<p class="text-xs text-gray-500" id="popupDoctorHospital"></p>
-</div>
-</div>
+                    <div>
+                      <h5 class="text-sm font-bold">Specialization</h5>
+                      <p class="text-xs text-gray-500" id="popupDoctorSpecialization"></p>
+                    </div>
+                  </div>
+                  <div class="flex gap-4">
+                    <div>
+                      <h5 class="text-sm font-bold">Experience</h5>
+                      <p class="text-xs text-gray-500" id="popupDoctorExperience"></p>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="flex gap-4">
+                    <span class="material-symbols-outlined text-primary">apartment</span>
+                    <div>
+                      <h5 class="text-sm font-bold">Working Hospital</h5>
+                      <p class="text-xs text-gray-500" id="popupDoctorHospital"></p>
+                    </div>
+                  </div>
                  
                   <div class="flex gap-4">
-<span class="material-symbols-outlined text-primary">location_on</span>
-<div>
-<h5 class="text-sm font-bold">Address</h5>
-<p class="text-xs text-gray-500" id="popupDoctorAddress"></p>
-</div>
-</div>
+                    <span class="material-symbols-outlined text-primary">location_on</span>
+                    <div>
+                      <h5 class="text-sm font-bold">Address</h5>
+                      <p class="text-xs text-gray-500" id="popupDoctorAddress"></p>
+                    </div>
+                  </div>
                   
                   <div class="flex gap-4">
-<span class="material-symbols-outlined text-primary">call</span>
-<div>
-<h5 class="text-sm font-bold">Phone</h5>
-<p class="text-xs text-gray-500" id="popupDoctorPhone"></p>
-</div>
-</div>
+                    <span class="material-symbols-outlined text-primary">call</span>
+                    <div>
+                      <h5 class="text-sm font-bold">Phone</h5>
+                      <p class="text-xs text-gray-500" id="popupDoctorPhone"></p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -680,64 +679,61 @@
 
             <!-- Right: Booking -->
             <div class="col-md-4">
-<h4 class="text-2xl font-bold mb-6">Schedule Appointment</h4>
-             <div class="mb-8">
-<div class="flex items-center justify-between mb-4">
-<h3 class="font-bold flex items-center gap-2">
-<span class="material-symbols-outlined text-primary">calendar_month</span>
-                            Select Date
-                        </h3>
-</div>
+              <h4 class="text-2xl font-bold mb-6">Schedule Appointment</h4>
+              <div class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-bold flex items-center gap-2">
+                    <span class="material-symbols-outlined text-primary">calendar_month</span>
+                    Select Date
+                  </h3>
+                </div>
 
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <i class="fas fa-chevron-left" id="prevMonth"></i>
-                <span id="monthYear"></span>
-                <i class="fas fa-chevron-right" id="nextMonth"></i>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <i class="fas fa-chevron-left" id="prevMonth" style="cursor: pointer;"></i>
+                  <span id="monthYear"></span>
+                  <i class="fas fa-chevron-right" id="nextMonth" style="cursor: pointer;"></i>
+                </div>
+
+                <div class="calendar-grid mb-2" id="calendar"></div>
               </div>
-
-              <div class="calendar-grid mb-2" id="calendar"></div>
-
-            </div>
 
               <div class="mb-8">
-<h3 class="font-bold flex items-center gap-2 mb-4">
-<span class="material-symbols-outlined text-primary">schedule</span>
-                        Available Slots
-                    </h3>
-              <div class="d-flex flex-wrap gap-2 mb-2" id="slots">
-                <div class="slot btn btn-outline-primary btn-sm">5:00 PM</div>
-                <div class="slot btn btn-outline-primary btn-sm">5:30 PM</div>
-                <div class="slot btn btn-outline-primary btn-sm">6:00 PM</div>
-                <div class="slot btn btn-outline-primary btn-sm">6:30 PM</div>
-                <div class="slot btn btn-outline-primary btn-sm">7:00 PM</div>
-                <div class="slot btn btn-outline-primary btn-sm">7:30 PM</div>
-                <div class="slot btn btn-outline-primary btn-sm">8:00 PM</div>
-                <div class="slot btn btn-outline-primary btn-sm">8:30 PM</div>
-                <div class="slot btn btn-outline-primary btn-sm">9:00 PM</div>
+                <h3 class="font-bold flex items-center gap-2 mb-4">
+                  <span class="material-symbols-outlined text-primary">schedule</span>
+                  Available Slots
+                </h3>
+                <div class="d-flex flex-wrap gap-2 mb-2" id="slots">
+                  <div class="slot btn btn-outline-primary btn-sm">5:00 PM</div>
+                  <div class="slot btn btn-outline-primary btn-sm">5:30 PM</div>
+                  <div class="slot btn btn-outline-primary btn-sm">6:00 PM</div>
+                  <div class="slot btn btn-outline-primary btn-sm">6:30 PM</div>
+                  <div class="slot btn btn-outline-primary btn-sm">7:00 PM</div>
+                  <div class="slot btn btn-outline-primary btn-sm">7:30 PM</div>
+                  <div class="slot btn btn-outline-primary btn-sm">8:00 PM</div>
+                  <div class="slot btn btn-outline-primary btn-sm">8:30 PM</div>
+                  <div class="slot btn btn-outline-primary btn-sm">9:00 PM</div>
+                </div>
               </div>
-            </div>
-<div class="mb-8">
-<h3 class="font-bold mb-4">Patient Information</h3>
-                  <div class="relative">
-  <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400">
-    phone
-  </span>
-  <input 
-    class="w-full h-12 pl-16 pr-4 bg-gray-100 dark:bg-gray-800 border-none rounded-xl focus:ring-2 focus:ring-primary text-sm outline-none" 
-    placeholder="Your Phone Number" 
-    type="text" 
-    id="userPhone" 
-    value="{{ user.phone if user and user.phone else '' }}" style="padding-left:60px"
-  />
-</div>
-</div>
-
+              
+              <div class="mb-8">
+                <h3 class="font-bold mb-4">Patient Information</h3>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400">
+                    phone
+                  </span>
+                  <input 
+                    class="w-full h-12 pl-16 pr-4 bg-gray-100 dark:bg-gray-800 border-none rounded-xl focus:ring-2 focus:ring-primary text-sm outline-none" 
+                    placeholder="Your Phone Number" 
+                    type="text" 
+                    id="userPhone" 
+                    value="{{ user.phone if user and user.phone else '' }}" style="padding-left:60px"
+                  />
+                </div>
+              </div>
 
               <button id="bookBtn" class="btn btn-primary w-100">
                 Book Appointment <i class="fas fa-chevron-right"></i>
               </button>
-            </br></br>
-
             </div>
           </div>
         </div>
@@ -755,90 +751,53 @@ document.addEventListener("DOMContentLoaded", () => {
   let doctorId = null;
   let selectedDate = null;
   let selectedSlot = null;
-  let workingDays = []; // store doctor's available days
-  let unavailableDates = []; // store doctor's holiday/specific off dates
+  let workingDays = [];
+  let unavailableDates = []; 
 
   const appointmentModal = document.getElementById("appointmentModal");
   const slotsContainer = document.getElementById("slots");
 
   function updateBookedSlots(bookedSlots) {
-    const slots = slotsContainer.querySelectorAll(".slot");
-    slots.forEach(slot => {
-      if (bookedSlots.includes(slot.textContent.trim())) {
-        slot.classList.add("booked");
-        slot.classList.remove("active");
-      } else {
-        slot.classList.remove("booked");
-      }
+    slotsContainer.querySelectorAll(".slot").forEach(slot => {
+      slot.classList.toggle("booked", bookedSlots.includes(slot.textContent.trim()));
+      slot.classList.remove("active");
     });
   }
 
-  // When modal opens
   appointmentModal.addEventListener("show.bs.modal", async (event) => {
     const button = event.relatedTarget;
     if (!button) return;
 
     doctorId = button.getAttribute("data-id");
-    const name = button.getAttribute("data-name") || "Unknown Doctor";
-    const qualification = button.getAttribute("data-qualification") || "";
-    const specialization = button.getAttribute("data-specialization") || "";
-    const experience = button.getAttribute("data-experience") || "";
-    const phone = button.getAttribute("data-phone") || "";
-    const bio = button.getAttribute("data-bio") || "";
-    const hospital = button.getAttribute("data-hospital") || "Hospital not available";
-    const address = button.getAttribute("data-address") || "Address not available";
-    const image = button.getAttribute("data-image") || "https://via.placeholder.com/200";
-
-    document.getElementById("popupDoctorName").textContent = name;
-    document.getElementById("popupDoctorQualification").textContent = qualification;
-    document.getElementById("popupDoctorSpecialization").textContent = specialization;
-    document.getElementById("popupDoctorExperience").textContent = `Experience: ${experience} Years`;
-    document.getElementById("popupDoctorPhone").textContent = phone;
-    document.getElementById("popupDoctorAddress").textContent = address;
-    document.getElementById("popupDoctorBio").textContent = bio;
-    document.getElementById("popupDoctorHospital").textContent = hospital;
-    document.getElementById("popupDoctorImage").src = image;
-    document.getElementById("popupDoctorNameAbout").textContent = name;
+    document.getElementById("popupDoctorName").textContent = button.getAttribute("data-name");
+    document.getElementById("popupDoctorQualification").textContent = button.getAttribute("data-qualification");
+    document.getElementById("popupDoctorSpecialization").textContent = button.getAttribute("data-specialization");
+    document.getElementById("popupDoctorExperience").textContent = `Experience: ${button.getAttribute("data-experience")} Years`;
+    document.getElementById("popupDoctorPhone").textContent = button.getAttribute("data-phone");
+    document.getElementById("popupDoctorAddress").textContent = button.getAttribute("data-address");
+    document.getElementById("popupDoctorBio").textContent = button.getAttribute("data-bio");
+    document.getElementById("popupDoctorHospital").textContent = button.getAttribute("data-hospital");
+    document.getElementById("popupDoctorImage").src = button.getAttribute("data-image");
 
     selectedDate = null;
     selectedSlot = null;
-    workingDays = []; // Reset for each doctor
-    unavailableDates = []; // Reset for each doctor
-
-    document.querySelectorAll(".date").forEach(el => el.classList.remove("active"));
-    document.querySelectorAll(".slot").forEach(el => el.classList.remove("active"));
-
-    // Fetch booked slots and working days from backend (initial load)
+    
     try {
       const res = await fetch(`/get_booked_slots?doctor_id=${doctorId}`);
       const data = await res.json();
-      console.log("Fetched doctor availability:", data);
-      if (data.workingDays) {
-          workingDays = data.workingDays;
-      }
-      if (data.unavailableDates) {
-          unavailableDates = data.unavailableDates;
-      }
-      if (data.workingDays || data.unavailableDates) {
-          console.log("Applying availability to calendar. Working days:", workingDays, "Holidays:", unavailableDates);
-          renderCalendar(currentMonth, currentYear); // Re-render once data has arrived
-      }
-      if (data.bookedSlots) {
-        updateBookedSlots(data.bookedSlots);
-      }
+      workingDays = data.workingDays?.length ? data.workingDays : ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      unavailableDates = data.unavailableDates || [];
+      renderCalendar(currentMonth, currentYear);
     } catch (err) {
-      console.error("Failed to fetch doctor schedule:", err);
+      console.error(err);
     }
   });
 
-  // ---------------- Calendar ----------------
   const monthYear = document.getElementById("monthYear");
   const calendar = document.getElementById("calendar");
   const prevMonth = document.getElementById("prevMonth");
   const nextMonth = document.getElementById("nextMonth");
-  let today = new Date();
-  today.setHours(0, 0, 0, 0); // normalize
-
+  let today = new Date(); today.setHours(0,0,0,0);
   let currentMonth = today.getMonth();
   let currentYear = today.getFullYear();
   const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
@@ -846,95 +805,47 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderCalendar(month, year) {
     calendar.innerHTML = "";
     monthYear.textContent = `${months[month]} ${year}`;
-
-    const dayLabels = ["Su","Mo","Tu","We","Th","Fr","Sa"];
-    dayLabels.forEach(d => {
-      const label = document.createElement("div");
-      label.className = "day-label";
-      label.textContent = d;
-      calendar.appendChild(label);
+    ["Su","Mo","Tu","We","Th","Fr","Sa"].forEach(d => {
+      const label = document.createElement("div"); label.className = "day-label"; label.textContent = d; calendar.appendChild(label);
     });
 
     const firstDay = new Date(year, month).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-
-    for (let i = 0; i < firstDay; i++) {
-      calendar.appendChild(document.createElement("div"));
-    }
+    for (let i = 0; i < firstDay; i++) calendar.appendChild(document.createElement("div"));
 
     for (let d = 1; d <= daysInMonth; d++) {
-      const date = document.createElement("div");
-      date.className = "date";
-      date.textContent = d;
-
-      const fullDate = new Date(year, month, d, 0, 0, 0, 0);
-      const dayName = dayNames[fullDate.getDay()];
-      
+      const dateEl = document.createElement("div");
+      dateEl.className = "date";
+      dateEl.textContent = d;
+      const fullDate = new Date(year, month, d);
       const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][fullDate.getDay()];
       
-      const isRegularDay = workingDays.includes(dayName) || workingDays.length === 0;
-      const isHoliday = unavailableDates.includes(dateStr);
-
-      if (fullDate < today || !isRegularDay || isHoliday) {
-        date.classList.add("disabled-date");
-        date.style.cursor = "not-allowed";
-        date.style.pointerEvents = "none";
+      if (fullDate < today || (workingDays.length > 0 && !workingDays.includes(dayName)) || unavailableDates.includes(dateStr)) {
+        dateEl.classList.add("disabled-date");
+        dateEl.style.cursor = "not-allowed";
+        dateEl.style.pointerEvents = "none";
       } else {
-        date.classList.add("available-date");
-        date.addEventListener("click", async () => {
+        dateEl.classList.add("available-date");
+        dateEl.addEventListener("click", async () => {
           document.querySelectorAll(".date").forEach(el => el.classList.remove("active"));
-          date.classList.add("active");
-          selectedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-
-          try {
-            const res = await fetch(`/get_booked_slots?doctor_id=${doctorId}&date=${selectedDate}`);
-            const data = await res.json();
-            if (data.bookedSlots) updateBookedSlots(data.bookedSlots);
-          } catch (err) {
-            console.error(err);
-          }
+          dateEl.classList.add("active");
+          selectedDate = dateStr;
+          const res = await fetch(`/get_booked_slots?doctor_id=${doctorId}&date=${selectedDate}`);
+          const data = await res.json();
+          if (data.bookedSlots) updateBookedSlots(data.bookedSlots);
         });
       }
-
-      if (
-        d === today.getDate() &&
-        month === today.getMonth() &&
-        year === today.getFullYear()
-      ) {
-        date.classList.add("active");
-        selectedDate = `${year}-${month + 1}-${d}`;
-      }
-
-      calendar.appendChild(date);
+      calendar.appendChild(dateEl);
     }
   }
 
-  prevMonth.addEventListener("click", () => {
-    currentMonth--;
-    if (currentMonth < 0) {
-      currentMonth = 11;
-      currentYear--;
-    }
-    renderCalendar(currentMonth, currentYear);
-  });
+  prevMonth.addEventListener("click", () => { currentMonth--; if(currentMonth < 0) { currentMonth = 11; currentYear--; } renderCalendar(currentMonth, currentYear); });
+  nextMonth.addEventListener("click", () => { currentMonth++; if(currentMonth > 11) { currentMonth = 0; currentYear++; } renderCalendar(currentMonth, currentYear); });
 
-  nextMonth.addEventListener("click", () => {
-    currentMonth++;
-    if (currentMonth > 11) {
-      currentMonth = 0;
-      currentYear++;
-    }
-    renderCalendar(currentMonth, currentYear);
-  });
-
-  renderCalendar(currentMonth, currentYear);
-
-  // ---------------- Time slot selection ----------------
   slotsContainer.addEventListener("click", (e) => {
     const slot = e.target;
     if (!slot.classList.contains("slot") || slot.classList.contains("booked")) return;
-
     slotsContainer.querySelectorAll(".slot").forEach(s => s.classList.remove("active"));
     slot.classList.add("active");
     selectedSlot = slot.textContent.trim();

@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 import pytz
 import json
 from pytorch_tabnet.tab_model import TabNetRegressor
+from itsdangerous import URLSafeTimedSerializer
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
@@ -63,6 +64,18 @@ app.config.update(
 )
 
 mail = Mail(app)
+
+@app.after_request
+def add_header(response):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    response.headers['X-UA-Compatible'] = 'IE=Edge,chrome=1'
+    return response
 
 ADMIN_EMAIL = 'wellnesswave353@gmail.com'
 
@@ -806,6 +819,22 @@ def index():
     open_login = request.args.get("open_login", "false")
     return render_template("index.html", open_login=open_login, reviews=reviews, latest_blogs=latest_blogs)
 
+def generate_reset_token(email):
+    serializer = URLSafeTimedSerializer(app.secret_key)
+    return serializer.dumps(email, salt="password-reset-salt")
+
+def verify_reset_token(token, expiration=3600):
+    serializer = URLSafeTimedSerializer(app.secret_key)
+    try:
+        email = serializer.loads(
+            token,
+            salt="password-reset-salt",
+            max_age=expiration
+        )
+    except:
+        return None
+    return email
+
 # User registration
 @app.route("/user_register", methods=["POST"])
 def user_register():
@@ -866,6 +895,63 @@ def user_login():
 def user_loginpage():
     return render_template("users_login.html")
 
+@app.route("/forgot_password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "POST":
+        email = request.form.get("email", "").strip()
+        user = users_col.find_one({"email": email})
+        doctor = doctors_col.find_one({"email": email})
+        
+        if user or doctor:
+            token = generate_reset_token(email)
+            reset_url = url_for("reset_password", token=token, _external=True)
+            
+            body = f"""
+Hello,
+
+To reset your password for Wellness Wave, please click the following link:
+{reset_url}
+
+If you did not make this request, simply ignore this email and no changes will be made.
+
+Regards,
+Wellness Wave Team
+"""
+            send_email(to=email, subject="Password Reset Request – Wellness Wave", body=body)
+            flash("An email has been sent with instructions to reset your password.", "success")
+            return redirect(url_for("user_loginpage"))
+        else:
+            flash("Email address not found.", "error")
+            
+    return render_template("forgot_password.html")
+
+@app.route("/reset_password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    email = verify_reset_token(token)
+    if not email:
+        flash("That is an invalid or expired token.", "error")
+        return redirect(url_for("forgot_password"))
+        
+    if request.method == "POST":
+        password = request.form.get("password")
+        confirm_password = request.form.get("confirm_password")
+        
+        if not password or password != confirm_password:
+            flash("Passwords do not match.", "error")
+            return render_template("reset_password.html", token=token)
+            
+        hashed_password = generate_password_hash(password)
+        
+        # Update user if exists
+        users_col.update_one({"email": email}, {"$set": {"password": hashed_password}})
+        # Update doctor if exists
+        doctors_col.update_one({"email": email}, {"$set": {"password": hashed_password}})
+        
+        flash("Your password has been updated! You can now log in.", "success")
+        return redirect(url_for("user_loginpage"))
+        
+    return render_template("reset_password.html", token=token)
+
 @app.route('/user_reg')
 def user_reg():
     return render_template("users_register.html")
@@ -922,7 +1008,8 @@ def user_home():
 
     upcoming_appointments = list(appointments_col.find({
         "user_id": ObjectId(session["user_id"]),
-        "appointment_date": {"$gte": datetime.now()}
+        "appointment_date": {"$gte": datetime.now()},
+        "status": {"$ne": "cancelled"}
     }))
 
     return render_template(
@@ -1130,9 +1217,11 @@ def doctor_home():
     # Convert _id for frontend
     doctor["_id"] = str(doctor["_id"])
 
-    # Fetch appointments sorted by date descending
-    
-    appointments = list(appointments_col.find({'doctor_id': doctor_id}).sort('appointment_date', -1))
+    # Fetch active appointments sorted by date descending (exclude cancelled)
+    appointments = list(appointments_col.find({
+        'doctor_id': doctor_id, 
+        'status': {'$ne': 'cancelled'}
+    }).sort('appointment_date', -1))
     
 
     # Attach patient info
@@ -1297,26 +1386,24 @@ def book_appointment():
     }
     result = appointments_col.insert_one(appointment)
     
+    # Move notification to background thread to avoid response delay
+    import threading
+    def notify(user_mail, username, doc_name, spec, appt_date, appt_time):
+        try:
+            send_email(
+                to=user_mail,
+                subject="Appointment Booked – Wellness Wave",
+                body=f"Hello {username},\n\nYour appointment has been booked successfully.\n\nDoctor: Dr. {doc_name}\nSpecialization: {spec}\nDate: {appt_date}\nTime: {appt_time}\n\nThank you,\nWellness Wave"
+            )
+        except Exception as e:
+            print(f"Error sending email: {e}")
+
     user = users_col.find_one({"_id": user_oid})
     doctor = doctors_col.find_one({"_id": doctor_oid})
 
-    send_email(
-        to=user["email"],
-        subject="Appointment Booked – Wellness Wave",
-        body=f"""
-    Hello {user['username']},
-
-    Your appointment has been booked successfully.
-
-    Doctor: Dr. {doctor['name']}
-    Specialization: {doctor['specialization']}
-    Date: {date}
-    Time: {time}
-
-    Thank you,
-    Wellness Wave
-    """
-    )
+    threading.Thread(target=notify, args=(
+        user["email"], user["username"], doctor["name"], doctor["specialization"], date, time
+    )).start()
 
     return jsonify({
         "success": True,
@@ -1336,7 +1423,9 @@ def get_booked_slots():
     unavailable_dates = []
     doctor = doctors_col.find_one({"_id": ObjectId(doctor_id)})
     if doctor:
-        working_days = doctor.get("working_days", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+        working_days = doctor.get("working_days")
+        if not working_days: # Handles both None and []
+            working_days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         unavailable_dates = doctor.get("unavailable_dates", [])
 
     query = {"doctor_id": ObjectId(doctor_id)}
@@ -1363,15 +1452,75 @@ def my_appointments():
     user_id = ObjectId(session["user_id"])
     appointments_list = list(appointments_col.find({"user_id": user_id}).sort("appointment_date", 1))
 
-    # Populate doctor details and convert ObjectIds for Jinja
+    # Populate doctor details and convert ObjectIds/Dates for Jinja JSON serialization
     for appt in appointments_list:
         doctor = doctors_col.find_one({"_id": ObjectId(appt["doctor_id"])})
-        appt["doctor"] = doctor
+        
+        # Stringify IDs
         appt["_id"] = str(appt["_id"])
-        appt["doctor"]["_id"] = str(doctor["_id"]) if doctor else None
+        appt["user_id"] = str(appt["user_id"])
+        appt["doctor_id"] = str(appt["doctor_id"])
+        
+        if doctor:
+            doctor["_id"] = str(doctor["_id"])
+            appt["doctor"] = doctor
+        else:
+            appt["doctor"] = {"name": "Unknown", "specialization": "Medical Professional", "_id": ""}
+
+        # Stringify datetimes if they exist
+        if "created_at" in appt and isinstance(appt["created_at"], datetime):
+            appt["created_at"] = appt["created_at"].isoformat()
+        if "updated_at" in appt and isinstance(appt["updated_at"], datetime):
+            appt["updated_at"] = appt["updated_at"].isoformat()
 
     return render_template("my_appointments.html", appointments=appointments_list)
 
+
+# ----------------- Reschedule Appointment -----------------
+@app.route("/reschedule_appointment", methods=["POST"])
+def reschedule_appointment():
+    if "user_id" not in session:
+        return jsonify({"error": "Login required"}), 401
+
+    data = request.json
+    appt_id = data.get("appt_id")
+    new_date = data.get("date")
+    new_time = data.get("time")
+
+    if not appt_id or not new_date or not new_time:
+        return jsonify({"error": "Missing fields"}), 400
+
+    try:
+        appt = appointments_col.find_one({"_id": ObjectId(appt_id)})
+        if not appt:
+            return jsonify({"error": "Appointment not found"}), 404
+
+        # Check if slot already booked for the same doctor
+        existing = appointments_col.find_one({
+            "doctor_id": appt["doctor_id"],
+            "appointment_date": new_date,
+            "time": new_time,
+            "_id": {"$ne": ObjectId(appt_id)}
+        })
+        if existing:
+            return jsonify({"error": "Slot already booked"}), 400
+
+        # Update appointment
+        appointments_col.update_one(
+            {"_id": ObjectId(appt_id)},
+            {"$set": {
+                "appointment_date": new_date,
+                "time": new_time,
+                "rescheduled": True,
+                "updated_at": datetime.now()
+            }}
+        )
+
+        # Notify user/doctor if needed (optional)
+
+        return jsonify({"success": True, "message": "Appointment rescheduled successfully!"})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # ----------------- Cancel Appointment -----------------
 @app.route("/cancel_appointment/<appt_id>", methods=["POST"])
@@ -1383,14 +1532,14 @@ def cancel_appointment(appt_id):
         appt = appointments_col.find_one({"_id": ObjectId(appt_id)})
         if not appt:
             return jsonify({"error": "Appointment not found"}), 404
-        if appt["status"] == "cancelled":
+        if appt.get("status") == "cancelled":
             return jsonify({"error": "Appointment already cancelled"}), 400
 
         appointments_col.update_one(
             {"_id": ObjectId(appt_id)},
-            {"$set": {"status": "cancelled"}}
+            {"$set": {"status": "cancelled", "updated_at": datetime.now()}}
         )
-        return jsonify({"success": True})
+        return jsonify({"success": True, "message": "Appointment cancelled successfully!"})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     

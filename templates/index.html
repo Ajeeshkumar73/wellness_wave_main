@@ -459,9 +459,8 @@
 <h5 class="font-bold mb-6">Company</h5>
 <ul class="space-y-4 text-gray-400 text-sm">
 <li><a class="hover:text-primary" href="#about">About Us</a></li>
-<li><a class="hover:text-primary" href="#">Medical Team</a></li>
-<li><a class="hover:text-primary" href="#">Privacy Policy</a></li>
-<li><a class="hover:text-primary" href="#">Terms of Service</a></li>
+<li><a class="hover:text-primary cursor-pointer" onclick="openModal('privacyModal')">Privacy Policy</a></li>
+<li><a class="hover:text-primary cursor-pointer" onclick="openModal('termsModal')">Terms of Service</a></li>
 </ul>
 </div>
 <div>
@@ -609,8 +608,79 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 
+
+<!-- Privacy Policy Modal -->
+<div id="privacyModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <h3 class="text-xl font-bold dark:text-white">Privacy Policy</h3>
+            <button onclick="closeModal('privacyModal')" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                <span class="material-symbols-outlined text-gray-500">close</span>
+            </button>
+        </div>
+        <div class="p-8 overflow-y-auto max-h-[70vh] text-sm leading-relaxed text-gray-600 dark:text-gray-400 space-y-4">
+            <p class="font-bold text-gray-900 dark:text-white">Last Updated: March 2026</p>
+            <p>At Wellness Wave, we prioritize your data privacy. This policy outlines how we handle your information.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">1. Data Collection</h4>
+            <p>We collect health-related metrics (BMI, BP, Blood Sugar, etc.) provided by you to perform disease risk analysis. Personal identifiers like email and name are used for account management.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">2. Use of Information</h4>
+            <p>Your data is used solely to generate health risk reports and connect you with qualified medical professionals. We do not sell your personal health information to third-party advertisers.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">3. Data Security</h4>
+            <p>We implement industry-standard encryption to protect your sensitive health data. Access to medical records is restricted to you and the doctors you explicitly consult with through our platform.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">4. Cookies</h4>
+            <p>We use essential cookies to maintain your login session and preferences.</p>
+        </div>
+        <div class="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+            <button onclick="closeModal('privacyModal')" class="bg-primary text-white font-bold px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-all">I Understand</button>
+        </div>
+    </div>
+</div>
+
+<!-- Terms of Service Modal -->
+<div id="termsModal" class="fixed inset-0 z-[100] hidden bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-gray-900 w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+        <div class="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <h3 class="text-xl font-bold dark:text-white">Terms of Service & Medical Disclaimer</h3>
+            <button onclick="closeModal('termsModal')" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                <span class="material-symbols-outlined text-gray-500">close</span>
+            </button>
+        </div>
+        <div class="p-8 overflow-y-auto max-h-[70vh] text-sm leading-relaxed text-gray-600 dark:text-gray-400 space-y-4">
+            <div class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-900/30 rounded-xl mb-6">
+                <p class="text-red-600 dark:text-red-400 font-bold uppercase tracking-wider text-xs mb-2">CRITICAL MEDICAL DISCLAIMER</p>
+                <p class="text-red-700 dark:text-red-300">Wellness Wave is an AI-driven prediction tool and NOT a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of your physician or other qualified health provider with any questions you may have regarding a medical condition.</p>
+            </div>
+            <h4 class="font-bold text-gray-900 dark:text-white">1. Acceptance of Terms</h4>
+            <p>By accessing Wellness Wave, you agree to these terms and conditions. If you do not agree, please do not use the service.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">2. Use of AI Tools</h4>
+            <p>Our risk assessment tools use Deep Learning models. While we strive for 98% accuracy (based on research datasets), results are probabilistic and should be verified by a medical professional.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">3. Account Responsibility</h4>
+            <p>You are responsible for maintaining the confidentiality of your credentials and for all activities under your account.</p>
+            <h4 class="font-bold text-gray-900 dark:text-white">4. Professional Consultations</h4>
+            <p>Chats and appointments booked through our platform are provided by third-party doctors. Wellness Wave is a facilitator and is not liable for outcomes of professional consultations.</p>
+        </div>
+        <div class="p-6 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+            <button onclick="closeModal('termsModal')" class="bg-primary text-white font-bold px-6 py-2.5 rounded-lg hover:bg-blue-700 transition-all">Agree & Close</button>
+        </div>
+    </div>
+</div>
+
 <script>
-  AOS.init({ duration: 800, once: false, mirror: true, easing: 'ease-in-out' });
+    function openModal(id) {
+        document.getElementById(id).classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal(id) {
+        document.getElementById(id).classList.add('hidden');
+        document.body.style.overflow = 'auto';
+    }
+    // Close on background click
+    window.onclick = function(event) {
+        if (event.target.classList.contains('bg-black/60')) {
+            event.target.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+    }
 </script>
 
 </body>
