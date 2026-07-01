@@ -1174,6 +1174,7 @@ def doctor_login():
 #doctor dashboard
 @app.route('/doctor_home', methods=['GET', 'POST'])
 def doctor_home():
+    
     # Ensure doctor is logged in
     if 'doctor_id' not in session:
         return redirect(url_for('doctor_login'))
@@ -1490,10 +1491,39 @@ def reschedule_appointment():
     if not appt_id or not new_date or not new_time:
         return jsonify({"error": "Missing fields"}), 400
 
+    DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
     try:
         appt = appointments_col.find_one({"_id": ObjectId(appt_id)})
         if not appt:
             return jsonify({"error": "Appointment not found"}), 404
+
+        # --- Fetch doctor availability ---
+        doctor = doctors_col.find_one({"_id": appt["doctor_id"]})
+        if doctor:
+            working_days = doctor.get("working_days") or DAY_NAMES
+            unavailable_dates = doctor.get("unavailable_dates", [])
+
+            # Normalise date strings to YYYY-MM-DD for comparison
+            from datetime import date as date_type
+            try:
+                selected_date_obj = datetime.strptime(new_date, "%Y-%m-%d").date()
+            except ValueError:
+                return jsonify({"error": "Invalid date format"}), 400
+
+            # Check unavailable dates
+            for ud in unavailable_dates:
+                try:
+                    ud_obj = datetime.strptime(ud, "%Y-%m-%d").date()
+                except (ValueError, TypeError):
+                    continue
+                if ud_obj == selected_date_obj:
+                    return jsonify({"error": "Doctor is on leave / unavailable on this date. Please choose another date."}), 400
+
+            # Check working days (Python's weekday: Monday=0 ... Sunday=6)
+            selected_day_name = DAY_NAMES[selected_date_obj.weekday()]
+            if selected_day_name not in working_days:
+                return jsonify({"error": f"Doctor does not consult on {selected_day_name}s. Working days: {', '.join(working_days)}."}), 400
 
         # Check if slot already booked for the same doctor
         existing = appointments_col.find_one({
@@ -1515,8 +1545,6 @@ def reschedule_appointment():
                 "updated_at": datetime.now()
             }}
         )
-
-        # Notify user/doctor if needed (optional)
 
         return jsonify({"success": True, "message": "Appointment rescheduled successfully!"})
     except Exception as e:

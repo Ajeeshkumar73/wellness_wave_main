@@ -164,7 +164,7 @@
 <a class="text-primary font-bold text-sm" href="#">User Dashboard</a>
 <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="{{ url_for('appointments') }}">Book Appointments</a>
 <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="{{ url_for('my_appointments') }}">My Appointments</a>
-<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="#history">history</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="{{ url_for('history') }}">History</a>
 <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="#review">Review</a>
 <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary font-medium text-sm transition-colors" href="{{ url_for('logout') }}">Logout</a>
 </nav>
@@ -456,8 +456,6 @@
 <div>
 <h5 class="font-bold mb-6">Company</h5>
 <ul class="space-y-4 text-gray-400 text-sm">
-<li><a class="hover:text-primary" href="#about">About Us</a></li>
-<li><a class="hover:text-primary" href="#">Medical Team</a></li>
 <li><a class="hover:text-primary cursor-pointer" onclick="openModal('privacyModal')">Privacy Policy</a></li>
 <li><a class="hover:text-primary cursor-pointer" onclick="openModal('termsModal')">Terms of Service</a></li>
 </ul>

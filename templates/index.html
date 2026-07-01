@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="{{ url_for('static', filename='images/favico.png') }}" type="image/x-icon">
@@ -243,12 +244,12 @@
 </div>
 <div class="grid grid-cols-2 gap-8 pt-4">
 <div>
-<div class="text-primary text-3xl font-bold mb-1">98%</div>
+<div class="text-primary text-3xl font-bold mb-1">95%</div>
 <div class="text-xs font-bold uppercase tracking-wider text-slate-gray dark:text-gray-400">Accuracy Rate</div>
 </div>
 <div>
 <div class="text-primary text-3xl font-bold mb-1">24/7</div>
-<div class="text-xs font-bold uppercase tracking-wider text-slate-gray dark:text-gray-400">Expert Support</div>
+<div class="text-xs font-bold uppercase tracking-wider text-slate-gray dark:text-gray-400">AI chatbot Support</div>
 </div>
 </div>
 </div>
@@ -499,6 +500,15 @@
       setTimeout(() => toast.remove(), 300);
     });
   }, 3000);
+</script>
+
+<!-- AOS Init -->
+<script>
+  AOS.init({
+    duration: 800,
+    once: true,
+    offset: 60,
+  });
 </script>
 
 <!--review-->

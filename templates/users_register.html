@@ -176,11 +176,19 @@
 
         <div class="flex flex-col gap-2">
           <label class="text-[#0d131c] dark:text-slate-200 text-sm font-semibold flex items-center gap-2">
+
 <span class="material-symbols-outlined text-primary text-lg">lock</span>
                                 Password
                             </label>
+                            <div class="relative">
 <input class="w-full rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50 p-3 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all dark:text-white" placeholder="••••••••" id="password" name="password" type="password"/>
+ <button
+                  class="absolute right-0 top-0 h-full px-4 text-[#616f89] hover:text-primary transition-colors flex items-center justify-center focus:outline-none"
+                  onclick="togglePassword('password', this)" type="button">
+                  <span class="material-symbols-outlined text-[20px]">visibility_off</span>
+                </button>
 <p id="passError" class="text-red-500 text-xs hidden"></p>
+</div>
         </div>
 
         <div class="flex items-center gap-3 pt-2">
@@ -340,6 +348,22 @@ form.addEventListener("submit", function(e) {
         }
     }
 </script>
+
+ <!--visible password-->
+  <script>
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector("span");
+
+      if (input.type === "password") {
+        input.type = "text";
+        icon.textContent = "visibility";
+      } else {
+        input.type = "password";
+        icon.textContent = "visibility_off";
+      }
+    }
+  </script>
 
 </body>
 </html>

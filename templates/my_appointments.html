@@ -33,16 +33,18 @@ tailwind.config = {
 <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
 <div class="layout-container flex h-full grow flex-col">
 <!-- TopNavBar -->
-<header class="sticky top-0 z-50 bg-white border-b border-solid border-[#e6ecf4] dark:bg-slate-900 dark:border-slate-800">
+<header class="sticky top-0 z-50 bg-white border-b border-solid border-[#e6ecf4] dark:border-gray-800">
+
 <div class="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4">
 <div class="flex items-center gap-3">
-<h2 class="text-xl font-bold tracking-tight text-primary">Wellness Wave</h2>
+<div class="text-primary">
 </div>
-<a class="flex items-center gap-1 text-sm font-medium text-slate-500 hover:text-primary transition-colors" href="{{ url_for('user_home') }}">
+<h2 class="text-[#0c131d] dark:text-white text-xl font-bold tracking-tight">Wellness Wave</h2>
+</div>
+<a class="flex items-center gap-1 text-sm font-medium text-slate-gray hover:text-primary transition-colors" href="{{ url_for('user_home') }}">
 <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-                    Back to Dashboard
+                    Back to Home
                 </a>
-</div>
 </header>
 
 <main class="max-w-7xl mx-auto p-6 md:p-10">
@@ -301,35 +303,70 @@ tailwind.config = {
         document.body.style.overflow = 'auto';
     }
 
+    // Day name lookup
+    const DAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
     async function fetchTimeSlots() {
         const date = document.getElementById('newDate').value;
         const slotsDiv = document.getElementById('time-slots');
         const confirmBtn = document.getElementById('confirmRescheduleBtn');
-        
+        confirmBtn.disabled = true;
+        confirmBtn.dataset.selectedTime = '';
+
         if (!date) return;
-        
+
         // Prevent past dates
         if (date < todayStr) {
-            slotsDiv.innerHTML = '<div class="col-span-full py-4 text-center text-red-500 text-xs text-bold">Please select a future date</div>';
+            slotsDiv.innerHTML = '<div class="col-span-full py-4 text-center text-red-500 text-xs font-bold">Please select a future date</div>';
             return;
         }
 
-        slotsDiv.innerHTML = '<div class="col-span-full py-4 text-center text-slate-400 text-xs animate-pulse font-bold">Checking slots...</div>';
-        confirmBtn.disabled = true;
+        slotsDiv.innerHTML = '<div class="col-span-full py-4 text-center text-slate-400 text-xs animate-pulse font-bold">Checking availability...</div>';
 
         try {
             const res = await fetch(`/get_booked_slots?doctor_id=${currentDoctorId}&date=${date}`);
             const data = await res.json();
-            
+
+            // --- 1. Check if date is in unavailable_dates ---
+            const unavailableDates = data.unavailableDates || [];
+            // Normalize: unavailableDates may be stored as "YYYY-M-D" or "YYYY-MM-DD"
+            const selectedDateObj = new Date(date + 'T00:00:00');
+            const selectedNorm = selectedDateObj.toLocaleDateString('en-CA'); // YYYY-MM-DD
+            const isUnavailableDate = unavailableDates.some(ud => {
+                const udNorm = new Date(ud + 'T00:00:00').toLocaleDateString('en-CA');
+                return udNorm === selectedNorm;
+            });
+            if (isUnavailableDate) {
+                slotsDiv.innerHTML = `
+                    <div class="col-span-full py-5 flex flex-col items-center gap-2">
+                        <span class="material-symbols-outlined text-3xl text-red-400">event_busy</span>
+                        <p class="text-red-500 text-xs font-bold text-center">Doctor is on leave / unavailable on this date.<br>Please choose another date.</p>
+                    </div>`;
+                return;
+            }
+
+            // --- 2. Check working days ---
+            const workingDays = data.workingDays || ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+            const selectedDayName = DAY_NAMES[selectedDateObj.getDay()];
+            if (!workingDays.includes(selectedDayName)) {
+                slotsDiv.innerHTML = `
+                    <div class="col-span-full py-5 flex flex-col items-center gap-2">
+                        <span class="material-symbols-outlined text-3xl text-orange-400">event_busy</span>
+                        <p class="text-orange-500 text-xs font-bold text-center">Doctor does not consult on <strong>${selectedDayName}s</strong>.<br>Working days: ${workingDays.join(', ')}.</p>
+                    </div>`;
+                return;
+            }
+
+            // --- 3. Filter booked slots ---
             const allTimes = [
                 "05:00 PM", "05:30 PM", "06:00 PM", "06:30 PM",
                 "07:00 PM", "07:30 PM", "08:00 PM", "08:30 PM", "09:00 PM"
             ];
-            
-            const booked = data.bookedSlots || [];
-            slotsDiv.innerHTML = '';
 
+            const booked = data.bookedSlots || [];
             const availableTimes = allTimes.filter(t => !booked.includes(t));
+
+            slotsDiv.innerHTML = '';
 
             if (availableTimes.length === 0) {
                 slotsDiv.innerHTML = '<div class="col-span-full py-4 text-center text-red-500 text-xs font-bold">Doctor is fully booked for this day</div>';

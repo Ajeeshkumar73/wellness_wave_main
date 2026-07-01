@@ -646,7 +646,21 @@ document.querySelectorAll('form').forEach(form => {
     });
 });
 </script>
+ <!--visible password-->
+  <script>
+    function togglePassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector("span");
 
+      if (input.type === "password") {
+        input.type = "text";
+        icon.textContent = "visibility";
+      } else {
+        input.type = "password";
+        icon.textContent = "visibility_off";
+      }
+    }
+  </script>
 
 </body>
 </html>
